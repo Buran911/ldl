@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ldl" default="init" basedir=".">
+	<property name="src" value="src"/>
+	<property name="lib" value="lib"/>
+	<property name="build" value="bin"/>
+	<property name="build.classes" value="${build}/classes"/>
+	<property name="project dir" location="."/>
+	
+	<property name="lexerFile" value="generation/lexparse/JFlex.jar"/>
+	<property name="lexerDir" value="parse/lexer"/>
+	<property name="lexerJava" value="Lexer.java"/>
+	<property name="lexerSrc" value="generation/lexparse/src/Lexer.flex"/>
+	
+	<property name="parserFile" value="generation/lexparse/yacc.exe"/>
+	<property name="parserDir" value="parse/parser"/>
+	<property name="parserJava" value="Parser.java"/>
+	<property name="parserSrc" value="generation/lexparse/src/Parser.yy"/>
+	
+	<!-- вывод информации -->
+	<target name="init">
+		<tstamp> 
+			<format property="release date" pattern="dd MMM yyyy hh:mm:ss aa" locale="en,US"/>
+		</tstamp>
+		<echo>${release date}</echo>
+	</target>
+	
+	<!-- проверка на изменения исходных файлов лексера и парсера -->
+
+	<target name="check.lexer.uptodate">
+		<uptodate property="lexer.uptodate" srcfile="${lexerSrc}" targetfile="${lexerDir}/${lexerJava}"/>
+	</target>
+	<target name="check.parser.uptodate">
+		<uptodate property="parser.uptodate" srcfile="${parserSrc}" targetfile="${parserDir}/${parserJava}"/>
+	</target>
+
+	
+	
+	
+	<!-- генерация лексера -->
+	<target name="generate lexer" depends="check.lexer.uptodate" unless="lexer.uptodate" description="Creating lexer from ldl project">
+		<java jar="${lexerFile}" fork="yes" failonerror="yes">
+			<arg line="-d ${src}/${lexerDir} -nobak"/>
+			<arg line="${lexerSrc}"/>
+		</java>
+	</target>
+	
+	<!-- генерация парсера -->
+    <target name="generate parser" depends="check.parser.uptodate" unless="parser.uptodate" description="Creating parser from ldl project">
+        <exec executable="${project dir}/${parserFile}" dir="${src}/${parserDir}" failonerror="yes">
+        	<arg line="-Jclass=Parser"/>
+        	<arg line="-Jpackage=parse.parser"/>
+        	<arg line="-Jnorun"/>
+        	<arg line="-d"/>
+        	<arg line="-v"/>
+            <arg line="-J ${project dir}/${parserSrc}"/>
+        </exec>
+    </target>
+
+	
+	<!-- задание путей  либам --> 
+	<path id="classpath">
+		<fileset dir="${lib}" includes="*.jar" excludes="junit.jar"/>
+	</path>
+	
+	<!-- создание бинарников -->
+    <target name="make jar" depends="init" description="Creating jar from ldl project">
+    	
+		<!-- компиляция исходников -->
+    	<javac proceed="true" encoding="cp1251" debug="off" optimize="on" srcdir="${src}" destdir="${build.classes}" classpathref="classpath"/>
+    	
+    	<!-- правка манифеста и его копирование в бинарники -->
+    	<filter token="VERSION" value="0"/>
+    	<filter token="RELEASE_DATE" value="${release date}"/>
+    	<copy todir="${build}" file="${lib}/MANIFEST.MF" filtering="true"/>
+    	
+    	<!-- создание jar -->
+        <jar jarfile="generation/project/ldl.jar" includes="*.*" basedir="bin" manifest="${build}/MANIFEST.MF"/>
+    	<echo> ldl.jar created </echo>
+   	</target>
+
+</project>
