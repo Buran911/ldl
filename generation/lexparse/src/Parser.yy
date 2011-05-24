@@ -9,25 +9,25 @@
 %left "+" "-"
 %left "*" "/"
 
-%left UMINUS 
 %type <dval> Number
 %type <dval> Expr
 
+%left UMINUS 
 %%
 
-Expr : Expr "+" Number{
+Expr : Expr "+" Expr{
 	$$ = $1 + $3;
 }
 
-Expr : Expr "-" Number{
+Expr : Expr "-" Expr{
 	$$ = $1 - $3;
 }
 
-Expr : Expr "*" Number{
+Expr : Expr "*" Expr{
 	$$ = $1 * $3;
 }
 
-Expr : Expr "/" Number{
+Expr : Expr "/" Expr{
 	$$ = $1 / $3;
 }
 
@@ -36,10 +36,12 @@ Expr : Number{
 	$$ = $1;
 }
 
-Expr : "(" Expr ")"
+Expr : "(" Expr ")"{
+	$$ = $2;
+}
 
 Expr : "-" Expr %prec UMINUS {
-	$$ = -1 * $$;
+	$$ = -1 * $2;
 }
 
 Number : intNumber{
@@ -52,6 +54,7 @@ Number : realNumber{
 %%
 
 private Lexer lexer;
+private double value;
 
 private int yylex () {
 	int yyl_return = -1;
@@ -70,4 +73,17 @@ public void yyerror  (String error) {
   
 public void setYylval(ParserVal yylval) {
 	this.yylval = yylval;
+}
+
+public Parser(java.io.Reader in){
+	lexer = new Lexer(in, this);
+}
+
+public void parse(){
+	yyparse();
+	value = yyval.dval;
+}
+
+public double getValue(){
+	return value;
 }

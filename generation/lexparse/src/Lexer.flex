@@ -1,11 +1,12 @@
 package parse.lexer;
 import parse.parser.*;
-import static parse.parser.ParserTokens;
+// import static parse.parser.ParserTokens;
 
 %%
 
 %public
 %class Lexer
+%implements ParserTokens
 %byaccj
 %unicode
 

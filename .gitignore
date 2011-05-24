@@ -1,2 +1,4 @@
 bin
 src/parse
+src/testcode
+generation/project

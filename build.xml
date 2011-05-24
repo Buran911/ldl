@@ -5,6 +5,8 @@
 	<property name="build" value="bin"/>
 	<property name="build.classes" value="${build}/classes"/>
 	<property name="project dir" location="."/>
+	<property name="releaseDir" value= "generation/project"/>
+	<property name="jarFile" value="ldl.jar"/>
 	
 	<property name="lexerFile" value="generation/lexparse/JFlex.jar"/>
 	<property name="lexerDir" value="parse/lexer"/>
@@ -56,26 +58,41 @@
         </exec>
     </target>
 
+	<target name="generate lexparse" depends="generate lexer, generate parser" description="Regenerating of lexer and parser"/>
 	
 	<!-- задание путей  либам --> 
-	<path id="classpath">
-		<fileset dir="${lib}" includes="*.jar" excludes="junit.jar"/>
+	<path id="compile.classpath">
+		<fileset dir="${lib}" includes="**/*.jar" excludes="junit.jar"/>
 	</path>
 	
 	<!-- создание бинарников -->
-    <target name="make jar" depends="init" description="Creating jar from ldl project">
+    <target name="jar" depends="init, check.lexer.uptodate, check.parser.uptodate" description="Creating jar from ldl project">
+    	<manifestclasspath property="jar.classpath" jarfile="${releaseDir}/${jarFile}">
+    		<classpath refid="compile.classpath"/>
+    	</manifestclasspath>
     	
 		<!-- компиляция исходников -->
-    	<javac proceed="true" encoding="cp1251" debug="off" optimize="on" srcdir="${src}" destdir="${build.classes}" classpathref="classpath"/>
-    	
-    	<!-- правка манифеста и его копирование в бинарники -->
-    	<filter token="VERSION" value="0"/>
-    	<filter token="RELEASE_DATE" value="${release date}"/>
-    	<copy todir="${build}" file="${lib}/MANIFEST.MF" filtering="true"/>
+    	<mkdir dir="${build.classes}"/>
+    	<echo> All sources will be recompiled.</echo>
+    	<javac proceed="true" encoding="cp1251" debug="off" optimize="on" srcdir="${src}" destdir="${build.classes}" classpathref="compile.classpath"/>
     	
     	<!-- создание jar -->
-        <jar jarfile="generation/project/ldl.jar" includes="*.*" basedir="bin" manifest="${build}/MANIFEST.MF"/>
-    	<echo> ldl.jar created </echo>
+        <jar destfile="${releaseDir}/${jarFile}" basedir="${build.classes}">
+        	<manifest>
+        		<attribute name="Built-Time" value="${release date}"/>
+        		<attribute name="Built-By" value="${user.name}"/>
+        		<attribute name="Class-Path" value="${jar.classpath}"/>
+        	</manifest>
+        </jar>
+    	<echo> ${jarFile} created </echo>
+    	
+    	<!-- копирование либ -->
+    	<mkdir dir="${releaseDir}/lib"/>
+    	<copy todir="${releaseDir}/lib" verbose="Yes" >
+    		<fileset dir="${lib}" includes="**/*.jar" excludes="junit.jar"/>
+    	</copy>
+    	
+    	<delete dir="${build.classes}"/>
    	</target>
 
 </project>
