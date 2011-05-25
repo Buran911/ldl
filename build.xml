@@ -23,27 +23,26 @@
 		<tstamp> 
 			<format property="release date" pattern="dd MMM yyyy hh:mm:ss aa" locale="en,US"/>
 		</tstamp>
-		<echo>${release date}</echo>
+		<echo>Begins: ${release date}</echo>
+		<echo>Run by: ${user.name}</echo>
 	</target>
 	
 	<!-- проверка на изменения исходных файлов лексера и парсера -->
-
 	<target name="check.lexer.uptodate">
-		<uptodate property="lexer.uptodate" srcfile="${lexerSrc}" targetfile="${lexerDir}/${lexerJava}"/>
+		<uptodate property="lexer.uptodate" srcfile="${lexerSrc}" targetfile="${src}/${lexerDir}/${lexerJava}"/>
 	</target>
+	
 	<target name="check.parser.uptodate">
-		<uptodate property="parser.uptodate" srcfile="${parserSrc}" targetfile="${parserDir}/${parserJava}"/>
+		<uptodate property="parser.uptodate" srcfile="${parserSrc}" targetfile="${src}/${parserDir}/${parserJava}"/>
 	</target>
 
-	
-	
-	
 	<!-- генерация лексера -->
-	<target name="generate lexer" depends="check.lexer.uptodate" unless="lexer.uptodate" description="Creating lexer from ldl project">
+	<target name="generate lexer"  depends="check.lexer.uptodate" unless="lexer.uptodate" description="Creating lexer from ldl project">
 		<java jar="${lexerFile}" fork="yes" failonerror="yes">
 			<arg line="-d ${src}/${lexerDir} -nobak"/>
 			<arg line="${lexerSrc}"/>
 		</java>
+		<echo> Lexer generated.</echo>
 	</target>
 	
 	<!-- генерация парсера -->
@@ -56,9 +55,11 @@
         	<arg line="-v"/>
             <arg line="-J ${project dir}/${parserSrc}"/>
         </exec>
+    	<echo> Parser generated.</echo>
     </target>
 
 	<target name="generate lexparse" depends="generate lexer, generate parser" description="Regenerating of lexer and parser"/>
+	
 	
 	<!-- задание путей  либам --> 
 	<path id="compile.classpath">
@@ -66,7 +67,7 @@
 	</path>
 	
 	<!-- создание бинарников -->
-    <target name="jar" depends="init, check.lexer.uptodate, check.parser.uptodate" description="Creating jar from ldl project">
+    <target name="jar" depends="init, generate lexparse" description="Creating jar from ldl project">
     	<manifestclasspath property="jar.classpath" jarfile="${releaseDir}/${jarFile}">
     		<classpath refid="compile.classpath"/>
     	</manifestclasspath>
