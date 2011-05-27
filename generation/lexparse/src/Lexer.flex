@@ -1,6 +1,7 @@
 package parse.lexer;
 import parse.parser.*;
-// import static parse.parser.ParserTokens;
+import parse.exceptions.UnknownTokenException;
+import parse.exceptions.InvalidIdentifierException;
 
 %%
 
@@ -9,6 +10,11 @@ import parse.parser.*;
 %implements ParserTokens
 %byaccj
 %unicode
+%line
+%column
+
+%yylexthrow UnknownTokenException
+%yylexthrow InvalidIdentifierException
 
 
 %{
