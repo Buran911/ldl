@@ -14,16 +14,16 @@ import parse.util.PairSet;
  * @author hindu
  * */
 public abstract class ErrorHandler {
-	private Queue<Error> errors = new LinkedList<Error>();
+	private Queue<ParseError> errors = new LinkedList<ParseError>();
 	private final int errCritCount = 15; // количество ошибок, после которого дальнейшие проверки нецелесообразны 
 	private PairSet incompatibleErrors = new PairSet(); // набор несовместимых друг с другом ошибок 
 	
-	public void addError(Error error){
+	public void addError(ParseError error){
 		errors.add(error);
 		handle();
 	}
 	
-	public void hasError(Error error){
+	public void hasError(ParseError error){
 		errors.contains(error);
 	}
 	
