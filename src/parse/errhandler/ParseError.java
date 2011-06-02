@@ -6,7 +6,7 @@ package parse.errhandler;
  * 
  * @author hindu
  * */
-public class Error {
+public class ParseError {
 	private ErrorClass errClass;
 	private ErrorType errType;
 	private int lineNo;
@@ -15,7 +15,7 @@ public class Error {
 	private String possibleSolution;
 
 
-	public Error(ErrorClass errClass, ErrorType errType, int lineNo,
+	public ParseError(ErrorClass errClass, ErrorType errType, int lineNo,
 			String errorLine, String context, String possibleSolution) {
 		super();
 		this.errClass = errClass;
