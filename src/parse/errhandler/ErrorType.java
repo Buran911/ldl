@@ -5,6 +5,7 @@ public enum ErrorType {
 	InvalidIdentifier,
 	OperandNotFound,
 	Syntax,
+	Quote,
 	UnexpectedEOF,
 	UnknownToken,
 	

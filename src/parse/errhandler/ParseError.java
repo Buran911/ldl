@@ -23,6 +23,11 @@ public class ParseError {
 		this(errClass, errType, lineNo, columnNo, null, null, null);
 	}
 	
+	public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo,
+			String possibleSolution) {
+		this(errClass, errType, lineNo, columnNo, null, null, possibleSolution);
+	}
+	
 	
 	public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo,
 			String errorLine, String context, String possibleSolution) {
