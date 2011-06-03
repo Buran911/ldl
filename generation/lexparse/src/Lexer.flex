@@ -116,12 +116,11 @@ error = .
 { xor } { return xor; }
 
 { badidentifier } { 
-	errHandler.add( new ParseError( ErrorClass.syntax, ErrorType.InvalidIdentifier,
-		  getCurrentLineNo(), getCurrentColumnNo(), "Идентификатор должен начинаться с буквы или знака подчеркивания.");
-	);
+	errHandler.addError( new ParseError( ErrorClass.syntax, ErrorType.InvalidIdentifier,
+		  getCurrentLineNo(), getCurrentColumnNo(), "Идентификатор должен начинаться с буквы или знака подчеркивания."));
 }
 
-{ number } { 
+{ number } {  
 	ParserVal yylval = new ParserVal(Double.parseDouble(yytext()));
 	yyparser.setYylval(yylval);
 	return number; }
@@ -140,13 +139,13 @@ error = .
 { whitespace } { }
 
 { errorQuote } { 
-	errHandler.add( new ParseError(  ErrorClass.syntax, ErrorType.Quote,
-		getCurrentLineNo(), getCurrentColumnNo(),"Возможно поставлена лишняя кавычка.");
+	errHandler.addError( new ParseError(  ErrorClass.syntax, ErrorType.Quote,
+		getCurrentLineNo(), getCurrentColumnNo(),"Возможно поставлена лишняя кавычка."));
 }
 	
 
 { error } { 
-	errHandler.add( new ParseError(  ErrorClass.syntax, ErrorType.UnknownToken, 
+	errHandler.addError( new ParseError(  ErrorClass.syntax, ErrorType.UnknownToken, 
 		getCurrentLineNo(), getCurrentColumnNo(),
-		"Неизвестный токен: " + getCurrentToken() +  ".");
+		"Неизвестный токен: " + getCurrentToken() +  "."));
 }
