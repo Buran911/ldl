@@ -1,55 +1,61 @@
 %{
-  import java.io.*;
-  import parse.lexer.Lexer;
- %}
+	import java.io.*;
+	import parse.lexer.Lexer;
+	import parse.errhandler.ErrorHandler;
+%}
 
-%token <ival> intNumber
-%token <dval> realNumber
+%token context 
+%token map
+%token exists
+%token instanceOf
+
+%left ":"
+%token <sval> identifier
+%token <dval> number
+
+%left "." "," "'" "\""
+
+%token set
 
 %left "+" "-"
 %left "*" "/"
 
-%type <dval> Number
-%type <dval> Expr
+%token <sval> string
+%type <dval> number
 
 %left UMINUS 
+
+%token notEqual
+%token lessEqual
+%token moreEqual
+
+%token ldltrue
+%token ldlfalse
+
+%left and
+%left or
+%left not
+%left xor
+
+%left UNOT 
+
+
+%left "="
+%left "<"
+%left ">"
+
+
+%left "("
+%left ")"
+%left "{"
+%left "}"
+%left "["
+%left "]"
+
+%type <dval> Expr
 %%
 
-Expr : Expr "+" Expr{
-	$$ = $1 + $3;
-}
-
-Expr : Expr "-" Expr{
-	$$ = $1 - $3;
-}
-
-Expr : Expr "*" Expr{
-	$$ = $1 * $3;
-}
-
-Expr : Expr "/" Expr{
-	$$ = $1 / $3;
-}
-
-
-Expr : Number{
-	$$ = $1;
-}
-
-Expr : "(" Expr ")"{
-	$$ = $2;
-}
-
-Expr : "-" Expr %prec UMINUS {
-	$$ = -1 * $2;
-}
-
-Number : intNumber{
-	$$ = $1;
-}
-Number : realNumber{
-	$$ = $1;
-}
+Expr : number
 
 %%
 
@@ -75,13 +81,12 @@ public void setYylval(ParserVal yylval) {
 	this.yylval = yylval;
 }
 
-public Parser(java.io.Reader in){
-	lexer = new Lexer(in, this);
+public Parser(java.io.Reader in, ErrorHandler errHandler){
+	lexer = new Lexer(in, this, errHandler);
 }
 
 public void parse(){
 	yyparse();
-	value = yyval.dval;
 }
 
 public double getValue(){
