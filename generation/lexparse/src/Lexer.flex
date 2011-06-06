@@ -14,9 +14,6 @@ import parse.exceptions.InvalidIdentifierException;
 %line
 %column 
 
-%yylexthrow UnknownTokenException
-%yylexthrow InvalidIdentifierException
-
 
 %{
 	private Parser yyparser;
