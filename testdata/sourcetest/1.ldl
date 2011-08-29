@@ -1,0 +1,31 @@
+context Payment{
+	number instanceof int;
+	payer instanceof Participant;
+	payee instanceof Participant;
+	
+	source{
+		number:{
+			_type = NumberGenerator;
+			_generationType = sequence;
+			_beginVal = 10;
+			_period = 3;
+		}
+	}
+
+	eq_classes {
+		Participiants_in_equal_region();
+		Participiants_in_diff_regions();
+	}
+	
+	-- constraints
+	TransferPossible( payer.account.balAcc, payer.account.balAcc);
+	
+	if payee.bic.isKO() & payer.bic.isKO(){
+		not Payee_equals_payer();
+	}
+	
+	if payee.bic.region = payer.bic.region{
+		not GRKC_equal();
+		
+	}
+}

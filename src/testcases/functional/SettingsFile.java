@@ -9,10 +9,11 @@ import org.junit.Test;
 import parse.ldlsettingsparser.XMLParser;
 
 public class SettingsFile {
-	private static XMLParser parser = new XMLParser("testdata/settings.xml");
+	private static XMLParser parser;
 	
 	@BeforeClass
 	public static void setUp() {
+		parser = new XMLParser("testdata/settingstest/settings.xml");
 		parser.parse();
 	}
 	
