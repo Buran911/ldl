@@ -31,6 +31,7 @@
 
 %token ldltrue
 %token ldlfalse
+%token instanceOf
 
 %left and
 %left or
@@ -52,10 +53,38 @@
 %left "["
 %left "]"
 
-%type <dval> Expr
+
 %%
 
-Expr : number
+ldl : Contexts | Predicates
+
+Contexts : Context
+Contexts : Context Contexts
+
+Predicates : Predicate
+Predicates : Predicate Predicates
+
+Context : PathName "{" 
+	Blocks
+"}"
+
+PathName : SimpleName
+PathName : SimpleName ":"":" SimpleName
+ 
+Blocks : Block
+Blocks : Block Blocks 
+ 
+Block : Description
+	| Source
+	| Condition
+	| Constraint
+	
+Description : Identifier instanceOf Type ";"
+
+Identifier : identifier
+Type : identifier
+SimpleName : identifier
+
 
 %%
 
