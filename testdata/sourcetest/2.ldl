@@ -1,0 +1,24 @@
+context Participant{
+	bic instanceof BIC;
+	account instanceof Account;
+	
+		source{
+			accounts{
+				_type = db;
+				_table =  accs;
+				_column = acc;
+			}
+			
+			
+			map(accounts){
+				account.balAcc = acc[0:4];
+				account.currency  = acc[5:7];
+				account.key  = acc[8];
+				account.suboffice = acc[9:12];
+				account.personalAcc = acc[13:19];
+		}
+	}
+
+	
+}
+
