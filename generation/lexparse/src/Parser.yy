@@ -64,7 +64,7 @@ Contexts : Context Contexts
 Predicates : Predicate
 Predicates : Predicate Predicates
 
-Context : PathName "{" 
+Context : context PathName "{" 
 	Blocks
 "}"
 
@@ -104,6 +104,8 @@ private int yylex () {
   /* error reporting */
 public void yyerror  (String error) {
 	System.err.println ("Error: " + error);
+	/* КАК ЭТО РАБОТАЕТ????? P.S. Восстановление парсера после фейла.*/
+	yyerrflag = 3;
 }
   
 public void setYylval(ParserVal yylval) {
@@ -116,6 +118,10 @@ public Parser(java.io.Reader in, ErrorHandler errHandler){
 
 public void parse(){
 	yyparse();
+}
+
+public void setDebugModeOn(){
+	yydebug = true;
 }
 
 public double getValue(){

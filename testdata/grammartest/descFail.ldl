@@ -1,0 +1,9 @@
+context InvalidCorrespondence{
+	balAcc1 instance0f string;
+	balAcc2 instanceof string;
+	republic instanceof int;
+	region instanceof int;
+	ubr instanceof int;
+	triple instanceof int;
+	correspAcc instanceof Account;
+}
