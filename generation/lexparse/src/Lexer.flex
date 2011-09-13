@@ -48,6 +48,11 @@ context = "context"
 instanceOf = "instanceof"
 map = "map"
 exists = "exists"
+source = "source"
+eq_classes = "eq_classes"
+
+ldltrue = "ldltrue"
+ldlfalse = "ldlfalse"
 
 set = "Set"
 
@@ -101,6 +106,11 @@ error = .
 { instanceOf} { return instanceOf; }
 { map } { return map; }
 { exists } { return exists; }
+{ source } { return source; }
+{ eq_classes } { return eq_classes; }
+
+{ ldltrue } { return ldltrue; }
+{ ldlfalse } { return ldlfalse; }
 
 { set } { return set; }
 

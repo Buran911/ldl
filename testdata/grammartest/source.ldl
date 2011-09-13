@@ -1,0 +1,16 @@
+context Participant{	
+	source{
+		transactionalAccount:{
+			_type = 13;
+			_table = 'refs';
+			_column = transactionalAccount;
+		}
+			
+		kpp:{
+			_type = db;
+			_table = accounts;
+			_column = kpp;
+		}
+	}	
+		
+}

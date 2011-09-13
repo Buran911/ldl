@@ -8,10 +8,16 @@
 %token map
 %token exists
 %token instanceOf
+%token source
+%token eq_classes
+
+
 
 %left ":"
 %token <sval> identifier
 %token <dval> number
+%token ldltrue
+%token ldlfalse
 
 %left "." "," "'" "\""
 
@@ -53,6 +59,8 @@
 %left "["
 %left "]"
 
+%left UNARY 
+
 
 %%
 
@@ -76,22 +84,94 @@ Blocks : Block Blocks
  
 Block : Description
 	| Source
-	| Condition
 	| Constraint
+	| EqClasses
+	
+EqClasses : eq_classes "{"
+	Constraints
+"}"
 	
 Description : Identifier instanceOf Type ";"
+
+Constraints : Constraint
+Constraints : Constraint Constraints
+
+Source: source "{"
+	srcBlocks
+"}"
+
+srcBlocks : srcBlock
+srcBlocks : srcBlock srcBlocks
+
+srcBlock : Identifier ":" "{" 
+	srcExprs
+"}"
+
+srcExprs : srcExpr
+srcExprs : srcExpr srcExprs
+
+srcExpr : Identifier "=" Identifier ";"
+srcExpr : Identifier "=" Set ";"
+srcExpr : Identifier "=" Number ";"
+srcExpr : Identifier "=" String ";"
+
+Set : "{" Elements "}"
+
+Elements : Element
+Elements : Element "," Elements
+
+Element : String
+Element : Number
+
+Constraint : Binary ";"
+
+Binary : not Binary %prec UNARY
+Binary : "(" Binary ")"
+Binary : BinaryExp
+Binary : Binary SetOp BinaryExp
+Binary : Binary SetOp "(" Binary ")"
+
+BinaryExp : Predicate
+BinaryExp : Expression Relation Expression
+
+
+Expression : AttributeCall
+Expression : OperationCall
+Expression : ArithmeticExpression
+Expression : Variable
+Expression : Literal
+Literal : String
+Literal : Number
+Literal : Boolean
+Boolean : ldltrue
+Boolean : ldlfalse
+
+AttributeCall : AttributeCall "." Identifier
+AttributeCall : Variable "." Identifier
+
+
+
+Variable : Identifier
+
+Predicate : Identifier "(" Parametres ")" 
+
+Parametres :
 
 Identifier : identifier
 Type : identifier
 SimpleName : identifier
+String : string
+Number : number
 
+SetOp : and | or | xor
+Relation : "<" | ">" | "=" | notEqual | lessEqual | moreEqual
 
 %%
 
 private Lexer lexer;
 private double value;
 
-private int yylex () {
+private int yylex (){
 	int yyl_return = -1;
 	try {
 		yyl_return = lexer.yylex();
