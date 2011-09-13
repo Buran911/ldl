@@ -1,9 +1,12 @@
 context Constraints{
-	!(qqq = 'asd') && (!(xxx > 6));
-	((aa > 5) || ((inn = '123456789') && (zzz < 3)));
-	inn = '123456789' && zzz < 3; 
-	not_enough_money() || not_enough_money();
-	bic = '123456789';
-	aa > 5;
-	not_enough_money();
+	isKO();
+	--bic.isKO();
+	--payee.bic.isKO() ;
+	--!(qqq = 'asd') && (!(xxx > 6));
+	--((aa > 5) || ((inn = '123456789') && (zzz < 3)));
+	--inn = '123456789' && zzz < 3; 
+	--not_enough_money() || not_enough_money();
+	--bic = '123456789';
+	--aa > 5;
+	--not_enough_money();
 }

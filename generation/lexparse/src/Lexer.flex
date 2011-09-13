@@ -50,6 +50,7 @@ map = "map"
 exists = "exists"
 source = "source"
 eq_classes = "eq_classes"
+If = "if"
 
 ldltrue = "ldltrue"
 ldlfalse = "ldlfalse"
@@ -108,6 +109,8 @@ error = .
 { exists } { return exists; }
 { source } { return source; }
 { eq_classes } { return eq_classes; }
+
+{ If } { return If; }
 
 { ldltrue } { return ldltrue; }
 { ldlfalse } { return ldlfalse; }

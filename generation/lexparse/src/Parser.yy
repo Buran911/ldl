@@ -10,6 +10,7 @@
 %token instanceOf
 %token source
 %token eq_classes
+%token If
 
 
 
@@ -124,6 +125,7 @@ Element : String
 Element : Number
 
 Constraint : Binary ";"
+Constraint : Condition
 
 Binary : not Binary %prec UNARY
 Binary : "(" Binary ")"
@@ -134,9 +136,16 @@ Binary : Binary SetOp "(" Binary ")"
 BinaryExp : Predicate
 BinaryExp : Expression Relation Expression
 
+Condition : If Binary "{"
+	IfBlocks
+"}"
+
+IfBlocks : IfBlock IfBlocks
+IfBlock : Constraint
+IfBlock : EqClasses
+
 
 Expression : AttributeCall
-Expression : OperationCall
 Expression : ArithmeticExpression
 Expression : Variable
 Expression : Literal
@@ -153,7 +162,11 @@ AttributeCall : Variable "." Identifier
 
 Variable : Identifier
 
-Predicate : Identifier "(" Parametres ")" 
+Predicate : OperationCall
+Predicate : Variable "." OperationCall
+Predicate : AttributeCall "." OperationCall
+
+OperationCall : Identifier "(" Parametres ")" 
 
 Parametres :
 
