@@ -65,13 +65,13 @@
 
 %%
 
-ldl : Contexts | Predicates
+ldl : Contexts | PredicateImpls
 
 Contexts : Context
 Contexts : Context Contexts
 
-Predicates : Predicate
-Predicates : Predicate Predicates
+PredicateImpls : PredicateImpl
+PredicateImpls : PredicateImpl PredicateImpls
 
 Context : context PathName "{" 
 	Blocks
@@ -170,6 +170,18 @@ Predicate : AttributeCall "." OperationCall
 OperationCall : Identifier "(" Parametres ")" 
 
 Parametres :
+
+
+
+
+PredicateImpl : PathName FunctionalPart "(" FormalParams ")"  "{"
+	Constraints 
+"}"
+
+FunctionalPart :
+FunctionalPart : "<" String "," Number ">"
+
+FormalParams : 
 
 Identifier : identifier
 Type : identifier
