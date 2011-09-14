@@ -1,0 +1,8 @@
+BIC::isRKC<'bic', 1>(){
+	ubr > 50;
+	triple = '000';	
+}
+
+Payment::Participiants_in_equal_region(){
+	payer.bic.region = payee.bic.region;
+}

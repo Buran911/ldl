@@ -1,0 +1,7 @@
+context Testo {
+	eq_classes {
+		epic_constraint();
+		bic = '1234';
+		refid > 3;
+	}
+}
