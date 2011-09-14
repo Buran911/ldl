@@ -140,6 +140,7 @@ Condition : If Binary "{"
 	IfBlocks
 "}"
 
+IfBlocks : IfBlock
 IfBlocks : IfBlock IfBlocks
 IfBlock : Constraint
 IfBlock : EqClasses

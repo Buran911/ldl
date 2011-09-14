@@ -1,0 +1,30 @@
+context Payment{
+	if isKO(){
+		if isVasya(){
+			maintainInRKC();
+		}
+	}
+	eq_classes {
+		isKO();
+		isGRKC();
+		isRKC();
+		isPU();
+		isKO();
+		
+		if isKO() {
+			eq_classes {
+				maintainInGRKC();
+				maintainInRKC();
+			}
+		} 
+	}
+	
+	if payee.bic.isKO() && payer.bic.isKO(){
+		!Payee_equals_payer();
+	}	
+	
+	if payee.bic.region = payer.bic.region{
+		!GRKC_equal();
+	}
+
+}
