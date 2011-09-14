@@ -64,14 +64,13 @@
 
 
 %%
+ldl : ldlExpressions
+ldlExpressions : ldlExpression
+ldlExpressions : ldlExpression ldlExpressions
 
-ldl : Contexts | PredicateImpls
+ldlExpression : Context  
+ldlExpression : PredicateImpl
 
-Contexts : Context
-Contexts : Context Contexts
-
-PredicateImpls : PredicateImpl
-PredicateImpls : PredicateImpl PredicateImpls
 
 Context : context PathName "{" 
 	Blocks

@@ -18,20 +18,27 @@ context Payment{
 	}
 	
 	-- constraints
-	TransferPossible( payer.account.balAcc, payer.account.balAcc);
-	!Payee_equals_payer();
-	!GRKC_equal();
+	TransferPossible( );
+	
+	if payee.bic.isKO() && payer.bic.isKO(){
+		! Payee_equals_payer();
+	}
+	
+	if payee.bic.region = payer.bic.region{
+		! GRKC_equal();
+	}
 }
 
 context Participant{
 	bic instanceof BIC;
 	account instanceof Account;
-		source{
-			accounts:{
-				_type = db;
-				_table =  accs;
-				_column = acc;
-			}
+	source{
+		accounts:{
+			_type = db;
+			_table =  accs;
+			_column = acc;
+		}
+		
 	}
 
 	
@@ -56,14 +63,21 @@ context BIC{
 		isGRKC();
 		isRKC();
 		isPU();
-		isKO;
+		isKO();
+		
+		if isKO() {
+			eq_classes {
+				maintainInGRKC();
+				maintainInRKC();
+			}
+		} 
 	}
 	
 }
 
 context Account{
 	balAcc instanceof string;
-	currency instanceof string
+	currency instanceof string;
 	key instanceof string;
 	suboffice instanceof string;
 	personalAcc instanceof string;
@@ -93,31 +107,20 @@ context InvalidCorrespondence{
 	}
 }
 
-BIC::isKO<"bic","1">(){
-	to_int(triple) >= 100;
+BIC::isKO<'bic',1>(){
+	triple >= 100;
 }
 
-BIC::isGRKC()<"bic","1">(){
-	to_int(ubr) <= 50; 
-	triple = "000";	
+BIC::isGRKC<'bic',1>(){
+	ubr <= 50; 
+	triple = '000';	
 }
 
-BIC::isRKC()<"bic","1">(){
-	to_int(ubr) > 50;
-	triple = "000";	
+BIC::isRKC<'bic',1>(){
+	ubr > 50;
+	triple = '000';	
 }
 
-BIC::isPU()<"bic","3">(){
-	to_int(triple) < 100;
-}
-
-BIC::maintainInGRKC<"bic","2">(){
-	to_int(ubr > 50;
-}
-
-BIC::maintainInRKC<"bic","2">(){
-	to_int(ubr) <= 50;
-}
 
 Payment::Participiants_in_equal_region(){
 	payer.bic.region = payee.bic.region;
@@ -134,10 +137,6 @@ Payment::Payee_equals_payer(){
 	payer.bic.triple = payee.bic.triple;
 }
 
-Payment::TransferPossible(string acc1, string acc2){
-	not exists InvalidCorrespondence(acc1, acc2);				
-}
-
 Account::OnlyRubleAccs(){
-	currency = "643";
+	currency = '643';
 }
