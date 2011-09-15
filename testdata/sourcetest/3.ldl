@@ -1,0 +1,38 @@
+
+context BIC{
+	republic instanceof int;
+	region instanceof int;
+	ubr instanceof int;
+	triple instanceof int;
+	
+	source{
+		bic:{
+			_type = db;
+			_table = bnkseek;
+			_column = bnk_id;
+		}
+		
+		map(bic){
+			republic = bic[0:2];
+			region = bic[2:4];
+			ubr = bic[4:6];
+			triple = bic[6:9];
+		}
+	}
+	
+	eq_classes {
+		isKO();
+		isGRKC();
+		isRKC();
+		isPU();
+		isKO;
+		
+		if isKO() {
+			eq_classes {
+				maintainInGRKC();
+				maintainInRKC();
+			}
+		} 
+	}
+	
+}

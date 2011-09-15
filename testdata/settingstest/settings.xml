@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ldl-project>
+	<db connectionString = "jdbc:sqlite:TestData\new.db"/>
+	<generation>
+		<function_groups>
+			<group>bic</group>
+			<group>acc</group>
+			<group>leaf</group>
+		</function_groups>
+		<priority volume = "4" type = "upper"/>
+	</generation>	
+</ldl-project>

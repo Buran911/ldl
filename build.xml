@@ -51,6 +51,7 @@
         	<arg line="-Jclass=Parser"/>
         	<arg line="-Jpackage=parse.parser"/>
         	<arg line="-Jnorun"/>
+        	<arg line="-Jnoconstruct"/>
         	<arg line="-d"/>
         	<arg line="-v"/>
             <arg line="-J ${project dir}/${parserSrc}"/>
