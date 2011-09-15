@@ -2,6 +2,9 @@
 	import java.io.*;
 	import parse.lexer.Lexer;
 	import parse.errhandler.ErrorHandler;
+	import parse.util.Source;
+	import java.io.StringReader;
+	import parse.errhandler.*;
 %}
 
 %token context 
@@ -194,7 +197,10 @@ Relation : "<" | ">" | "=" | notEqual | lessEqual | moreEqual
 %%
 
 private Lexer lexer;
+private Source src;
+private ErrorHandler errHandler;
 private double value;
+
 
 private int yylex (){
 	int yyl_return = -1;
@@ -209,6 +215,7 @@ private int yylex (){
   /* error reporting */
 public void yyerror  (String error) {
 	System.err.println ("Error: " + error);
+	errHandler.addError( new ParseError(ErrorClass.syntax, ErrorType.Syntax, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()));
 	/* КАК ЭТО РАБОТАЕТ????? P.S. Восстановление парсера после фейла.*/
 	yyerrflag = 3;
 }
@@ -217,8 +224,10 @@ public void setYylval(ParserVal yylval) {
 	this.yylval = yylval;
 }
 
-public Parser(java.io.Reader in, ErrorHandler errHandler){
-	lexer = new Lexer(in, this, errHandler);
+public Parser(Source src, ErrorHandler errHandler){
+	this.src = src;
+	this.errHandler = errHandler;
+	lexer = new Lexer(new StringReader(src.getProgram()), this, errHandler);
 }
 
 public void parse(){
