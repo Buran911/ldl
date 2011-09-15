@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import parse.util.PairSet;
+import parse.util.Source;
  // TODO Научить работать хэндлер
 /**
  * Класс накапливает, содержит и обрабатывает ошибки парсинга и анализа исходного кода(синтаксические и семантические).
@@ -13,11 +14,22 @@ import parse.util.PairSet;
  * 
  * @author hindu
  * */
-public abstract class ErrorHandler {
-	private Queue<ParseError> errors = new LinkedList<ParseError>();
-	private final int errCritCount = 15; // количество ошибок, после которого дальнейшие проверки нецелесообразны 
-	private PairSet incompatibleErrors = new PairSet(); // набор несовместимых друг с другом ошибок 
+public class ErrorHandler {	
+	private LinkedList<ParseError> errors;
+	private final int errCritCount; // количество ошибок, после которого дальнейшие проверки нецелесообразны 
+	private PairSet incompatibleErrors; // набор несовместимых друг с другом ошибок
+	private Source src;
 	
+	{
+		errors = new LinkedList<ParseError>();
+		errCritCount = 15;
+		incompatibleErrors = new PairSet();
+	}
+	
+	public ErrorHandler(Source src) {
+		this.src = src;
+	}
+
 	public void addError(ParseError error){
 		errors.add(error);
 		handle();
@@ -33,11 +45,19 @@ public abstract class ErrorHandler {
 	
 	
 	private void handle() {
-		//XXX проверить на несовместимость ошибки, превышение криткаунта и прочая
+		//TODO проверить на несовместимость ошибки, превышение криткаунта и прочая
+		ParseError lastErr = errors.getLast();
+		String errorLine = src.getLine( lastErr.getLineNo());
+		
+		lastErr.setErrorLine(errorLine);
 	}
 	
-	private void printErrors(){
+	public void printErrors(){
 		//XXX распечатать в удобном виде информацию по ошибкам
+		for(ParseError error : errors){
+			System.err.println("Error["+ error.getLineNo() +
+					"]" + error.getErrorLine());
+		}
 	}
 	
 }
