@@ -66,6 +66,53 @@
 %left UNARY 
 
 
+%type <obj> ldl
+%type <obj> ldlExpressions
+%type <obj> ldlExpression
+%type <obj> Context
+%type <obj> PredicateImpl
+%type <obj> Blocks
+%type <obj> Block
+%type <obj> Description
+%type <obj> Source
+%type <obj> Constraints
+%type <obj> Constraint
+%type <obj> EqClasses
+%type <obj> srcBlocks
+%type <obj> srcBlock
+%type <obj> srcExprs
+%type <obj> srcExpr
+%type <obj> Elements
+%type <obj> Element
+%type <obj> Binary
+%type <obj> Condition
+%type <obj> BinaryExp
+%type <obj> SetOp
+%type <obj> Predicate
+%type <obj> Expression
+%type <obj> Relation
+%type <obj> IfBlocks
+%type <obj> IfBlock
+%type <obj> AttributeCall
+%type <obj> Variable
+%type <obj> Literal
+%type <obj> Boolean
+%type <obj> OperationCall
+%type <obj> Parametres
+%type <obj> PredicateImpl
+%type <obj> FunctionalPart
+%type <obj> FormalParams
+%type <obj> Relation
+%type <obj> Set
+%type <obj> Number
+%type <obj> String
+%type <obj> Identifier
+%type <obj> Type
+%type <obj> PathName
+%type <obj> SimpleName
+
+
+
 %%
 ldl : ldlExpressions
 ldlExpressions : ldlExpression
@@ -75,7 +122,7 @@ ldlExpression : Context
 ldlExpression : PredicateImpl
 
 
-Context : context PathName "{" 
+Context : context SimpleName "{" 
 	Blocks
 "}"
 
@@ -199,7 +246,11 @@ Relation : "<" | ">" | "=" | notEqual | lessEqual | moreEqual
 private Lexer lexer;
 private Source src;
 private ErrorHandler errHandler;
-private double value;
+private ParseTree tree;
+  
+public ParseTree getTree(){
+  	return tree;
+}
 
 
 private int yylex (){
