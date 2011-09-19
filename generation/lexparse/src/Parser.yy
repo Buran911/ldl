@@ -5,6 +5,9 @@
 	import parse.util.Source;
 	import java.io.StringReader;
 	import parse.errhandler.*;
+	import parse.parsetree.*;
+	import parse.parsetree.nodes.*;
+	import parse.parsetree.nodes.Number;
 %}
 
 %token context 
@@ -20,6 +23,8 @@
 %left ":"
 %token <sval> identifier
 %token <dval> number
+%token <bval> ldltrue
+%token <bval> ldlfalse
 %token ldltrue
 %token ldlfalse
 
@@ -96,7 +101,7 @@
 %type <obj> AttributeCall
 %type <obj> Variable
 %type <obj> Literal
-%type <obj> Boolean
+%type <obj> Bool
 %type <obj> OperationCall
 %type <obj> Parametres
 %type <obj> PredicateImpl
@@ -105,141 +110,538 @@
 %type <obj> Relation
 %type <obj> Set
 %type <obj> Number
-%type <obj> String
+%type <obj> LString
 %type <obj> Identifier
 %type <obj> Type
 %type <obj> PathName
 %type <obj> SimpleName
 
+%type <obj> ArithmeticExpression
+
 
 
 %%
-ldl : ldlExpressions
-ldlExpressions : ldlExpression
-ldlExpressions : ldlExpression ldlExpressions
+ldl : ldlExpressions{ 
+	tree.saveNode( new ldl() ); 
+	$$ = tree.getLast();
+	 
+	// ”казатель на корень дерева
+	tree.setRoot((Node)$$);
+	
+	(( ldlExpressions ) $1).setParent( (ldl)$$ );
+}
 
-ldlExpression : Context  
-ldlExpression : PredicateImpl
+ldlExpressions : ldlExpression{ 
+	tree.saveNode( new ldlExpressions() ); 
+	$$ = tree.getLast(); 
+	(( ldlExpression ) $1).setParent( (ldlExpressions)$$ ); 
+}
+
+ldlExpressions : ldlExpression ldlExpressions{ 
+	tree.saveNode( new ldlExpressions() ); 
+	$$ = tree.getLast(); 
+	(( ldlExpression ) $1).setParent( (ldlExpressions)$$ ); 
+	(( ldlExpressions ) $2).setParent( (ldlExpressions)$$ ); 
+}
+
+ldlExpression : Context{ 
+	tree.saveNode( new ldlExpression() ); 
+	$$ = tree.getLast(); 
+	(( Context ) $1).setParent( (ldlExpression)$$ ); 
+}  
+
+ldlExpression : PredicateImpl{ 
+	tree.saveNode( new ldlExpression() ); 
+	$$ = tree.getLast(); 
+	(( PredicateImpl ) $1).setParent( (ldlExpression)$$ ); 
+}  
 
 
 Context : context SimpleName "{" 
 	Blocks
-"}"
+"}"{ 
+	tree.saveNode( new Context() ); 
+	$$ = tree.getLast(); 
+	(( SimpleName ) $2).setParent( (Context)$$ ); 
+	(( Blocks ) $4).setParent( (Context)$$ ); 
+}  
 
-PathName : SimpleName
-PathName : SimpleName ":"":" SimpleName
+PathName : SimpleName{ 
+	tree.saveNode( new PathName() ); 
+	$$ = tree.getLast(); 
+	(( SimpleName ) $1).setParent( (PathName)$$ ); 
+}  
+
+PathName : SimpleName ":"":" SimpleName{ 
+	tree.saveNode( new PathName() ); 
+	$$ = tree.getLast(); 
+	(( SimpleName ) $1).setParent( (PathName)$$ ); 
+	(( SimpleName ) $4).setParent( (PathName)$$ ); 
+}  
  
-Blocks : Block
-Blocks : Block Blocks 
+Blocks : Block{ 
+	tree.saveNode( new Blocks() ); 
+	$$ = tree.getLast(); 
+	(( Block ) $1).setParent( (Blocks)$$ ); 
+}  
+
+Blocks : Block Blocks { 
+	tree.saveNode( new Blocks() ); 
+	$$ = tree.getLast(); 
+	(( Block ) $1).setParent( (Blocks)$$ ); 
+	(( Blocks ) $2).setParent( (Blocks)$$ ); 
+}  
  
-Block : Description
-	| Source
-	| Constraint
-	| EqClasses
+Block : Description{ 
+	tree.saveNode( new Block() ); 
+	$$ = tree.getLast(); 
+	(( Description ) $1).setParent( (Block)$$ ); 
+}  
+
+Block : Source{ 
+	tree.saveNode( new Block() ); 
+	$$ = tree.getLast(); 
+	(( Src ) $1).setParent( (Block)$$ ); 
+}  
+
+Block : Constraint{ 
+	tree.saveNode( new Block() ); 
+	$$ = tree.getLast(); 
+	(( Constraint ) $1).setParent( (Block)$$ ); 
+}  
+
+Block : EqClasses{ 
+	tree.saveNode( new Block() ); 
+	$$ = tree.getLast(); 
+	(( EqClasses ) $1).setParent( (Block)$$ ); 
+}  
 	
 EqClasses : eq_classes "{"
 	Constraints
-"}"
+"}"{ 
+	tree.saveNode( new EqClasses() ); 
+	$$ = tree.getLast(); 
+	(( Constraints ) $3).setParent( (EqClasses)$$ ); 
+}  
 	
-Description : Identifier instanceOf Type ";"
+Description : Identifier instanceOf Type ";"{ 
+	tree.saveNode( new Description() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (Description)$$ ); 
+	(( Type ) $3).setParent( (Description)$$ ); 
+}  
 
-Constraints : Constraint
-Constraints : Constraint Constraints
+Constraints : Constraint{ 
+	tree.saveNode( new Constraints() ); 
+	$$ = tree.getLast(); 
+	(( Constraint ) $1).setParent( (Constraints)$$ ); 
+}  
+
+Constraints : Constraint Constraints{ 
+	tree.saveNode( new Constraints() ); 
+	$$ = tree.getLast(); 
+	(( Constraint ) $1).setParent( (Constraints)$$ ); 
+	(( Constraints ) $2).setParent( (Constraints)$$ ); 
+}  
 
 Source: source "{"
 	srcBlocks
-"}"
+"}"{ 
+	tree.saveNode( new Src() ); 
+	$$ = tree.getLast(); 
+	(( srcBlocks ) $3).setParent( (Src)$$ ); 
+}  
 
-srcBlocks : srcBlock
-srcBlocks : srcBlock srcBlocks
+
+srcBlocks : srcBlock{ 
+	tree.saveNode( new srcBlocks() ); 
+	$$ = tree.getLast(); 
+	(( srcBlock ) $1).setParent( (srcBlocks)$$ ); 
+}  
+srcBlocks : srcBlock srcBlocks{ 
+	tree.saveNode( new srcBlocks() ); 
+	$$ = tree.getLast();
+	(( srcBlock ) $1).setParent( (srcBlocks)$$ );  
+	(( srcBlocks ) $2).setParent( (srcBlocks)$$ ); 
+}  
 
 srcBlock : Identifier ":" "{" 
 	srcExprs
-"}"
+"}"{ 
+	tree.saveNode( new srcBlock() ); 
+	$$ = tree.getLast();
+	(( Identifier ) $1).setParent( (srcBlock)$$ );  
+	(( srcExprs ) $4).setParent( (srcBlock)$$ ); 
+}  
 
-srcExprs : srcExpr
-srcExprs : srcExpr srcExprs
+srcExprs : srcExpr{ 
+	tree.saveNode( new srcExprs() ); 
+	$$ = tree.getLast(); 
+	(( srcExpr ) $1).setParent( (srcExprs)$$ ); 
+}  
 
-srcExpr : Identifier "=" Identifier ";"
-srcExpr : Identifier "=" Set ";"
-srcExpr : Identifier "=" Number ";"
-srcExpr : Identifier "=" String ";"
+srcExprs : srcExpr srcExprs{ 
+	tree.saveNode( new srcExprs() ); 
+	$$ = tree.getLast(); 
+	(( srcExpr ) $1).setParent( (srcExprs)$$ ); 
+	(( srcExprs ) $2).setParent( (srcExprs)$$ ); 
+}  
 
-Set : "{" Elements "}"
+srcExpr : Identifier "=" Identifier ";"{ 
+	tree.saveNode( new srcExpr() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (srcExpr)$$ ); 
+	(( Identifier ) $3).setParent( (srcExpr)$$ ); 
+}  
+srcExpr : Identifier "=" Set ";"{ 
+	tree.saveNode( new srcExpr() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (srcExpr)$$ ); 
+	(( Set ) $3).setParent( (srcExpr)$$ ); 
+}  
 
-Elements : Element
-Elements : Element "," Elements
+srcExpr : Identifier "=" Number ";"{ 
+	tree.saveNode( new srcExpr() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (srcExpr)$$ ); 
+	(( Number ) $3).setParent( (srcExpr)$$ ); 
+}  
 
-Element : String
-Element : Number
+srcExpr : Identifier "=" LString ";"{ 
+	tree.saveNode( new srcExpr() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (srcExpr)$$ ); 
+	(( LString ) $3).setParent( (srcExpr)$$ ); 
+}  
 
-Constraint : Binary ";"
-Constraint : Condition
+Set : "{" Elements "}"{ 
+	tree.saveNode( new Set() ); 
+	$$ = tree.getLast(); 
+	(( Elements ) $2).setParent( (Set)$$ ); 
+}  
 
-Binary : not Binary %prec UNARY
-Binary : "(" Binary ")"
-Binary : BinaryExp
-Binary : Binary SetOp BinaryExp
-Binary : Binary SetOp "(" Binary ")"
+Elements : Element{ 
+	tree.saveNode( new Elements() ); 
+	$$ = tree.getLast(); 
+	(( Elements ) $1).setParent( (Element)$$ ); 
+}  
+Elements : Element "," Elements{ 
+	tree.saveNode( new Elements() ); 
+	$$ = tree.getLast(); 
+	(( Element ) $1).setParent( (Elements)$$ ); 
+	(( Elements ) $3).setParent( (Elements)$$ ); 
+}  
 
-BinaryExp : Predicate
-BinaryExp : Expression Relation Expression
+Element : LString{ 
+	tree.saveNode( new Element() ); 
+	$$ = tree.getLast(); 
+	(( LString ) $1).setParent( (Element)$$ ); 
+}  
+Element : Number{ 
+	tree.saveNode( new Element() ); 
+	$$ = tree.getLast(); 
+	(( Number ) $1).setParent( (Element)$$ ); 
+}  
+
+Constraint : Binary ";"{ 
+	tree.saveNode( new Constraint() ); 
+	$$ = tree.getLast(); 
+	(( Binary ) $1).setParent( (Constraint)$$ ); 
+}  
+Constraint : Condition{ 
+	tree.saveNode( new Constraint() ); 
+	$$ = tree.getLast(); 
+	(( Condition ) $1).setParent( (Constraint)$$ ); 
+}  
+
+Binary : not Binary %prec UNARY{ 
+	tree.saveNode( new Binary() ); 
+	$$ = tree.getLast(); 
+	// TODO not потом binary
+	(( Binary ) $2).setParent( (Binary)$$ ); 
+}  
+
+Binary : "(" Binary ")"{ 
+	tree.saveNode( new Binary() ); 
+	$$ = tree.getLast(); 
+	(( Binary ) $2).setParent( (Binary)$$ ); 
+}  
+
+Binary : BinaryExp{ 
+	tree.saveNode( new Binary() ); 
+	$$ = tree.getLast(); 
+	(( BinaryExp ) $1).setParent( (Binary)$$ ); 
+}  
+
+Binary : Binary SetOp BinaryExp { 
+	tree.saveNode( new Binary() ); 
+	$$ = tree.getLast(); 
+	(( Binary ) $1).setParent( (Binary)$$ ); 
+	(( SetOp ) $2).setParent( (Binary)$$ );
+	(( BinaryExp ) $3).setParent( (Binary)$$ );
+}  
+
+Binary : Binary SetOp "(" Binary ")"{ 
+	tree.saveNode( new Binary() ); 
+	$$ = tree.getLast(); 
+	(( Binary ) $1).setParent( (Binary)$$ ); 
+	(( SetOp ) $2).setParent( (Binary)$$ );
+	(( Binary ) $4).setParent( (Binary)$$ );
+}  
+
+BinaryExp : Predicate { 
+	tree.saveNode( new BinaryExp() ); 
+	$$ = tree.getLast(); 
+	(( Predicate ) $1).setParent( (BinaryExp)$$ ); 
+}  
+
+BinaryExp : Expression Relation Expression{ 
+	tree.saveNode( new BinaryExp() ); 
+	$$ = tree.getLast(); 
+	(( Expression ) $1).setParent( (BinaryExp)$$ ); 
+	(( Relation ) $2).setParent( (BinaryExp)$$ );
+	(( Expression ) $3).setParent( (BinaryExp)$$ );
+}  
 
 Condition : If Binary "{"
 	IfBlocks
-"}"
+"}" { 
+	tree.saveNode( new Condition() ); 
+	$$ = tree.getLast(); 
+	(( Binary ) $2).setParent( (Condition)$$ ); 
+	(( IfBlocks ) $4).setParent( (Condition)$$ );
+}  
 
-IfBlocks : IfBlock
-IfBlocks : IfBlock IfBlocks
-IfBlock : Constraint
-IfBlock : EqClasses
+IfBlocks : IfBlock{ 
+	tree.saveNode( new IfBlocks() ); 
+	$$ = tree.getLast(); 
+	(( IfBlock ) $1).setParent( (IfBlocks)$$ ); 
+}  
+
+IfBlocks : IfBlock IfBlocks { 
+	tree.saveNode( new IfBlocks() ); 
+	$$ = tree.getLast(); 
+	(( IfBlock ) $1).setParent( (IfBlocks)$$ ); 
+	(( IfBlocks ) $2).setParent( (IfBlocks)$$ );
+}  
+
+IfBlock : Constraint{ 
+	tree.saveNode( new IfBlock() ); 
+	$$ = tree.getLast(); 
+	(( Constraint ) $1).setParent( (IfBlock)$$ ); 
+}  
+
+IfBlock : EqClasses{ 
+	tree.saveNode( new IfBlock() ); 
+	$$ = tree.getLast(); 
+	(( EqClasses ) $1).setParent( (IfBlock)$$ ); 
+}  
 
 
-Expression : AttributeCall
-Expression : ArithmeticExpression
-Expression : Variable
-Expression : Literal
-Literal : String
-Literal : Number
-Literal : Boolean
-Boolean : ldltrue
-Boolean : ldlfalse
+Expression : AttributeCall { 
+	tree.saveNode( new Expression() ); 
+	$$ = tree.getLast(); 
+	(( AttributeCall ) $1).setParent( (Expression)$$ ); 
+}  
 
-AttributeCall : AttributeCall "." Identifier
-AttributeCall : Variable "." Identifier
+Expression : ArithmeticExpression{ 
+	tree.saveNode( new Expression() ); 
+	$$ = tree.getLast(); 
+	(( ArithmeticExpression ) $1).setParent( (Expression)$$ ); 
+}  
+
+Expression : Variable{ 
+	tree.saveNode( new Expression() ); 
+	$$ = tree.getLast(); 
+	(( Variable ) $1).setParent( (Expression)$$ ); 
+}  
+
+Expression : Literal{ 
+	tree.saveNode( new Expression() ); 
+	$$ = tree.getLast(); 
+	(( Literal ) $1).setParent( (Expression)$$ ); 
+}  
+
+Literal : LString { 
+	tree.saveNode( new Literal() ); 
+	$$ = tree.getLast(); 
+	(( LString ) $1).setParent( (Literal)$$ ); 
+}  
+
+Literal : Number{ 
+	tree.saveNode( new Literal() ); 
+	$$ = tree.getLast(); 
+	(( Number ) $1).setParent( (Literal)$$ ); 
+}  
+
+Literal : Bool{ 
+	tree.saveNode( new Literal() ); 
+	$$ = tree.getLast(); 
+	(( Bool ) $1).setParent( (Literal)$$ ); 
+}  
+
+AttributeCall : AttributeCall "." Identifier{ 
+	tree.saveNode( new AttributeCall() ); 
+	$$ = tree.getLast(); 
+	(( AttributeCall ) $1).setParent( (AttributeCall)$$ ); 
+	(( Identifier ) $3).setParent( (AttributeCall)$$ );
+}  
+
+AttributeCall : Variable "." Identifier{ 
+	tree.saveNode( new AttributeCall() ); 
+	$$ = tree.getLast(); 
+	(( Variable ) $1).setParent( (AttributeCall)$$ ); 
+	(( Identifier ) $3).setParent( (AttributeCall)$$ );
+}  
 
 
+Variable : Identifier{ 
+	tree.saveNode( new Variable() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (Variable)$$ ); 
+}  
 
-Variable : Identifier
+Predicate : OperationCall { 
+	tree.saveNode( new Predicate() ); 
+	$$ = tree.getLast(); 
+	(( OperationCall ) $1).setParent( (Predicate)$$ ); 
+}  
 
-Predicate : OperationCall
-Predicate : Variable "." OperationCall
-Predicate : AttributeCall "." OperationCall
+Predicate : Variable "." OperationCall{ 
+	tree.saveNode( new Predicate() ); 
+	$$ = tree.getLast(); 
+	(( Variable ) $1).setParent( (Predicate)$$ ); 
+	(( OperationCall ) $3).setParent( (Predicate)$$ ); 
+}  
 
-OperationCall : Identifier "(" Parametres ")" 
+Predicate : AttributeCall "." OperationCall{ 
+	tree.saveNode( new Predicate() ); 
+	$$ = tree.getLast(); 
+	(( AttributeCall ) $1).setParent( (Predicate)$$ ); 
+	(( OperationCall ) $3).setParent( (Predicate)$$ ); 
+}  
 
-Parametres :
+OperationCall : Identifier "(" Parametres ")" { 
+	tree.saveNode( new OperationCall() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (OperationCall)$$ ); 
+	(( Parametres ) $3).setParent( (OperationCall)$$ ); 
+}  
+
+Parametres : { 
+	tree.saveNode( new Parametres() ); 
+	$$ = tree.getLast(); 
+}  
 
 
 
 
 PredicateImpl : PathName FunctionalPart "(" FormalParams ")"  "{"
 	Constraints 
-"}"
+"}"{  
+	tree.saveNode( new PredicateImpl() ); 
+	$$ = tree.getLast(); 
+	(( PathName ) $1).setParent( (PredicateImpl)$$ ); 
+	(( FunctionalPart ) $2).setParent( (PredicateImpl)$$ ); 
+	(( FormalParams ) $4).setParent( (PredicateImpl)$$ ); 
+	(( Constraints ) $7).setParent( (PredicateImpl)$$ ); 
+}  
 
-FunctionalPart :
-FunctionalPart : "<" String "," Number ">"
+FunctionalPart : { 
+	tree.saveNode( new FunctionalPart() ); 
+	$$ = tree.getLast(); 
+}  
+FunctionalPart : "<" LString "," Number ">"{ 
+	tree.saveNode( new FunctionalPart() ); 
+	$$ = tree.getLast(); 
+	(( LString ) $2).setParent( (FunctionalPart)$$ ); 
+	(( Number ) $4).setParent( (FunctionalPart)$$ ); 
+}  
 
-FormalParams : 
+FormalParams : { 
+	tree.saveNode( new FormalParams() ); 
+	$$ = tree.getLast(); 
+}  
 
-Identifier : identifier
-Type : identifier
-SimpleName : identifier
-String : string
-Number : number
+Identifier : identifier{ 
+	tree.saveNode( new Identifier($1) ); 
+	$$ = tree.getLast(); 
+}  
 
-SetOp : and | or | xor
-Relation : "<" | ">" | "=" | notEqual | lessEqual | moreEqual
+Type : identifier{ 
+	tree.saveNode( new Type($1) ); 
+	$$ = tree.getLast(); 
+}  
+
+SimpleName : identifier { 
+	tree.saveNode( new SimpleName($1) ); 
+	$$ = tree.getLast(); 
+}  
+
+LString : string{ 
+	tree.saveNode( new LString($1) ); 
+	$$ = tree.getLast(); 
+}  
+
+Number : number { 
+	tree.saveNode( new Number($1) ); 
+	$$ = tree.getLast(); 
+}  
+
+Bool : ldltrue { 
+	tree.saveNode( new Bool(true) ); 
+	$$ = tree.getLast(); 
+}  
+
+Bool : ldlfalse{ 
+	tree.saveNode( new Bool(false) ); 
+	$$ = tree.getLast(); 
+}  
+
+SetOp : and { 
+	tree.saveNode( new SetOp(Logical.and) ); 
+	$$ = tree.getLast(); 
+}  
+
+SetOp : or { 
+	tree.saveNode( new SetOp(Logical.or) ); 
+	$$ = tree.getLast(); 
+}  
+
+SetOp : xor { 
+	tree.saveNode( new SetOp(Logical.xor) ); 
+	$$ = tree.getLast(); 
+}  
+
+Relation : "<" { 
+	tree.saveNode( new Relation(Ratio.less) ); 
+	$$ = tree.getLast(); 
+}  
+
+Relation : ">" { 
+	tree.saveNode( new Relation(Ratio.more) ); 
+	$$ = tree.getLast(); 
+}  
+
+Relation : "=" { 
+	tree.saveNode( new Relation(Ratio.equal) ); 
+	$$ = tree.getLast(); 
+}  
+
+Relation : notEqual { 
+	tree.saveNode( new Relation(Ratio.notEqual) ); 
+	$$ = tree.getLast(); 
+}  
+
+Relation : lessEqual { 
+	tree.saveNode( new Relation(Ratio.lessEqual) ); 
+	$$ = tree.getLast(); 
+}  
+
+Relation : moreEqual{ 
+	tree.saveNode( new Relation(Ratio.moreEqual) );  
+	$$ = tree.getLast(); 
+}  
 
 %%
 
@@ -248,6 +650,9 @@ private Source src;
 private ErrorHandler errHandler;
 private ParseTree tree;
   
+{
+	tree = new ParseTree();
+}
 public ParseTree getTree(){
   	return tree;
 }
@@ -289,6 +694,3 @@ public void setDebugModeOn(){
 	yydebug = true;
 }
 
-public double getValue(){
-	return value;
-}
