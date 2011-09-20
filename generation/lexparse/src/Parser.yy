@@ -355,16 +355,21 @@ Constraint : Condition{
 }  
 
 Binary : not Binary %prec UNARY{ 
-	tree.saveNode( new Binary() ); 
+	Not not = new Not();
+	Binary binary = new Binary();
+	tree.saveNode( not );
+	tree.saveNode( binary ); 
+	
+	
 	$$ = tree.getLast(); 
-	// TODO not потом binary
-	(( Binary ) $2).setParent( (Binary)$$ ); 
+	 
+	not.setParent(binary);
+	(( Binary ) $2).setParent( not ); 
 }  
 
 Binary : "(" Binary ")"{ 
-	tree.saveNode( new Binary() ); 
-	$$ = tree.getLast(); 
-	(( Binary ) $2).setParent( (Binary)$$ ); 
+	// Лишний узел не нужен
+	$$ = $2; 
 }  
 
 Binary : BinaryExp{ 
