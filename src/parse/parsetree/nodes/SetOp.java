@@ -2,6 +2,8 @@ package parse.parsetree.nodes;
 
 import parse.parsetree.Logical;
 import parse.parsetree.Node;
+import parse.syntaxtree.NodeAST;
+import parse.syntaxtree.nodes.SetOpAST;
 
 public class SetOp extends Node {
 	private Logical logical;
@@ -12,5 +14,10 @@ public class SetOp extends Node {
 
 	public Logical getLogical() {
 		return logical;
+	}
+
+	@Override
+	public NodeAST getConvertedSubtree() {
+		return new SetOpAST(getLogical());
 	}
 }

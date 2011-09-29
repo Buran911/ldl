@@ -3,6 +3,8 @@ package parse.parsetree;
 import java.util.Collections;
 import java.util.LinkedList;
 
+import parse.syntaxtree.NodeAST;
+
 
 public class ParseTree {
 	private Node root;
@@ -10,6 +12,10 @@ public class ParseTree {
 	
 	public ParseTree getTree(){
 		return this;
+	}
+	
+	public NodeAST getAST() {
+		return root.getConvertedSubtree();
 	}
 	
 	public void setRoot(Node root) {
@@ -64,4 +70,6 @@ public class ParseTree {
 		
 		return sb.toString() + string;
 	}
+
+
 }
