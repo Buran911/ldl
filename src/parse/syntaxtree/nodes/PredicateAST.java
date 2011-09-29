@@ -22,6 +22,18 @@ public class PredicateAST extends BinaryExpAST {
 		addSuccessor(oprCall);
 	}
 
+	public AttributeCallAST getAttrCall() {
+		return attrCall;
+	}
+
+	public VariableAST getVariable() {
+		return variable;
+	}
+
+	public OperationCallAST getOprCall() {
+		return oprCall;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

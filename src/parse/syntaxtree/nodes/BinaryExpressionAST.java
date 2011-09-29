@@ -22,6 +22,18 @@ public class BinaryExpressionAST extends BinaryExpAST {
 		addSuccessor(secondExpression);
 	}
 
+	public ExpressionAST getFirstExpression() {
+		return firstExpression;
+	}
+
+	public RelationAST getRelation() {
+		return relation;
+	}
+
+	public ExpressionAST getSecondExpression() {
+		return secondExpression;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

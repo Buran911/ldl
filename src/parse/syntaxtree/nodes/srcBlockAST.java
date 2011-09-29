@@ -24,6 +24,14 @@ public class srcBlockAST extends NodeAST {
 		addSuccessor(srcExpr);
 	}
 
+	public IdentifierAST getIdentifier() {
+		return identifier;
+	}
+
+	public List<srcExprAST> getSrcExprs() {
+		return srcExprs;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

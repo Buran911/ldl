@@ -22,6 +22,18 @@ public class AttributeCallAST extends ExpressionAST {
 		addSuccessor(identifier);
 	}
 
+	public AttributeCallAST getAttrCall() {
+		return attrCall;
+	}
+
+	public VariableAST getVariable() {
+		return variable;
+	}
+
+	public IdentifierAST getIdentifier() {
+		return identifier;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

@@ -31,6 +31,18 @@ public class ConditionAST extends ConstraintAST {
 		addSuccessor(eqClasses);
 	}
 	
+	public BinaryAST getCondition() {
+		return condition;
+	}
+
+	public List<ConstraintAST> getConstraints() {
+		return constraints;
+	}
+
+	public List<ConstraintAST> getEqClasseses() {
+		return eqClasseses;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

@@ -6,7 +6,7 @@ import java.util.List;
 /** Общий класс для всех элементов дерева. 
  * Дает возможность обхода дерева.
  * */
-public abstract class NodeAST extends AbstactNodeAST{
+public abstract class NodeAST extends NodeProperty{
 	private NodeAST parent;
 	private List<NodeAST> successors;
 	
@@ -14,7 +14,6 @@ public abstract class NodeAST extends AbstactNodeAST{
 		successors = new LinkedList<NodeAST>();
 	}
 	
-//	public abstract List<NodeAST> getSuccessors( );
 	
 	public abstract void accept(TreeWalker walker);
 

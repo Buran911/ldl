@@ -30,6 +30,26 @@ public class srcExprAST extends NodeAST {
 
 
 
+	public IdentifierAST getFirstId() {
+		return firstId;
+	}
+
+
+	public IdentifierAST getSecondId() {
+		return secondId;
+	}
+
+
+	public SetAST getSet() {
+		return set;
+	}
+
+
+	public LiteralAST getLiteral() {
+		return literal;
+	}
+
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

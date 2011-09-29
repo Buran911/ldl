@@ -10,6 +10,10 @@ public class VariableAST extends ExpressionAST {
 		addSuccessor(identifier);
 	}
 
+	public IdentifierAST getIdentifier() {
+		return identifier;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

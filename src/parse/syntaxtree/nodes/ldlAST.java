@@ -28,6 +28,14 @@ public class ldlAST extends NodeAST {
 		addSuccessor(impl);
 	}
 
+	public List<ContextAST> getContexts() {
+		return contexts;
+	}
+
+	public List<PredicateImplAST> getImpls() {
+		return impls;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

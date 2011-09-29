@@ -17,6 +17,14 @@ public class FunctionalPartAST extends NodeAST {
 		addSuccessor(priority);
 	}
 
+	public StringAST getGroup() {
+		return group;
+	}
+
+	public NumberAST getPriority() {
+		return priority;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

@@ -18,6 +18,10 @@ public class SetAST extends NodeAST {
 		addSuccessor(element);
 	}
 	
+	public List<LiteralAST> getElements() {
+		return elements;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

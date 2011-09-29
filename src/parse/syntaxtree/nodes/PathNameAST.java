@@ -17,6 +17,14 @@ public class PathNameAST extends NodeAST {
 		addSuccessor(predicateName);
 	}
 
+	public SimpleNameAST getContextName() {
+		return contextName;
+	}
+
+	public SimpleNameAST getPredicateName() {
+		return predicateName;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

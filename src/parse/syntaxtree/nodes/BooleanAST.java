@@ -10,6 +10,10 @@ public class BooleanAST extends LiteralAST {
 		this.bool = bool;
 	}
 
+	public Boolean getBool() {
+		return bool;
+	}
+	
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

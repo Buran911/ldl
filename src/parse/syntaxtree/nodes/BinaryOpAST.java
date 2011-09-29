@@ -22,6 +22,18 @@ public class BinaryOpAST extends BinaryAST {
 		addSuccessor(binaryExp);
 	}
 
+	public BinaryAST getBinary() {
+		return binary;
+	}
+
+	public SetOpAST getSetOp() {
+		return setOp;
+	}
+
+	public BinaryExpAST getBinaryExp() {
+		return binaryExp;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

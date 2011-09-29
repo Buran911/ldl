@@ -51,6 +51,31 @@ public class ContextAST extends NodeAST {
 	}
 
 
+	public SimpleNameAST getContextName() {
+		return contextName;
+	}
+
+
+	public List<DescriptionAST> getDescriptions() {
+		return descriptions;
+	}
+
+
+	public List<SourceAST> getSources() {
+		return sources;
+	}
+
+
+	public List<ConstraintAST> getConstraints() {
+		return constraints;
+	}
+
+
+	public List<ConstraintAST> getEqClasseses() {
+		return eqClasseses;
+	}
+
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

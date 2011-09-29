@@ -20,6 +20,16 @@ public class DescriptionAST extends NodeAST {
 	}
 
 
+	public IdentifierAST getIdentifier() {
+		return identifier;
+	}
+
+
+	public TypeAST getType() {
+		return type;
+	}
+
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

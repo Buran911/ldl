@@ -18,6 +18,10 @@ public class SourceAST extends NodeAST {
 		addSuccessor(block);
 	}
 	
+	public List<srcBlockAST> getSrcBlocks() {
+		return srcBlocks;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

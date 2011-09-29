@@ -36,6 +36,22 @@ public class PredicateImplAST extends NodeAST {
 		addSuccessor(constraint);
 	}
 
+	public PathNameAST getPathName() {
+		return pathName;
+	}
+
+	public FunctionalPartAST getFuncPart() {
+		return funcPart;
+	}
+
+	public FormalParamsAST getFormalParams() {
+		return formalParams;
+	}
+
+	public List<ConstraintAST> getConstraints() {
+		return constraints;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub

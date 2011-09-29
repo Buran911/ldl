@@ -12,6 +12,10 @@ public class OperationCallAST extends NodeAST {
 		addSuccessor(identifier);
 	}
 	
+	public IdentifierAST getIdentifier() {
+		return identifier;
+	}
+
 	@Override
 	public void accept(TreeWalker walker) {
 		// TODO Auto-generated method stub
