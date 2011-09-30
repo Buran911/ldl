@@ -36,7 +36,7 @@ public class BinaryOpAST extends BinaryAST {
 
 	@Override
 	public void accept(TreeWalker walker) {
-		// TODO Auto-generated method stub
+		walker.accept(this);
 
 	}
 

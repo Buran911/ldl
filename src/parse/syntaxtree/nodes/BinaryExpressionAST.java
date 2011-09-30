@@ -36,7 +36,7 @@ public class BinaryExpressionAST extends BinaryExpAST {
 
 	@Override
 	public void accept(TreeWalker walker) {
-		// TODO Auto-generated method stub
+		walker.accept(this);
 
 	}
 

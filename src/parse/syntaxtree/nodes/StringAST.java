@@ -11,7 +11,7 @@ public class StringAST extends LiteralAST {
 
 	@Override
 	public void accept(TreeWalker walker) {
-		// TODO Auto-generated method stub
+		walker.accept(this);
 
 	}
 

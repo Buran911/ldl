@@ -12,7 +12,7 @@ public class IdentifierAST extends NodeAST {
 
 	@Override
 	public void accept(TreeWalker walker) {
-		// TODO Auto-generated method stub
+		walker.accept(this);
 		
 	}
 
