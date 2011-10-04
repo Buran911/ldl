@@ -1,8 +1,9 @@
 package parse.syntaxtree.nodes;
 
-import parse.syntaxtree.TreeWalker;
+import parse.syntaxtree.Data;
+import generation.walkers.TreeWalker;
 
-public class BooleanAST extends LiteralAST {
+public class BooleanAST extends LiteralAST implements Data{
 	private Boolean bool;
 	
 	public BooleanAST(Boolean bool) {
@@ -18,6 +19,11 @@ public class BooleanAST extends LiteralAST {
 	public void accept(TreeWalker walker) {
 		walker.accept(this);
 
+	}
+
+	@Override
+	public String getData() {
+		return bool.toString();
 	}
 
 }

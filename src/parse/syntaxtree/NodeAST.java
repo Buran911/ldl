@@ -1,5 +1,7 @@
 package parse.syntaxtree;
 
+import generation.walkers.TreeWalker;
+
 import java.util.LinkedList;
 import java.util.List;
 

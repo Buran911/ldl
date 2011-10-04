@@ -1,10 +1,11 @@
 package parse.syntaxtree.nodes;
 
+import generation.walkers.TreeWalker;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import parse.syntaxtree.NodeAST;
-import parse.syntaxtree.TreeWalker;
 
 public class PredicateImplAST extends NodeAST {
 	private PathNameAST pathName;

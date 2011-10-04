@@ -1,7 +1,7 @@
 package parse.syntaxtree.nodes;
 
+import generation.walkers.TreeWalker;
 import parse.syntaxtree.NodeAST;
-import parse.syntaxtree.TreeWalker;
 
 public class srcExprAST extends NodeAST {
 	private IdentifierAST firstId;

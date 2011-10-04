@@ -1,4 +1,4 @@
-package parse.syntaxtree;
+package generation.walkers;
 
 import parse.syntaxtree.nodes.*;
 

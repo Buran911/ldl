@@ -2,11 +2,12 @@ package parse.syntaxtree.nodes;
 /**
  * Класс содержит ссылки на основные конструкции языка: контексты и описания предикатов.
  * */
+import generation.walkers.TreeWalker;
+
 import java.util.LinkedList;
 import java.util.List;
 
 import parse.syntaxtree.NodeAST;
-import parse.syntaxtree.TreeWalker;
 
 public class ldlAST extends NodeAST {
 	private List<ContextAST> contexts;

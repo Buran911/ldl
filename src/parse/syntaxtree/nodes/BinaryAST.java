@@ -1,6 +1,6 @@
 package parse.syntaxtree.nodes;
 
-import parse.syntaxtree.TreeWalker;
+import generation.walkers.TreeWalker;
 
 public abstract class BinaryAST extends ConstraintAST {
 	Boolean not;

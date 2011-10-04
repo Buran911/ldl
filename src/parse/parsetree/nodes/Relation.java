@@ -5,13 +5,13 @@ import parse.syntaxtree.NodeAST;
 import parse.syntaxtree.nodes.RelationAST;
 
 public class Relation extends Node {
-	private parse.parsetree.Ratio relation;
+	private generation.languageconstants.Ratio relation;
 
-	public Relation(parse.parsetree.Ratio relation) {
+	public Relation(generation.languageconstants.Ratio relation) {
 		this.relation = relation;
 	}
 
-	public parse.parsetree.Ratio getRelation() {
+	public generation.languageconstants.Ratio getRelation() {
 		return relation;
 	}
 

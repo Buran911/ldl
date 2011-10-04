@@ -1,7 +1,7 @@
 package parse.syntaxtree.nodes;
 
+import generation.walkers.TreeWalker;
 import parse.syntaxtree.NodeAST;
-import parse.syntaxtree.TreeWalker;
 
 public class FunctionalPartAST extends NodeAST {
 	private StringAST group;

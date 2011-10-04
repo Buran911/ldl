@@ -1,6 +1,6 @@
 package parse.syntaxtree.nodes;
 
-import parse.syntaxtree.TreeWalker;
+import generation.walkers.TreeWalker;
 
 public class VariableAST extends ExpressionAST {
 	private IdentifierAST identifier;

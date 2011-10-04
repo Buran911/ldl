@@ -1,7 +1,7 @@
-package parse.syntaxtree.walkers.strategys;
+package generation.walkers.strategys;
 
-import parse.syntaxtree.TreeWalker;
-import parse.syntaxtree.WalkerStrategy;
+import generation.walkers.TreeWalker;
+import generation.walkers.WalkerStrategy;
 import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
 import parse.syntaxtree.nodes.BinaryOpAST;
@@ -198,7 +198,10 @@ public class BottomUpWalkingStrategy extends WalkerStrategy {
 	public void accept(TreeWalker walker, PredicateImplAST impl) {
 		impl.getPathName().accept(walker);
 		impl.getFuncPart().accept(walker);
-		impl.getFormalParams().accept(walker);
+		
+		if(impl.getFormalParams() != null){
+			impl.getFormalParams().accept(walker);
+		}
 		
 		for(ConstraintAST constraint : impl.getConstraints()){
 			constraint.accept(walker);

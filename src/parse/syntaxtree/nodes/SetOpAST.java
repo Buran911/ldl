@@ -1,10 +1,11 @@
 package parse.syntaxtree.nodes;
 
-import parse.parsetree.Logical;
+import generation.languageconstants.Logical;
+import generation.walkers.TreeWalker;
+import parse.syntaxtree.Data;
 import parse.syntaxtree.NodeAST;
-import parse.syntaxtree.TreeWalker;
 
-public class SetOpAST extends NodeAST {
+public class SetOpAST extends NodeAST implements Data {
 	private Logical operation;
 	
 	public SetOpAST(Logical operation) {
@@ -16,6 +17,12 @@ public class SetOpAST extends NodeAST {
 	public void accept(TreeWalker walker) {
 		walker.accept(this);
 
+	}
+
+
+	@Override
+	public String getData() {
+		return operation.value();
 	}
 
 }
