@@ -1,0 +1,23 @@
+where(elem) ::=<<
+	<if(elem.nnext)>
+		WHERE <constraint_list(elem.gnext)>
+	<endif>
+>>
+
+constraint_list(elem) ::=<<
+	<node(first(elem))><if(rest(elem))> AND <constraint_list(rest(elem))><endif>
+>>
+
+node(elem) ::=<<
+	<if(elem.node)>
+		<successors_list(elem.successors)>
+	<elseif(elem.leaf)>
+		<elem.data>
+	<elseif(elem.variableExp)>
+		<elem.column>
+	<endif>
+>>
+
+successors_list(elem) ::=<<
+	 <node(first(elem))><if(rest(elem))><successors_list(rest(elem))><endif>
+>>

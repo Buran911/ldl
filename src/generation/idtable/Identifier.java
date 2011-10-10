@@ -9,7 +9,8 @@ public class Identifier {
 	private Type srcType;
 	private SourceData srcData;
 	
-	private int index;
+	private Integer index;
+	private String alias;
 	
 	public String getName() {
 		return name;
@@ -44,7 +45,17 @@ public class Identifier {
 	public Integer getIndex() {
 		return index;
 	}
+	
+
 	public void setIndex(Integer index) {
 		this.index = index;
+	}
+	
+	public void makeAlias(){
+		alias = name + "_" + index.toString();
+	}
+	
+	public String getAlias() {
+		return alias;
 	}
 }

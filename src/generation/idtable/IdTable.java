@@ -29,6 +29,7 @@ public class IdTable {
 	
 	public void addId(Identifier id, NodeAST node){
 		id.setIndex(idIndex);
+		id.makeAlias();
 		idIndex++;
 		
 		idTable.put(id, node);

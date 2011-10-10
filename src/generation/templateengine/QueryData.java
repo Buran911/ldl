@@ -46,7 +46,7 @@ public class QueryData {
 		
 		for(SelectFrom selFrom : data){
 			if(selFrom.getTable().contentEquals(db.getTable())){
-				selFrom.addColumn(db.getColumn(), "_" + id.getIndex().toString());
+				selFrom.addColumn(db.getColumn(), id.getAlias());
 				added = true;
 			}
 		}
@@ -55,7 +55,7 @@ public class QueryData {
 			SelectFrom selFrom = new SelectFrom();
 			
 			selFrom.setTable( db.getTable() );
-			selFrom.addColumn( db.getColumn(), "_" + id.getIndex().toString() );
+			selFrom.addColumn( db.getColumn(), id.getAlias() );
 			
 			data.add( selFrom );
 		}
