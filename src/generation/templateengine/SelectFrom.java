@@ -19,8 +19,8 @@ public class SelectFrom {
 		return columns;
 	}
 
-	public void addColumn(String name, String postfix){
-		columns.add( new Column(name, postfix));
+	public void addColumn(String name, String alias){
+		columns.add( new Column(name, alias));
 	}
 
 	public void setTable(String table) {
@@ -31,9 +31,9 @@ public class SelectFrom {
 		private String name;
 		private String alias;
 		
-		public Column(String name, String postfix) {
+		public Column(String name, String alias) {
 			this.name = name;
-			alias = name + postfix;
+			this.alias = alias;
 		}
 
 		public String getName() {

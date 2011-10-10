@@ -2,6 +2,10 @@ context Payment{
 	number instanceof int;
 	inn instanceof String;
 	kpp instanceof String;
+	
+	number = 3;
+	inn = '123456789';
+	
 	source{
 		number:{
 			_type = db;

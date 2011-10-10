@@ -28,6 +28,7 @@ import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 import generation.idtable.IdTable;
+import generation.idtable.Identifier;
 import generation.walkers.TreeWalker;
 import generation.walkers.WalkerStrategy;
 
@@ -198,8 +199,10 @@ public class IdConvertor extends TreeWalker {
 
 	@Override
 	public void visit(VariableAST var) {
+		String idName = var.getIdentifier().getData();
 		
-
+		Identifier id = table.getId(idName, contextName); 
+		var.setColumn( id.getAlias());
 	}
 
 }

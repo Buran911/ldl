@@ -16,6 +16,10 @@ public class EqualityClass {
 		constraints.add(constraint);
 	}
 
+	public void addConstraints(List<ConstraintAST> constraints){
+		this.constraints.addAll(constraints);
+	}
+	
 	public List<ConstraintAST> getConstraints() {
 		return constraints;
 	}

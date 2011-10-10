@@ -27,14 +27,22 @@ import parse.syntaxtree.nodes.VariableAST;
 import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
+import generation.templateengine.EqualityClass;
+import generation.templateengine.QueryConstraints;
 import generation.walkers.TreeWalker;
 import generation.walkers.WalkerStrategy;
 
 public class TemplateEqClassesFiller extends TreeWalker {
-
-	public TemplateEqClassesFiller(WalkerStrategy strategy) {
+	private EqualityClass constPart;
+	private QueryConstraints queryConstraints;
+	
+	{
+		constPart = new EqualityClass();
+	}
+	
+	public TemplateEqClassesFiller(WalkerStrategy strategy, QueryConstraints queryConstraints) {
 		super(strategy);
-		// TODO Auto-generated constructor stub
+		this.queryConstraints = queryConstraints;
 	}
 
 	@Override
@@ -69,7 +77,7 @@ public class TemplateEqClassesFiller extends TreeWalker {
 
 	@Override
 	public void visit(ContextAST context) {
-		// TODO Auto-generated method stub
+		constPart.addConstraints(context.getConstraints());
 
 	}
 
@@ -97,10 +105,10 @@ public class TemplateEqClassesFiller extends TreeWalker {
 
 	}
 
+	// Вызывается в конце обхода при Bottom-Up стратегии обхода
 	@Override
 	public void visit(ldlAST ldl) {
-		// TODO Auto-generated method stub
-
+		queryConstraints.setConstPart(constPart);
 	}
 
 	@Override
