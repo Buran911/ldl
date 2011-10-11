@@ -7,6 +7,7 @@ import parse.syntaxtree.nodes.BooleanAST;
 import parse.syntaxtree.nodes.ConditionAST;
 import parse.syntaxtree.nodes.ContextAST;
 import parse.syntaxtree.nodes.DescriptionAST;
+import parse.syntaxtree.nodes.EqClassAST;
 import parse.syntaxtree.nodes.FormalParamsAST;
 import parse.syntaxtree.nodes.FunctionalPartAST;
 import parse.syntaxtree.nodes.IdentifierAST;
@@ -85,6 +86,12 @@ public class TemplateEqClassesFiller extends TreeWalker {
 	public void visit(DescriptionAST description) {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public void visit(EqClassAST eqClass) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

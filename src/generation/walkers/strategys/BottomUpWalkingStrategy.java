@@ -10,6 +10,7 @@ import parse.syntaxtree.nodes.ConditionAST;
 import parse.syntaxtree.nodes.ConstraintAST;
 import parse.syntaxtree.nodes.ContextAST;
 import parse.syntaxtree.nodes.DescriptionAST;
+import parse.syntaxtree.nodes.EqClassAST;
 import parse.syntaxtree.nodes.FormalParamsAST;
 import parse.syntaxtree.nodes.FunctionalPartAST;
 import parse.syntaxtree.nodes.IdentifierAST;
@@ -106,8 +107,8 @@ public class BottomUpWalkingStrategy extends WalkerStrategy {
 			constraint.accept(walker);
 		}
 		
-		for(ConstraintAST constraint : context.getEqClasseses()){
-			constraint.accept(walker);
+		for(EqClassAST eqClass : context.getEqClasseses()){
+			eqClass.accept(walker);
 		}
 		
 		walker.visit(context);
@@ -121,6 +122,15 @@ public class BottomUpWalkingStrategy extends WalkerStrategy {
 		walker.visit(description);
 	}
 
+	@Override
+	public void accept(TreeWalker walker, EqClassAST eqClass) {
+		for(ConstraintAST constraint : eqClass.getConstraints()){
+			constraint.accept(walker);
+		}
+
+		walker.visit(eqClass);
+	}
+	
 	@Override
 	public void accept(TreeWalker walker, FormalParamsAST formalParams) {
 		// XXX здесь будет жить код

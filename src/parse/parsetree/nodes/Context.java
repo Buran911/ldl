@@ -8,6 +8,7 @@ import parse.syntaxtree.NodeAST;
 import parse.syntaxtree.nodes.ConstraintAST;
 import parse.syntaxtree.nodes.ContextAST;
 import parse.syntaxtree.nodes.DescriptionAST;
+import parse.syntaxtree.nodes.EqClassAST;
 import parse.syntaxtree.nodes.SimpleNameAST;
 import parse.syntaxtree.nodes.SourceAST;
 import parse.util.Source;
@@ -47,12 +48,13 @@ public class Context extends Node {
 					}
 					
 					if(child instanceof EqClasses){
-						List<Node> constraints = new LinkedList<Node>();
-						
-						child.getSuccsessor().makeLinearList(constraints);
-						for(Node constraint : constraints){
-							context.addEqClasses((ConstraintAST) constraint.getConvertedSubtree());
-						}
+						context.addEqClass((EqClassAST) child.getConvertedSubtree());
+//						List<Node> constraints = new LinkedList<Node>();
+//						
+//						child.getSuccsessor().makeLinearList(constraints);
+//						for(Node constraint : constraints){
+//							context.addEqClasses((ConstraintAST) constraint.getConvertedSubtree());
+//						}
 					}
 				}
 				

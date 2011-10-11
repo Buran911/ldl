@@ -17,6 +17,7 @@ import parse.syntaxtree.nodes.BooleanAST;
 import parse.syntaxtree.nodes.ConditionAST;
 import parse.syntaxtree.nodes.ContextAST;
 import parse.syntaxtree.nodes.DescriptionAST;
+import parse.syntaxtree.nodes.EqClassAST;
 import parse.syntaxtree.nodes.FormalParamsAST;
 import parse.syntaxtree.nodes.FunctionalPartAST;
 import parse.syntaxtree.nodes.IdentifierAST;
@@ -91,6 +92,12 @@ public class IdTableFiller extends TreeWalker {
 		id.setType(description.getType().getType());
 		
 		table.addId(id, description);
+	}
+	
+	@Override
+	public void visit(EqClassAST eqClass) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override

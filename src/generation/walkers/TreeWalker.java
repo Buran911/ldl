@@ -24,6 +24,8 @@ public abstract class TreeWalker {
 	
 	public abstract void visit( DescriptionAST description );
 	
+	public abstract void visit( EqClassAST eqClass );
+	
 	public abstract void visit( FormalParamsAST formalParams );
 	
 	public abstract void visit( FunctionalPartAST funcPart );
@@ -93,6 +95,10 @@ public abstract class TreeWalker {
 	
 	public  void accept( DescriptionAST description ){
 		strategy.accept(this, description);
+	}
+	
+	public void accept(EqClassAST eqClass) {
+		strategy.accept(this, eqClass);
 	}
 	
 	public  void accept( FormalParamsAST formalParams ){
@@ -174,4 +180,5 @@ public abstract class TreeWalker {
 	public  void accept( VariableAST var ){
 		strategy.accept(this, var);
 	}
+
 }

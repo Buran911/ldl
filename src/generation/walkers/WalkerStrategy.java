@@ -17,6 +17,8 @@ public abstract class WalkerStrategy {
 	
 	public abstract void accept( TreeWalker walker, DescriptionAST description );
 	
+	public abstract void accept(TreeWalker walker, EqClassAST eqClass);
+	
 	public abstract void accept( TreeWalker walker, FormalParamsAST formalParams );
 	
 	public abstract void accept( TreeWalker walker, FunctionalPartAST funcPart );
@@ -56,4 +58,5 @@ public abstract class WalkerStrategy {
 	public abstract void accept( TreeWalker walker, TypeAST type );
 	
 	public abstract void accept( TreeWalker walker, VariableAST var );
+
 }

@@ -12,13 +12,13 @@ public class ContextAST extends NodeAST {
 	private List<DescriptionAST> descriptions;
 	private List<SourceAST> sources;
 	private List<ConstraintAST> constraints;
-	private List<ConstraintAST> eqClasseses;
+	private List<EqClassAST> eqClasseses;
 	
 	{
 		descriptions = new LinkedList<DescriptionAST>();
 		sources = new LinkedList<SourceAST>();
 		constraints = new LinkedList<ConstraintAST>();
-		eqClasseses = new LinkedList<ConstraintAST>();
+		eqClasseses = new LinkedList<EqClassAST>();
 	}
 
 
@@ -46,9 +46,9 @@ public class ContextAST extends NodeAST {
 	}
 
 
-	public void addEqClasses(ConstraintAST eqClasses) {
-		eqClasseses.add(eqClasses);
-		addSuccessor(eqClasses);
+	public void addEqClass(EqClassAST eqClass) {
+		eqClasseses.add(eqClass);
+		addSuccessor(eqClass);
 	}
 
 
@@ -72,7 +72,7 @@ public class ContextAST extends NodeAST {
 	}
 
 
-	public List<ConstraintAST> getEqClasseses() {
+	public List<EqClassAST> getEqClasseses() {
 		return eqClasseses;
 	}
 

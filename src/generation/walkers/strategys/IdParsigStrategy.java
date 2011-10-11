@@ -4,6 +4,7 @@ import generation.walkers.TreeWalker;
 import parse.syntaxtree.nodes.ConstraintAST;
 import parse.syntaxtree.nodes.ContextAST;
 import parse.syntaxtree.nodes.DescriptionAST;
+import parse.syntaxtree.nodes.EqClassAST;
 import parse.syntaxtree.nodes.SourceAST;
 
 public class IdParsigStrategy extends BottomUpWalkingStrategy {
@@ -27,8 +28,8 @@ public class IdParsigStrategy extends BottomUpWalkingStrategy {
 			constraint.accept(walker);
 		}
 		
-		for(ConstraintAST constraint : context.getEqClasseses()){
-			constraint.accept(walker);
+		for(EqClassAST eqClass : context.getEqClasseses()){
+			eqClass.accept(walker);
 		}
 		
 		
