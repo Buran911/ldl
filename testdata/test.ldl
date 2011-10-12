@@ -3,7 +3,6 @@ context Payment{
 	inn instanceof String;
 	kpp instanceof String;
 	
-	number = 3;
 	inn = '123456789';
 	
 	source{
@@ -22,6 +21,16 @@ context Payment{
 			_table = 'acc_table';
 			_column = 'kpp_column';
 		}
+	}
+	
+	eq_classes{
+		number = 3;
+		number = 4;
+	}
+	
+	eq_classes{
+		number = 5;
+		number = 6;
 	}
 }
 

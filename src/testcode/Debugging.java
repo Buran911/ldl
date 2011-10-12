@@ -44,11 +44,11 @@ public class Debugging {
 		syntaxTree.accept( new IdConvertor( new IdParsigStrategy(),table));
 		syntaxTree.accept( new TemplateEqClassesFiller(new BottomUpWalkingStrategy(), qConstraints));
 		
-		
+		qConstraints.makeUnmodifiable();
 		Engine engine = new Engine(new QueryData(table), qConstraints);
 		engine.generate();
 		
-		System.out.println(engine.getQuery());
+		System.out.println(engine.getQuery().get(1));
 	}
 
 }
