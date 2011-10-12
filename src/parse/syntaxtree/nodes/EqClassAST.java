@@ -15,6 +15,10 @@ public class EqClassAST extends NodeAST {
 		constraints = new LinkedList<ConstraintAST>();
 	}
 	
+	public ConstraintAST getConstraint(int index) {
+		return constraints.get(index);
+	}
+	
 	public List<ConstraintAST> getConstraints() {
 		return constraints;
 	}
@@ -23,7 +27,7 @@ public class EqClassAST extends NodeAST {
 		constraints.add(constraint);
 		addSuccessor(constraint);
 	}
-
+	
 	@Override
 	public void accept(TreeWalker walker) {
 		walker.accept(this);

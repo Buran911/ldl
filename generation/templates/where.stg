@@ -1,7 +1,5 @@
 where(elem) ::=<<
-	<if(elem.nnext)>
-		WHERE <constraint_list(elem.gnext)>
-	<endif>
+	WHERE <constraint_list(elem)>
 >>
 
 constraint_list(elem) ::=<<

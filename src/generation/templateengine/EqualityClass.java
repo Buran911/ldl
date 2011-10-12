@@ -5,7 +5,7 @@ import java.util.List;
 
 import parse.syntaxtree.nodes.ConstraintAST;
 
-public class EqualityClass {
+public class EqualityClass implements Cloneable{
 	private List<ConstraintAST> constraints;
 	
 	{
@@ -22,5 +22,16 @@ public class EqualityClass {
 	
 	public List<ConstraintAST> getConstraints() {
 		return constraints;
+	}
+	
+	@Override
+	public Object clone(){
+		EqualityClass eqClass = new EqualityClass();
+		
+		for(ConstraintAST constraint : constraints){
+			eqClass.addConstraint(constraint);
+		}
+		
+		return eqClass;
 	}
 }

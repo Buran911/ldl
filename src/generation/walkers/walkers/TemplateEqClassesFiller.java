@@ -5,6 +5,7 @@ import parse.syntaxtree.nodes.BinaryExpressionAST;
 import parse.syntaxtree.nodes.BinaryOpAST;
 import parse.syntaxtree.nodes.BooleanAST;
 import parse.syntaxtree.nodes.ConditionAST;
+import parse.syntaxtree.nodes.ConstraintAST;
 import parse.syntaxtree.nodes.ContextAST;
 import parse.syntaxtree.nodes.DescriptionAST;
 import parse.syntaxtree.nodes.EqClassAST;
@@ -90,7 +91,25 @@ public class TemplateEqClassesFiller extends TreeWalker {
 	
 	@Override
 	public void visit(EqClassAST eqClass) {
-		// TODO Auto-generated method stub
+		int constrCount = eqClass.getConstraints().size();
+		int eqClassesCount = queryConstraints.getEqClassesCount();
+		
+		// Первый проход, добавляем одному ограничению в пустые классы
+		if(eqClassesCount == 0){
+			eqClassesCount = 1;
+			queryConstraints.addEqualityClass( new EqualityClass());
+		}
+		
+		queryConstraints.duplicate( constrCount );
+		
+		for(int i = 0; i < constrCount; i++){
+			ConstraintAST constraint = eqClass.getConstraint(i);
+			
+			for(int j = 0; j < eqClassesCount; j++){
+				EqualityClass ec = queryConstraints.getEqClass(j + i*eqClassesCount);
+				ec.addConstraint( constraint );
+			}
+		}
 		
 	}
 

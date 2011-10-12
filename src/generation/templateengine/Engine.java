@@ -1,5 +1,8 @@
 package generation.templateengine;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
@@ -7,10 +10,10 @@ import org.stringtemplate.v4.STGroupFile;
 public class Engine {
 	private QueryData queryData;
 	private QueryConstraints queryConstraints;
-	private String query;
+	private LinkedList<String> query;
 	
 	{
-		query = "";
+		query = new LinkedList<String>();
 	}
 
 	public Engine(QueryData queryData, QueryConstraints queryConstraints) {
@@ -18,34 +21,40 @@ public class Engine {
 		this.queryConstraints = queryConstraints;
 	}
 	
-	public String getQuery() {
-		// FIXME убрать костыль
-		return query.replaceAll("'", "");
+	public List<String> getQuery() {
+		return query;
 	}
 
 	public void generate() {
-		generateSelectFrom();	
-		generateWhere();
+		String selFrom = generateSelectFrom();	
+		while(queryConstraints.hasNext()){
+			String where = generateWhere();
+			
+			// FIXME убрать костыль
+			String q = selFrom + where;
+			query.add(q.replaceAll("'", ""));
+		} 
+		
 	}
 
-	public void generateSelectFrom(){
+	private String generateSelectFrom(){
 		STGroup group = new STGroupFile("generation/templates/select_from.stg");
 		ST st = group.getInstanceOf("select");
 		
 		st.add("elem", queryData);
-		
 		String result = st.render();
-		query += result;
+		
+		return result;
 	}
 	
-	private void generateWhere() {
+	private String generateWhere() {
 		STGroup group = new STGroupFile("generation/templates/where.stg");
 		ST st = group.getInstanceOf("where");
 		
-		st.add("elem", queryConstraints);
-		
+		st.add("elem", queryConstraints.next());
 		String result = st.render();
-		query += result;
+		
+		return result;
 	}
 
 }
