@@ -1,10 +1,11 @@
 package parse.syntaxtree.nodes;
 
+import generation.idtable.Identifier;
 import generation.walkers.TreeWalker;
 
 public class VariableAST extends ExpressionAST {
 	private IdentifierAST identifier;
-	private String column;
+	private Identifier id;
 	
 	public void setIdentifier(IdentifierAST identifier) {
 		this.identifier = identifier;
@@ -16,12 +17,12 @@ public class VariableAST extends ExpressionAST {
 	}
 
 
-	public String getColumn() {
-		return column;
+	public Identifier getId() {
+		return id;
 	}
 
-	public void setColumn(String column) {
-		this.column = column;
+	public void setId(Identifier id) {
+		this.id = id;
 	}
 
 	@Override

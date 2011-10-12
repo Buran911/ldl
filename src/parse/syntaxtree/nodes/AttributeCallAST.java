@@ -1,11 +1,13 @@
 package parse.syntaxtree.nodes;
 
+import generation.idtable.Identifier;
 import generation.walkers.TreeWalker;
 
 public class AttributeCallAST extends ExpressionAST {
 	private AttributeCallAST attrCall;
 	private VariableAST variable;
 	private IdentifierAST identifier;
+	private Identifier id;
 	
 	public void setAttrCall(AttributeCallAST attrCall) {
 		this.attrCall = attrCall;
@@ -32,6 +34,14 @@ public class AttributeCallAST extends ExpressionAST {
 
 	public IdentifierAST getIdentifier() {
 		return identifier;
+	}
+
+	public Identifier getId() {
+		return id;
+	}
+
+	public void setId(Identifier id) {
+		this.id = id;
 	}
 
 	@Override

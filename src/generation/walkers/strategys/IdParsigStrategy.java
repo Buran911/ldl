@@ -1,6 +1,7 @@
 package generation.walkers.strategys;
 
 import generation.walkers.TreeWalker;
+import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.ConstraintAST;
 import parse.syntaxtree.nodes.ContextAST;
 import parse.syntaxtree.nodes.DescriptionAST;
@@ -35,4 +36,21 @@ public class IdParsigStrategy extends BottomUpWalkingStrategy {
 		
 	}
 	
+	// вызовы атрибутов посещаются в обратном порядке для удобства
+	@Override
+	public void accept(TreeWalker walker, AttributeCallAST attrCall) {
+		walker.visit(attrCall);
+		
+		if(attrCall.getAttrCall() != null){
+			attrCall.getAttrCall().accept(walker);
+		}
+		
+		if(attrCall.getVariable() != null){
+			attrCall.getVariable().accept(walker);
+		}
+		
+		if(attrCall.getIdentifier() != null){
+			attrCall.getIdentifier().accept(walker);
+		}
+	}	
 }

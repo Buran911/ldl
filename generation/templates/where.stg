@@ -12,7 +12,9 @@ node(elem) ::=<<
 	<elseif(elem.leaf)>
 		<elem.data>
 	<elseif(elem.variableExp)>
-		<elem.column>
+		<elem.id.alias>
+	<elseif(elem.attributeCallExp)>
+		<elem.id.alias>	
 	<endif>
 >>
 

@@ -120,7 +120,12 @@ public class IdTableFiller extends TreeWalker {
 
 	@Override
 	public void visit(ldlAST ldl) {
-		// TODO Auto-generated method stub
+		// Обрабатываем айдишники без указанных источников
+		for(Identifier id : table.getIds()){
+			if(id.getSrcData() == null){
+				id.setSrcType(Type.own);
+			}
+		}
 		
 	}
 
