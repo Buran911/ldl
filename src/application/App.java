@@ -1,7 +1,5 @@
 package application;
 
-import java.sql.SQLException;
-
 import generation.idtable.IdTable;
 import generation.templateengine.Engine;
 import generation.templateengine.QueryConstraints;
@@ -12,12 +10,16 @@ import generation.walkers.walkers.IdConvertor;
 import generation.walkers.walkers.IdTableFiller;
 import generation.walkers.walkers.TemplateEqClassesFiller;
 import generation.walkers.walkers.TemplateTypeFiller;
+
+import java.sql.SQLException;
+
 import parse.errhandler.ErrorHandler;
 import parse.ldlsettingsparser.XMLParser;
 import parse.parser.Parser;
 import parse.syntaxtree.SyntaxTree;
 import parse.util.Source;
 import application.util.CmdLineParser;
+import application.util.Policy;
 import application.util.QueryMaker;
 import application.util.YamlWriter;
 
@@ -29,6 +31,7 @@ public class App {
 	private Engine engine;
 	private String conStr;
 	private int columnCount;
+	private Policy policy;
 	private QueryMaker queryMaker;
 	
 	public App(String[] args) {
@@ -47,6 +50,7 @@ public class App {
 		XMLParser parser = new XMLParser(cmdLineParser.getPropertyFile());
 		parser.parse();
 		conStr = parser.getConnectionString();
+		policy = Policy.valueOf(parser.getPolicy());
 		
 		src = new Source(cmdLineParser.getLdlFiles());
 		errh = new ErrorHandler(src);
@@ -103,7 +107,7 @@ public class App {
 
 	public void writeYAML() {
 		System.out.println("Запись YAML.");
-		YamlWriter yw = new YamlWriter(queryMaker.getQueryResults());
+		YamlWriter yw = new YamlWriter(queryMaker.getQueryResults(), policy);
 		yw.writeYAMLs();
 	}
 

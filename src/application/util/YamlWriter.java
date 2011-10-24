@@ -14,10 +14,12 @@ import org.stringtemplate.v4.STGroupFile;
 public class YamlWriter {
 	private List<QueryResult> queryResults;
 	private String dir = "out/";
+	private Policy policy;
 
-	public YamlWriter(List<QueryResult> queryResults) {
+	public YamlWriter(List<QueryResult> queryResults, Policy returnPolicy) {
 		super();
 		this.queryResults = queryResults;
+		this.policy = returnPolicy;
 	}
 	
 	public void writeYAMLs(){
@@ -28,7 +30,7 @@ public class YamlWriter {
 		
 		for(QueryResult queryResult : queryResults){
 			ST st = group.getInstanceOf("yaml");
-			st.add("elem", queryResult.getListView());
+			st.add("elem", queryResult.get2valListView(policy));
 			String result = st.render();
 			
 			writeFile(result, count);

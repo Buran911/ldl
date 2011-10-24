@@ -1,0 +1,37 @@
+context Payer{
+	--foreignKey();
+
+	eq_classes{
+		kpp1();
+		kpp2();
+	}
+}
+
+context BankRu{
+	eq_classes{
+		isKO();
+		isGRKC();
+	}
+	
+}
+
+-- задаем сами, механизма нет
+Payer::foreignKey(){
+	bankRuId = bankRu.id;
+}
+
+BankRu::isKO(){
+	bic = '049466331' || bic = '046354678';
+}
+
+BankRu::isGRKC(){
+	bic = '046354980' || bic = '046354249';
+}
+
+Payer::kpp1(){
+	kpp = '084077387';
+}
+
+Payer::kpp2(){
+	kpp = '343172198';
+}
