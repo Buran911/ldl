@@ -68,7 +68,7 @@
 	</path>
 	
 	<!-- создание бинарников -->
-    <target name="jar" depends="init, generate lexparse" description="Creating jar from ldl project">
+    <target name="make build" depends="init, generate lexparse" description="Creating jar from ldl project">    	
     	<manifestclasspath property="jar.classpath" jarfile="${releaseDir}/${jarFile}">
     		<classpath refid="compile.classpath"/>
     	</manifestclasspath>
@@ -92,8 +92,24 @@
     	
     	<!-- копирование либ -->
     	<mkdir dir="${releaseDir}/lib"/>
-    	<copy todir="${releaseDir}/lib" verbose="Yes" >
+    	<copy todir="${releaseDir}/lib" verbose="Yes" overwrite="yes" >
     		<fileset dir="${lib}" includes="**/*.jar" excludes="junit.jar"/>
+    	</copy>
+    	
+    	<!-- копирование шаблонов -->
+    	<mkdir dir="${releaseDir}/generation"/>
+    	<mkdir dir="${releaseDir}/generation/templates"/>
+    	<copy todir="${releaseDir}/generation/templates" verbose="Yes" overwrite="yes">
+    		<fileset dir="generation/templates" includes="**/*.stg"/>
+    	</copy>
+    	
+    	<!-- создание выходной папки -->
+    	<mkdir dir="${releaseDir}/out"/>
+    	
+    	<!-- копирование примеров -->
+    	<mkdir dir="${releaseDir}/samples"/>
+    	<copy todir="${releaseDir}/samples" verbose="Yes" overwrite="yes">
+    	    <fileset dir="testdata/samples" includes="**/**"/>
     	</copy>
     	
     	<delete dir="${build.classes}"/>
