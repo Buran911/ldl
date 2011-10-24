@@ -81,6 +81,10 @@ public class XMLParser {
 		return getAttribute(rootElem, "priority", "type");
 	}
 	
+	public String getPolicy(){
+		return getAttribute(rootElem, "db", "returnPolicy");
+	}
+	
 	private String getTextValue(Element elem, String tag){
 		
 		return getValue(elem, tag, 0);
