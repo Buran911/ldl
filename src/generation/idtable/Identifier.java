@@ -8,9 +8,15 @@ public class Identifier {
 	private String type;
 	private Type srcType;
 	private SourceData srcData;
+	private Boolean visible;
 	
 	private Integer index;
 	private String alias;
+	
+	// дефолтные значения
+	{
+		visible = true;
+	}
 	
 	public String getName() {
 		return name;
@@ -57,5 +63,11 @@ public class Identifier {
 	
 	public String getAlias() {
 		return alias;
+	}
+	public Boolean isVisible() {
+		return visible;
+	}
+	public void setVisible(Boolean visible) {
+		this.visible = visible;
 	}
 }

@@ -57,6 +57,16 @@ public class IdTable {
 		return count;
 	}
 	
+	public Identifier getId(String alias){
+		for(Identifier id : idTable.keySet()){
+			if(id.getAlias().contentEquals(alias)){
+				return id;
+			}
+		}
+		
+		return null;
+	}
+	
 	public Identifier getId(String name, String namespace){
 		List<Identifier> ids = getIdByNamespace(namespace);
 		
