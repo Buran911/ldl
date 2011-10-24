@@ -3,7 +3,8 @@ package generation.languageconstants;
 public enum ReservedWord {
 	type("_type"),
 	column("_column"),
-	table("_table");
+	table("_table"),
+	visible("_visible");
 	
 	private final String reservedWord;
 	

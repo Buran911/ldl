@@ -20,6 +20,7 @@ context Payer{
 			_type = db;
 			_table = 'payer';
 			_column = 'bankru'; 
+			--_visible = false;
 		}
 		personalAcc:{
 			_type = db;
@@ -38,6 +39,7 @@ context BankRu{
 			_type = db;
 			_table = 'bankru';
 			_column = 'id'; 
+			_visible = false;
 		}
 		bic:{
 			_type = db;

@@ -33,6 +33,7 @@ public class App {
 	private int columnCount;
 	private Policy policy;
 	private QueryMaker queryMaker;
+	private IdTable table;
 	
 	public App(String[] args) {
 		this.args = args;
@@ -74,7 +75,7 @@ public class App {
 
 	public void generateEQ() {
 		System.out.println("Обработка АСТ.");
-		IdTable table = new IdTable();
+		table = new IdTable();
 		QueryConstraints qConstraints = new QueryConstraints();
 		
 		tree.accept( new IdTableFiller( new IdParsigStrategy(), table));
@@ -107,7 +108,7 @@ public class App {
 
 	public void writeYAML() {
 		System.out.println("Запись YAML.");
-		YamlWriter yw = new YamlWriter(queryMaker.getQueryResults(), policy);
+		YamlWriter yw = new YamlWriter(queryMaker.getQueryResults(), policy, table);
 		yw.writeYAMLs();
 	}
 

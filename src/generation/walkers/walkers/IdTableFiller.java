@@ -211,11 +211,9 @@ public class IdTableFiller extends TreeWalker {
 		Identifier id = table.getId(block.getIdentifier().getId(), contextName);
 		
 		// определяем источник
-		Iterator<srcExprAST> itExpr = block.getSrcExprs().iterator();
-		srcExprAST expr = null;
-		while(itExpr.hasNext() && !( (expr = itExpr.next()).getFirstId().getId().contentEquals(ReservedWord.type.word() )));
+		srcExprAST expr = findReservedWord( ReservedWord.type, block.getSrcExprs().iterator());
 		
-		if(expr.getFirstId().getId().contentEquals(ReservedWord.type.word() )){
+		if(expr != null ){
 			id.setSrcType(Type.valueOf(expr.getSecondId().getId()));
 		}
 		
@@ -239,6 +237,12 @@ public class IdTableFiller extends TreeWalker {
 				break;
 		}
 		
+		// устанавливаем параметр _visible
+		expr = findReservedWord(ReservedWord.visible, block.getSrcExprs().iterator());
+		
+		if(expr != null ){
+			id.setVisible(((BooleanAST) expr.getLiteral()).getBool());
+		}
 	}
 
 	@Override
@@ -263,6 +267,18 @@ public class IdTableFiller extends TreeWalker {
 	public void visit(VariableAST var) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private srcExprAST findReservedWord(ReservedWord word, Iterator<srcExprAST> itExpr){
+		srcExprAST expr = null;
+		while(itExpr.hasNext() && !( (expr = itExpr.next()).getFirstId().getId().contentEquals(word.word() )));
+		
+		if(expr.getFirstId().getId().contentEquals(word.word() )){
+			
+			return expr;
+		}
+		
+		return null;
 	}
 
 }

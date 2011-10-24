@@ -321,6 +321,13 @@ srcExpr : Identifier "=" LString ";"{
 	(( LString ) $3).setParent( (srcExpr)$$ ); 
 }  
 
+srcExpr : Identifier "=" Bool ";"{ 
+	tree.saveNode( new srcExpr() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (srcExpr)$$ ); 
+	(( Bool ) $3).setParent( (srcExpr)$$ ); 
+}
+
 Set : "{" Elements "}"{ 
 	tree.saveNode( new Set() ); 
 	$$ = tree.getLast(); 
