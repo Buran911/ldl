@@ -139,9 +139,13 @@ public class BottomUpWalkingStrategy extends WalkerStrategy {
 
 	@Override
 	public void accept(TreeWalker walker, FunctionalPartAST funcPart) {
-		funcPart.getGroup().accept(walker);
-		funcPart.getPriority().accept(walker);
-
+		if(funcPart.getGroup() != null){
+			funcPart.getGroup().accept(walker);
+		} 
+		if(funcPart.getPriority() != null){
+			funcPart.getPriority().accept(walker);
+		}
+		
 		walker.visit(funcPart);
 	}
 

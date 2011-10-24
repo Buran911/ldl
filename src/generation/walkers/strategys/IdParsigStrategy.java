@@ -6,6 +6,7 @@ import parse.syntaxtree.nodes.ConstraintAST;
 import parse.syntaxtree.nodes.ContextAST;
 import parse.syntaxtree.nodes.DescriptionAST;
 import parse.syntaxtree.nodes.EqClassAST;
+import parse.syntaxtree.nodes.PredicateImplAST;
 import parse.syntaxtree.nodes.SourceAST;
 
 public class IdParsigStrategy extends BottomUpWalkingStrategy {
@@ -53,4 +54,22 @@ public class IdParsigStrategy extends BottomUpWalkingStrategy {
 			attrCall.getIdentifier().accept(walker);
 		}
 	}	
+	
+	@Override
+	public void accept(TreeWalker walker, PredicateImplAST impl) {
+		impl.getPathName().accept(walker);
+		
+		walker.visit(impl);
+		
+		impl.getFuncPart().accept(walker);
+		
+		if(impl.getFormalParams() != null){
+			impl.getFormalParams().accept(walker);
+		}
+		
+		for(ConstraintAST constraint : impl.getConstraints()){
+			constraint.accept(walker);
+		}
+
+	}
 }

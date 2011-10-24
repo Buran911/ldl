@@ -134,7 +134,7 @@ public class TemplateTypeFiller extends TreeWalker {
 
 	@Override
 	public void visit(PredicateAST predicate) {
-		predicate.setDummy();
+		predicate.setPredicate();
 
 	}
 
@@ -189,6 +189,7 @@ public class TemplateTypeFiller extends TreeWalker {
 	@Override
 	public void visit(StringAST string) {
 		string.setLeaf();
+		string.setString();
 
 	}
 

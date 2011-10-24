@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Source {
 	private String program = ""; // программа одной строкой
@@ -22,27 +23,16 @@ public class Source {
 		for(String path : arg){
 			files.add(new LDLfile(path));
 		}
-		// делаем файл с текстом всей программы
-		for(LDLfile file : files){
-			program += file.getContent();
+	
+		preprocess();
+	}
+	
+	public Source(List<String> paths){
+		for(String path : paths){
+			files.add(new LDLfile(path));
 		}
-		
-
-		programLines = program.split("\\n");
-		
-		//  "опустошаем" строки пробелов и табов
-		for(int i = 0; i < programLines.length; i++){
-			if(programLines[i].matches("[ \\t]+")){
-				programLines[i] = "";
-			}
-		}
-		
-		// позиционируем файлы
-		filePos.add(-1); // выравнивание
-		for(LDLfile file : files){
-			filePos.add(file.getLineCount() + filePos.get( filePos.size() -1 ));
-		}
-		filePos.remove(0); // выровняли, убираем выравнивание
+	
+		preprocess();
 	}
 	
 	public String getProgram() {
@@ -113,6 +103,30 @@ public class Source {
 		}
 		
 		return pos;
+	}
+	
+	private void preprocess(){
+		// делаем файл с текстом всей программы
+		for(LDLfile file : files){
+			program += file.getContent();
+		}
+		
+
+		programLines = program.split("\\n");
+		
+		//  "опустошаем" строки пробелов и табов
+		for(int i = 0; i < programLines.length; i++){
+			if(programLines[i].matches("[ \\t]+")){
+				programLines[i] = "";
+			}
+		}
+		
+		// позиционируем файлы
+		filePos.add(-1); // выравнивание
+		for(LDLfile file : files){
+			filePos.add(file.getLineCount() + filePos.get( filePos.size() -1 ));
+		}
+		filePos.remove(0); // выровняли, убираем выравнивание
 	}
 
 	class LDLfile{

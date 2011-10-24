@@ -1,65 +1,47 @@
 package generation.walkers.walkers;
 
-import generation.idtable.IdTable;
-import generation.idtable.Identifier;
-import generation.idtable.Predicate;
+import parse.syntaxtree.nodes.AttributeCallAST;
+import parse.syntaxtree.nodes.BinaryExpressionAST;
+import parse.syntaxtree.nodes.BinaryOpAST;
+import parse.syntaxtree.nodes.BooleanAST;
+import parse.syntaxtree.nodes.ConditionAST;
+import parse.syntaxtree.nodes.ContextAST;
+import parse.syntaxtree.nodes.DescriptionAST;
+import parse.syntaxtree.nodes.EqClassAST;
+import parse.syntaxtree.nodes.FormalParamsAST;
+import parse.syntaxtree.nodes.FunctionalPartAST;
+import parse.syntaxtree.nodes.IdentifierAST;
+import parse.syntaxtree.nodes.NumberAST;
+import parse.syntaxtree.nodes.OperationCallAST;
+import parse.syntaxtree.nodes.ParametresAST;
+import parse.syntaxtree.nodes.PathNameAST;
+import parse.syntaxtree.nodes.PredicateAST;
+import parse.syntaxtree.nodes.PredicateImplAST;
+import parse.syntaxtree.nodes.RelationAST;
+import parse.syntaxtree.nodes.SetAST;
+import parse.syntaxtree.nodes.SetOpAST;
+import parse.syntaxtree.nodes.SimpleNameAST;
+import parse.syntaxtree.nodes.SourceAST;
+import parse.syntaxtree.nodes.StringAST;
+import parse.syntaxtree.nodes.TypeAST;
+import parse.syntaxtree.nodes.VariableAST;
+import parse.syntaxtree.nodes.ldlAST;
+import parse.syntaxtree.nodes.srcBlockAST;
+import parse.syntaxtree.nodes.srcExprAST;
 import generation.walkers.TreeWalker;
 import generation.walkers.WalkerStrategy;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
-import parse.syntaxtree.nodes.*;
-
-public class IdConvertor extends TreeWalker {
-	private IdTable table;
+public class PredicateImplSetter extends TreeWalker {
 	private String contextName;
-	private boolean attrCallVisited; // определ€ет, как будут обрабатыватьс€ вызовы атрибутов
-	private boolean variableCanBeVisited;
 	
-	{
-		attrCallVisited = false;
-		variableCanBeVisited = true;
-	}
-	
-	public IdConvertor(WalkerStrategy strategy, IdTable table) {
+	public PredicateImplSetter(WalkerStrategy strategy) {
 		super(strategy);
-		this.table = table;
 	}
 
 	@Override
 	public void visit(AttributeCallAST attrCall) {
-		if(!attrCallVisited){
-			List<String> attrChain = new LinkedList<String>();
-			AttributeCallAST attrFollower = attrCall;
-			while (attrFollower.getAttrCall() != null){
-				attrChain.add( attrFollower.getIdentifier().getData());
-				attrFollower = attrFollower.getAttrCall();
-			}
-			
-			attrChain.add(attrFollower.getIdentifier().getData());
-			attrChain.add(attrFollower.getVariable().getIdentifier().getData());
-			
-			Collections.reverse(attrChain);
-			
-			String curContext = contextName;
-			Identifier id = null;
-			for(String idName : attrChain){
-				id = table.getId(idName, curContext);
-				curContext = id.getType();
-			}
-			
-			// ѕри обработке шаблнизатором первым будет обработан последний элемент
-			attrFollower.setId(id);
-			
-			attrCallVisited = true;
-			variableCanBeVisited = false;
-		}
-		
-		if(attrCall.getAttrCall() == null){
-			attrCallVisited = false;
-		}
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -88,7 +70,7 @@ public class IdConvertor extends TreeWalker {
 
 	@Override
 	public void visit(ContextAST context) {
-		contextName = context.getContextName().getName();
+		contextName = context.getContextName().getData();
 
 	}
 
@@ -101,9 +83,9 @@ public class IdConvertor extends TreeWalker {
 	@Override
 	public void visit(EqClassAST eqClass) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
 	public void visit(FormalParamsAST formalParams) {
 		// TODO Auto-generated method stub
@@ -154,28 +136,13 @@ public class IdConvertor extends TreeWalker {
 
 	@Override
 	public void visit(PredicateAST predicate) {
-		String predicateName = predicate.getOprCall().getIdentifier().getData();
 		
-		if(predicate.getAttrCall() != null){
-			Predicate pred = table.getPredicate( predicateName, predicate.getAttrCall().getId().getType());
-			predicate.setImpl((PredicateImplAST) pred.getImpl());
-		}
-		
-		if(predicate.getVariable() != null){
-			Predicate pred = table.getPredicate( predicateName, predicate.getVariable().getId().getType());
-			predicate.setImpl((PredicateImplAST) pred.getImpl());
-		}
 
-		if((predicate.getAttrCall() == null) 
-				&&(predicate.getVariable() == null)) {
-			Predicate pred = table.getPredicate( predicateName, contextName);
-			predicate.setImpl((PredicateImplAST) pred.getImpl());
-		}
 	}
 
 	@Override
 	public void visit(PredicateImplAST impl) {
-		contextName = impl.getPathName().getContextName().getData();
+		// TODO Auto-generated method stub
 
 	}
 
@@ -235,16 +202,8 @@ public class IdConvertor extends TreeWalker {
 
 	@Override
 	public void visit(VariableAST var) {
-		if(variableCanBeVisited){
-			String idName = var.getIdentifier().getData();
-			
-			Identifier id = table.getId(idName, contextName); 
-			var.setId(id);
-		} 
-		else{
-			// attrCall закончен
-			variableCanBeVisited = true;
-		}
+		// TODO Auto-generated method stub
+
 	}
 
 }

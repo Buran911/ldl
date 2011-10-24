@@ -163,8 +163,12 @@ public class IdTableFiller extends TreeWalker {
 	public void visit(PredicateImplAST impl) {
 		Predicate predicate = new Predicate();
 		
-		predicate.setGroup(impl.getFuncPart().getGroup().getString());
-		predicate.setPriority(impl.getFuncPart().getPriority().getNumber());
+		if(impl.getFuncPart().getGroup() != null){
+			predicate.setGroup(impl.getFuncPart().getGroup().getString());
+		}
+		if(impl.getFuncPart().getPriority() != null){
+			predicate.setPriority(impl.getFuncPart().getPriority().getNumber());
+		}
 		predicate.setName(impl.getPathName().getPredicateName().getName());
 		predicate.setNamespace(impl.getPathName().getContextName().getName());
 		predicate.setImpl(impl);

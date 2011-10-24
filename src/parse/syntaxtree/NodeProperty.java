@@ -12,6 +12,8 @@ public class NodeProperty {
 	private boolean isBoolExp; // true, если это вызов функции includes
 	private boolean isDummy; // true, если это "пустышка" и дальше идти не надо
 	private boolean isFunction; // true, если это вызов функции
+	private boolean isPredicate; // true, если это вызов предиката
+	private boolean isString; // true, если это строковый тип данных
 	
 	private boolean used;  // true, ставиться при необходимости, если элемент дерева уже обработан
 	
@@ -96,6 +98,22 @@ public class NodeProperty {
 
 	public void setFunction() {
 		this.isFunction = true;
+	}
+
+	public boolean isPredicate() {
+		return isPredicate;
+	}
+
+	public void setPredicate() {
+		this.isPredicate = true;
+	}
+
+	public boolean isString() {
+		return isString;
+	}
+
+	public void setString() {
+		this.isString = true;
 	}
 	
 }

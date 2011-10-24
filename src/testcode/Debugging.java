@@ -31,6 +31,11 @@ public class Debugging {
 		
 		parser.parse();
 		
+		if(errh.hasErrors()){
+			errh.printErrors();
+			return;
+		}
+		
 		
 		ParseTree tree = parser.getTree();
 //		tree.printTree();
@@ -48,7 +53,7 @@ public class Debugging {
 		Engine engine = new Engine(new QueryData(table), qConstraints);
 		engine.generate();
 		
-		System.out.println(engine.getQuery().get(1));
+		System.out.println(engine.getQuery().get(0));
 	}
 
 }

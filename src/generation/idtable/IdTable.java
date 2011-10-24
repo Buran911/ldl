@@ -1,6 +1,8 @@
 package generation.idtable;
 
 
+import generation.languageconstants.Type;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +45,18 @@ public class IdTable {
 		return idTable.keySet();
 	}
 	
+	public int getDbIdCount(){
+		int count = 0;
+		
+		for(Identifier id : idTable.keySet()){
+			if(id.getSrcType() == Type.db){
+				count++;
+			}
+		}
+		
+		return count;
+	}
+	
 	public Identifier getId(String name, String namespace){
 		List<Identifier> ids = getIdByNamespace(namespace);
 		
@@ -64,6 +78,30 @@ public class IdTable {
 		}
 		
 		return identifiers;
+	}
+	
+	public Predicate getPredicate(String name, String namespace){
+		List<Predicate> predicates = getPredicateByNamespace(namespace);
+		
+		for(Predicate predicate : predicates){
+			if(predicate.getName().contentEquals(name)){
+				return predicate;
+			}
+		}
+		
+		return null;
+	}
+	
+
+	public List<Predicate> getPredicateByNamespace(String namespace){
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		for (Predicate predicate : predicateTable.keySet()){
+			if( predicate.getNamespace().contentEquals(namespace)){
+				predicates.add(predicate);
+			}
+		}
+		
+		return predicates;
 	}
 	
 	

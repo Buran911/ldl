@@ -6,6 +6,7 @@ public class PredicateAST extends BinaryExpAST {
 	private AttributeCallAST attrCall;
 	private VariableAST variable;
 	private OperationCallAST oprCall;
+	private PredicateImplAST impl;
 	
 	public void setAttrCall(AttributeCallAST attrCall) {
 		this.attrCall = attrCall;
@@ -32,6 +33,14 @@ public class PredicateAST extends BinaryExpAST {
 
 	public OperationCallAST getOprCall() {
 		return oprCall;
+	}
+
+	public PredicateImplAST getImpl() {
+		return impl;
+	}
+
+	public void setImpl(PredicateImplAST impl) {
+		this.impl = impl;
 	}
 
 	@Override

@@ -140,8 +140,12 @@ public class TopDownWalkingStrategy extends WalkerStrategy {
 	public void accept(TreeWalker walker, FunctionalPartAST funcPart) {
 		walker.visit(funcPart);
 		
-		funcPart.getGroup().accept(walker);
-		funcPart.getPriority().accept(walker);
+		if(funcPart.getGroup() != null){
+			funcPart.getGroup().accept(walker);
+		} 
+		if(funcPart.getPriority() != null){
+			funcPart.getPriority().accept(walker);
+		}
 	}
 
 	@Override
