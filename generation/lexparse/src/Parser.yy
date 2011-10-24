@@ -1,13 +1,20 @@
 %{
-	import java.io.*;
-	import parse.lexer.Lexer;
-	import parse.errhandler.ErrorHandler;
-	import parse.util.Source;
+	import generation.languageconstants.Logical;
+	import generation.languageconstants.Ratio;
+	
+	import java.io.IOException;
 	import java.io.StringReader;
-	import parse.errhandler.*;
-	import parse.parsetree.*;
+	
+	import parse.errhandler.ErrorClass;
+	import parse.errhandler.ErrorHandler;
+	import parse.errhandler.ErrorType;
+	import parse.errhandler.ParseError;
+	import parse.lexer.Lexer;
+	import parse.parsetree.Node;
+	import parse.parsetree.ParseTree;
 	import parse.parsetree.nodes.*;
 	import parse.parsetree.nodes.Number;
+	import parse.util.Source;
 %}
 
 %token context 
