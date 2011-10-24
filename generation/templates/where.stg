@@ -1,0 +1,33 @@
+where(elem) ::=<<
+	WHERE <constraint_list(elem)>
+>>
+
+constraint_list(elem) ::=<<
+	(<node(first(elem))>)<if(rest(elem))> AND <constraint_list(rest(elem))><endif>
+>>
+
+node(elem) ::=<<
+	<if(elem.node)>
+		<successors_list(elem.successors)>
+	<elseif(elem.leaf)>
+		<leaf(elem)>
+	<elseif(elem.variableExp)>
+		<elem.id.alias>
+	<elseif(elem.attributeCallExp)>
+		<elem.id.alias>	
+	<elseif(elem.predicate)>
+		<successors_list(elem.impl.constraints)>
+	<endif>
+>>
+
+successors_list(elem) ::=<<
+	 <node(first(elem))><if(rest(elem))><successors_list(rest(elem))><endif>
+>>
+
+leaf(elem) ::=<<
+	<if(elem.string)>
+		"<elem.data>"
+	<else>
+		<elem.data>
+	<endif>
+>>

@@ -1,0 +1,142 @@
+context Payment{
+	number instanceof int;
+	payer instanceof Participant;
+	payee instanceof Participant;
+	
+	source{
+		number:{
+			_type = NumberGenerator;
+			_generationType = sequence;
+			_beginVal = 10;
+			_period = 3;
+		}
+	}
+
+	eq_classes {
+		Participiants_in_equal_region();
+		Participiants_in_diff_regions();
+	}
+	
+	-- constraints
+	TransferPossible( );
+	
+	if payee.bic.isKO() && payer.bic.isKO(){
+		! Payee_equals_payer();
+	}
+	
+	if payee.bic.region = payer.bic.region{
+		! GRKC_equal();
+	}
+}
+
+context Participant{
+	bic instanceof BIC;
+	account instanceof Account;
+	source{
+		accounts:{
+			_type = db;
+			_table =  accs;
+			_column = acc;
+		}
+		
+	}
+
+	
+}
+
+context BIC{
+	republic instanceof int;
+	region instanceof int;
+	ubr instanceof int;
+	triple instanceof int;
+	
+	source{
+		bic:{
+			_type = db;
+			_table = bnkseek;
+			_column = bnk_id;
+		}
+	}
+	
+	eq_classes {
+		isKO();
+		isGRKC();
+		isRKC();
+		isPU();
+		isKO();
+		
+		if isKO() {
+			eq_classes {
+				maintainInGRKC();
+				maintainInRKC();
+			}
+		} 
+	}
+	
+}
+
+context Account{
+	balAcc instanceof string;
+	currency instanceof string;
+	key instanceof string;
+	suboffice instanceof string;
+	personalAcc instanceof string;
+
+
+	-- constraint
+	OnlyRubleAccs();
+}
+
+context InvalidCorrespondence{
+	balAcc1 instanceof string;
+	balAcc2 instanceof string;
+
+	source{ 
+		balAcc1:{
+			_type = db;
+			_table = inv_corr;
+			_column = balAcc1;
+		}
+		
+		balAcc2:{
+			_type = db;
+			_table = inv_corr;
+			_column = balAcc2;
+		}
+		
+	}
+}
+
+BIC::isKO<'bic',1>(){
+	triple >= 100;
+}
+
+BIC::isGRKC<'bic',1>(){
+	ubr <= 50; 
+	triple = '000';	
+}
+
+BIC::isRKC<'bic',1>(){
+	ubr > 50;
+	triple = '000';	
+}
+
+
+Payment::Participiants_in_equal_region(){
+	payer.bic.region = payee.bic.region;
+}
+
+Payment::Participiants_in_diff_regions(){
+	payer.bic.region != payee.bic.region;
+}
+
+Payment::Payee_equals_payer(){
+	payer.bic.republic = payee.bic.republic;
+	payer.bic.region = payee.bic.region;
+	payer.bic.ubr = payee.bic.ubr;
+	payer.bic.triple = payee.bic.triple;
+}
+
+Account::OnlyRubleAccs(){
+	currency = '643';
+}

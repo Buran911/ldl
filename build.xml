@@ -76,13 +76,15 @@
 		<!-- компиляция исходников -->
     	<mkdir dir="${build.classes}"/>
     	<echo> All sources will be recompiled.</echo>
-    	<javac proceed="true" encoding="cp1251" debug="off" optimize="on" srcdir="${src}" destdir="${build.classes}" classpathref="compile.classpath"/>
+    	<javac proceed="true" encoding="cp1251" debug="off" optimize="on" includeantruntime="true"
+    		srcdir="${src}" destdir="${build.classes}" classpathref="compile.classpath" excludes="testcases/**, testcode/**"/>
     	
     	<!-- создание jar -->
         <jar destfile="${releaseDir}/${jarFile}" basedir="${build.classes}">
         	<manifest>
         		<attribute name="Built-Time" value="${release date}"/>
         		<attribute name="Built-By" value="${user.name}"/>
+        		<attribute name="Main-Class" value="application.Application"/>
         		<attribute name="Class-Path" value="${jar.classpath}"/>
         	</manifest>
         </jar>

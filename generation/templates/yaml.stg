@@ -1,0 +1,11 @@
+yaml(elem) ::=<<
+<enter_list(elem)>
+>>
+enter_list(elem) ::=<<
+<data(first(elem))>
+<if(rest(elem))><enter_list(rest(elem))><endif>
+>>
+
+data(elem) ::=<<
+<first(elem)>: <first(rest(elem))>
+>>

@@ -1,0 +1,7 @@
+context Payment{
+	eq_classes{
+		sum > 3;
+		inn > 20000;
+	}
+}
+

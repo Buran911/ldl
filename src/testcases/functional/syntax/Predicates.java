@@ -1,7 +1,5 @@
 package testcases.functional.syntax;
 
-import java.io.StringReader;
-
 import org.junit.Assert;
 import org.junit.Test;
 
