@@ -1,13 +1,18 @@
 package parse.syntaxtree.nodes;
 
 import generation.walkers.TreeWalker;
-import parse.syntaxtree.Data;
+import parse.syntaxtree.Datable;
 import parse.syntaxtree.NodeAST;
+import parse.util.Positionable;
 
-public class IdentifierAST extends NodeAST implements Data{
+public class IdentifierAST extends NodeAST implements Datable, Positionable{
 	private String id;
+	private Integer lineNo;
+	private Integer columnNo;
 	
-	public IdentifierAST(String id) {
+	public IdentifierAST(String id, Integer lineNo, Integer columnNo) {
+		this.lineNo = lineNo;
+		this.columnNo = columnNo;
 		this.id = id;
 	}
 
@@ -24,6 +29,16 @@ public class IdentifierAST extends NodeAST implements Data{
 	@Override
 	public String getData() {
 		return id;
+	}
+	
+	@Override
+	public Integer getLineNo() {
+		return lineNo;
+	}
+
+	@Override
+	public Integer getColumnNo() {
+		return columnNo;
 	}
 
 }

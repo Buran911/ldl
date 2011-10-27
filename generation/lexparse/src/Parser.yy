@@ -583,82 +583,82 @@ FormalParams : {
 }  
 
 Identifier : identifier{ 
-	tree.saveNode( new Identifier($1) ); 
+	tree.saveNode( new Identifier($1, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Type : identifier{ 
-	tree.saveNode( new Type($1) ); 
+	tree.saveNode( new Type($1, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 SimpleName : identifier { 
-	tree.saveNode( new SimpleName($1) ); 
+	tree.saveNode( new SimpleName($1, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 LString : string{ 
-	tree.saveNode( new LString($1) ); 
+	tree.saveNode( new LString($1, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Number : number { 
-	tree.saveNode( new Number($1) ); 
+	tree.saveNode( new Number($1, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Bool : ldltrue { 
-	tree.saveNode( new Bool(true) ); 
+	tree.saveNode( new Bool(true, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Bool : ldlfalse{ 
-	tree.saveNode( new Bool(false) ); 
+	tree.saveNode( new Bool(false, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 SetOp : and { 
-	tree.saveNode( new SetOp(Logical.and) ); 
+	tree.saveNode( new SetOp(Logical.and, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 SetOp : or { 
-	tree.saveNode( new SetOp(Logical.or) ); 
+	tree.saveNode( new SetOp(Logical.or, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 SetOp : xor { 
-	tree.saveNode( new SetOp(Logical.xor) ); 
+	tree.saveNode( new SetOp(Logical.xor, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : "<" { 
-	tree.saveNode( new Relation(Ratio.less) ); 
+	tree.saveNode( new Relation(Ratio.less, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : ">" { 
-	tree.saveNode( new Relation(Ratio.more) ); 
+	tree.saveNode( new Relation(Ratio.more, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : "=" { 
-	tree.saveNode( new Relation(Ratio.equal) ); 
+	tree.saveNode( new Relation(Ratio.equal, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : notEqual { 
-	tree.saveNode( new Relation(Ratio.notEqual) ); 
+	tree.saveNode( new Relation(Ratio.notEqual, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : lessEqual { 
-	tree.saveNode( new Relation(Ratio.lessEqual) ); 
+	tree.saveNode( new Relation(Ratio.lessEqual, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : moreEqual{ 
-	tree.saveNode( new Relation(Ratio.moreEqual) );  
+	tree.saveNode( new Relation(Ratio.moreEqual, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) );  
 	$$ = tree.getLast(); 
 }  
 

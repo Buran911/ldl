@@ -1,5 +1,5 @@
 package parse.syntaxtree;
 
-public interface Data {
+public interface Datable {
 	public String getData();
 }

@@ -2,13 +2,18 @@ package parse.syntaxtree.nodes;
 
 import generation.languageconstants.Logical;
 import generation.walkers.TreeWalker;
-import parse.syntaxtree.Data;
+import parse.syntaxtree.Datable;
 import parse.syntaxtree.NodeAST;
+import parse.util.Positionable;
 
-public class SetOpAST extends NodeAST implements Data {
+public class SetOpAST extends NodeAST implements Datable, Positionable {
 	private Logical operation;
+	private Integer lineNo;
+	private Integer columnNo;
 	
-	public SetOpAST(Logical operation) {
+	public SetOpAST(Logical operation, Integer lineNo, Integer columnNo) {
+		this.lineNo = lineNo;
+		this.columnNo = columnNo;
 		this.operation = operation;
 	}
 
@@ -23,6 +28,17 @@ public class SetOpAST extends NodeAST implements Data {
 	@Override
 	public String getData() {
 		return operation.value();
+	}
+	
+	
+	@Override
+	public Integer getLineNo() {
+		return lineNo;
+	}
+
+	@Override
+	public Integer getColumnNo() {
+		return columnNo;
 	}
 
 }
