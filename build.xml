@@ -5,7 +5,7 @@
 	<property name="build" value="bin"/>
 	<property name="build.classes" value="${build}/classes"/>
 	<property name="project dir" location="."/>
-	<property name="releaseDir" value= "generation/project"/>
+	<property name="releaseDir" value= "build"/>
 	<property name="jarFile" value="ldl.jar"/>
 	
 	<property name="lexerFile" value="generation/lexparse/JFlex.jar"/>
@@ -77,7 +77,8 @@
     	<mkdir dir="${build.classes}"/>
     	<echo> All sources will be recompiled.</echo>
     	<javac proceed="true" encoding="cp1251" debug="off" optimize="on" includeantruntime="true"
-    		srcdir="${src}" destdir="${build.classes}" classpathref="compile.classpath" excludes="testcases/**, testcode/**"/>
+    		srcdir="${src}" destdir="${build.classes}" classpathref="compile.classpath"
+    		excludes="testcases/**, testcode/**" target="1.6"/>
     	
     	<!-- создание jar -->
         <jar destfile="${releaseDir}/${jarFile}" basedir="${build.classes}">
