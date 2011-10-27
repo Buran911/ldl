@@ -1,13 +1,17 @@
 package parse.syntaxtree.nodes;
 
-import parse.syntaxtree.Data;
 import generation.walkers.TreeWalker;
+import parse.syntaxtree.Datable;
+import parse.util.Positionable;
 
-public class BooleanAST extends LiteralAST implements Data{
+public class BooleanAST extends LiteralAST implements Datable, Positionable{
 	private Boolean bool;
+	private Integer lineNo;
+	private Integer columnNo;
 	
-	public BooleanAST(Boolean bool) {
-		super();
+	public BooleanAST(Boolean bool, Integer lineNo, Integer columnNo) {
+		this.lineNo = lineNo;
+		this.columnNo = columnNo;
 		this.bool = bool;
 	}
 
@@ -24,6 +28,16 @@ public class BooleanAST extends LiteralAST implements Data{
 	@Override
 	public String getData() {
 		return bool.toString();
+	}
+
+	@Override
+	public Integer getLineNo() {
+		return lineNo;
+	}
+
+	@Override
+	public Integer getColumnNo() {
+		return columnNo;
 	}
 
 }

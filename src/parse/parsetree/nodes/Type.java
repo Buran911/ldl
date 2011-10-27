@@ -1,13 +1,14 @@
 package parse.parsetree.nodes;
 
-import parse.parsetree.Node;
+import parse.parsetree.PositionableNode;
 import parse.syntaxtree.NodeAST;
 import parse.syntaxtree.nodes.TypeAST;
 
-public class Type extends Node {
+public class Type extends PositionableNode {
 	private String type;
 
-	public Type(String type) {
+	public Type(String type, Integer lineNo, Integer columnNo) {
+		super(lineNo, columnNo);
 		this.type = type;
 	}
 
@@ -17,7 +18,7 @@ public class Type extends Node {
 
 	@Override
 	public NodeAST getConvertedSubtree() {
-		return new TypeAST(getType());
+		return new TypeAST(getType(), getLineNo(), getColumnNo());
 	}
 	
 }

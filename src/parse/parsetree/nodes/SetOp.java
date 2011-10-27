@@ -1,14 +1,15 @@
 package parse.parsetree.nodes;
 
 import generation.languageconstants.Logical;
-import parse.parsetree.Node;
+import parse.parsetree.PositionableNode;
 import parse.syntaxtree.NodeAST;
 import parse.syntaxtree.nodes.SetOpAST;
 
-public class SetOp extends Node {
+public class SetOp extends PositionableNode {
 	private Logical logical;
 
-	public SetOp(Logical logical) {
+	public SetOp(Logical logical, Integer lineNo, Integer columnNo) {
+		super(lineNo, columnNo);
 		this.logical = logical;
 	}
 
@@ -18,6 +19,6 @@ public class SetOp extends Node {
 
 	@Override
 	public NodeAST getConvertedSubtree() {
-		return new SetOpAST(getLogical());
+		return new SetOpAST(getLogical(), getLineNo(), getColumnNo());
 	}
 }

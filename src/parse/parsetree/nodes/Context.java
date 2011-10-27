@@ -11,7 +11,6 @@ import parse.syntaxtree.nodes.DescriptionAST;
 import parse.syntaxtree.nodes.EqClassAST;
 import parse.syntaxtree.nodes.SimpleNameAST;
 import parse.syntaxtree.nodes.SourceAST;
-import parse.util.Source;
 
 public class Context extends Node {
 

@@ -7,7 +7,7 @@ import generation.templateengine.QueryData;
 import generation.walkers.strategys.BottomUpWalkingStrategy;
 import generation.walkers.strategys.IdParsigStrategy;
 import generation.walkers.walkers.IdConvertor;
-import generation.walkers.walkers.IdTableFiller;
+import generation.walkers.walkers.IdTableMaker;
 import generation.walkers.walkers.TemplateEqClassesFiller;
 import generation.walkers.walkers.TemplateTypeFiller;
 
@@ -44,7 +44,7 @@ public class Debugging {
 		
 		IdTable table = new IdTable();
 		QueryConstraints qConstraints = new QueryConstraints();
-		syntaxTree.accept( new IdTableFiller( new IdParsigStrategy(), table));
+		syntaxTree.accept( new IdTableMaker( new IdParsigStrategy(), table));
 		syntaxTree.accept( new TemplateTypeFiller( new BottomUpWalkingStrategy()));
 		syntaxTree.accept( new IdConvertor( new IdParsigStrategy(),table));
 		syntaxTree.accept( new TemplateEqClassesFiller(new BottomUpWalkingStrategy(), qConstraints));

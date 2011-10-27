@@ -8,6 +8,8 @@ import generation.walkers.strategys.BottomUpWalkingStrategy;
 import generation.walkers.strategys.IdParsigStrategy;
 import generation.walkers.walkers.IdConvertor;
 import generation.walkers.walkers.IdTableFiller;
+import generation.walkers.walkers.IdTableMaker;
+import generation.walkers.walkers.PositionEstimater;
 import generation.walkers.walkers.TemplateEqClassesFiller;
 import generation.walkers.walkers.TemplateTypeFiller;
 
@@ -78,6 +80,8 @@ public class App {
 		table = new IdTable();
 		QueryConstraints qConstraints = new QueryConstraints();
 		
+		tree.accept( new IdTableMaker( new IdParsigStrategy(), table));
+		tree.accept( new PositionEstimater( new IdParsigStrategy()));
 		tree.accept( new IdTableFiller( new IdParsigStrategy(), table));
 		tree.accept( new TemplateTypeFiller( new BottomUpWalkingStrategy()));
 		tree.accept( new IdConvertor( new IdParsigStrategy(),table));

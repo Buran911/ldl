@@ -1,12 +1,17 @@
 package parse.syntaxtree.nodes;
 
 import generation.walkers.TreeWalker;
-import parse.syntaxtree.Data;
+import parse.syntaxtree.Datable;
+import parse.util.Positionable;
 
-public class NumberAST extends LiteralAST implements Data {
+public class NumberAST extends LiteralAST implements Datable,Positionable {
 	private Double number;
+	private Integer lineNo;
+	private Integer columnNo;
 	
-	public NumberAST(Double number) {
+	public NumberAST(Double number, Integer lineNo, Integer columnNo) {
+		this.lineNo = lineNo;
+		this.columnNo = columnNo;
 		this.number = number;
 	}
 	
@@ -23,6 +28,17 @@ public class NumberAST extends LiteralAST implements Data {
 	@Override
 	public String getData() {
 		return number.toString();
+	}
+
+
+	@Override
+	public Integer getLineNo() {
+		return lineNo;
+	}
+
+	@Override
+	public Integer getColumnNo() {
+		return columnNo;
 	}
 
 }
