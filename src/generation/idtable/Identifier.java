@@ -58,7 +58,7 @@ public class Identifier {
 	}
 	
 	public void makeAlias(){
-		alias = name + "_" + index.toString();
+		alias = name.toUpperCase() + "_" + index.toString();
 	}
 	
 	public String getAlias() {

@@ -26,7 +26,7 @@ successors_list(elem) ::=<<
 
 leaf(elem) ::=<<
 	<if(elem.string)>
-		"<elem.data>"
+		'<elem.data>'
 	<else>
 		<elem.data>
 	<endif>
