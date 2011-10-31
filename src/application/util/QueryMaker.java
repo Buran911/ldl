@@ -6,31 +6,40 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 public class QueryMaker {
 	private List<String> querys;
 	private List<QueryResult> queryResults;
-	private String connectionString;
+	private DbConectionData connection;
 	private int columnCount;
+	private DBMS dbms;
 	
 	{
 		queryResults = new LinkedList<QueryResult>();
 	}
 	
-	public QueryMaker(String conStr, List<String> querys, int columnCount) {
+	public QueryMaker(DbConectionData connection, List<String> querys, int columnCount) {
 		this.querys = querys;
-		connectionString = conStr;
+		this.connection = connection;
 		this.columnCount = columnCount;
 	}
 	
 	public void makeQuerys() throws ClassNotFoundException, SQLException{
-		Class.forName("org.sqlite.JDBC");
+		estimateDbms();
+		
+		switch (dbms) {
+			case sqlite:
+				Class.forName("org.sqlite.JDBC");
+				break;
+			case oracle:
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+				break;
+		}
+		
 		Connection conn = DriverManager
-				.getConnection(connectionString);
+				.getConnection(connection.getConnectionString(), connection.getUser(), connection.getPassword());
 		Statement stat = conn.createStatement();
 		
 		
@@ -65,5 +74,10 @@ public class QueryMaker {
 		rs.close();
 		
 		return queryResult;
+	}
+	
+	private void estimateDbms(){
+		String dbmsString = connection.getConnectionString().split(":")[1];
+		dbms = DBMS.valueOf(dbmsString);
 	}
 }

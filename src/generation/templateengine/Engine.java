@@ -32,14 +32,17 @@ public class Engine {
 			
 			// FIXME убрать костыль
 			String q = selFrom + where;
-			query.add(q.replaceAll("'", ""));
+			q = q.replaceAll("''", "###");
+			q = q.replaceAll("'", "");
+			q = q.replaceAll("###", "'");
+			query.add(q);
 		} 
 		
 	}
 
 	private String generateSelectFrom(){
 		STGroup group = new STGroupFile("generation/templates/select_from.stg");
-		ST st = group.getInstanceOf("select");
+		ST st = group.getInstanceOf("query");
 		
 		st.add("elem", queryData);
 		String result = st.render();

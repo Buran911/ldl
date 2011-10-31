@@ -85,6 +85,14 @@ public class XMLParser {
 		return getAttribute(rootElem, "db", "returnPolicy");
 	}
 	
+	public String getUser(){
+		return getAttribute(rootElem, "db", "user");
+	}
+	
+	public String getPassword(){
+		return getAttribute(rootElem, "db", "password");
+	}
+	
 	private String getTextValue(Element elem, String tag){
 		
 		return getValue(elem, tag, 0);

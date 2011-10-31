@@ -5,7 +5,7 @@
 	<property name="build" value="bin"/>
 	<property name="build.classes" value="${build}/classes"/>
 	<property name="project dir" location="."/>
-	<property name="releaseDir" value= "generation/project"/>
+	<property name="releaseDir" value= "build"/>
 	<property name="jarFile" value="ldl.jar"/>
 	
 	<property name="lexerFile" value="generation/lexparse/JFlex.jar"/>
@@ -64,7 +64,7 @@
 	
 	<!-- задание путей  либам --> 
 	<path id="compile.classpath">
-		<fileset dir="${lib}" includes="**/*.jar" excludes="junit.jar"/>
+		<fileset dir="${lib}" includes="*.jar" excludes="junit.jar"/>
 	</path>
 	
 	<!-- создание бинарников -->

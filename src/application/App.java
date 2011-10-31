@@ -21,6 +21,7 @@ import parse.parser.Parser;
 import parse.syntaxtree.SyntaxTree;
 import parse.util.Source;
 import application.util.CmdLineParser;
+import application.util.DbConectionData;
 import application.util.Policy;
 import application.util.QueryMaker;
 import application.util.YamlWriter;
@@ -31,7 +32,7 @@ public class App {
 	private SyntaxTree tree;
 	private ErrorHandler errh;
 	private Engine engine;
-	private String conStr;
+	private DbConectionData connection;
 	private int columnCount;
 	private Policy policy;
 	private QueryMaker queryMaker;
@@ -52,7 +53,10 @@ public class App {
 		System.out.println("Парсинг настроечного файла.");
 		XMLParser parser = new XMLParser(cmdLineParser.getPropertyFile());
 		parser.parse();
-		conStr = parser.getConnectionString();
+		connection = new DbConectionData();
+		connection.setConnectionString(parser.getConnectionString());
+		connection.setUser(parser.getUser());
+		connection.setPassword(parser.getPassword());
 		policy = Policy.valueOf(parser.getPolicy());
 		
 		src = new Source(cmdLineParser.getLdlFiles());
@@ -97,7 +101,7 @@ public class App {
 	
 	public void makeQuery() {
 		System.out.println("Работа с БД.");
-		queryMaker = new QueryMaker(conStr, engine.getQuery(), columnCount);
+		queryMaker = new QueryMaker(connection, engine.getQuery(), columnCount);
 		try {
 			queryMaker.makeQuerys();
 		} catch (ClassNotFoundException e) {
