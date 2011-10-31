@@ -13,17 +13,15 @@ public class QueryMaker {
 	private List<String> querys;
 	private List<QueryResult> queryResults;
 	private DbConectionData connection;
-	private int columnCount;
 	private DBMS dbms;
 	
 	{
 		queryResults = new LinkedList<QueryResult>();
 	}
 	
-	public QueryMaker(DbConectionData connection, List<String> querys, int columnCount) {
+	public QueryMaker(DbConectionData connection, List<String> querys) {
 		this.querys = querys;
 		this.connection = connection;
-		this.columnCount = columnCount;
 	}
 	
 	public void makeQuerys() throws ClassNotFoundException, SQLException{
@@ -63,7 +61,7 @@ public class QueryMaker {
 		ResultSetMetaData meta = rs.getMetaData();
 		
 		while (rs.next()) {
-			for (int j = 1; j <= columnCount; j++) {
+			for (int j = 1; j <= meta.getColumnCount(); j++) {
 				// XXX слабое место
 				String columnLabel = meta.getColumnLabel(j);
 				queryResult.addResult(columnLabel, rs.getString(j));

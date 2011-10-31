@@ -45,17 +45,6 @@ public class IdTable {
 		return idTable.keySet();
 	}
 	
-	public int getDbIdCount(){
-		int count = 0;
-		
-		for(Identifier id : idTable.keySet()){
-			if(id.getSrcType() == Type.db){
-				count++;
-			}
-		}
-		
-		return count;
-	}
 	
 	public Identifier getId(String alias){
 		for(Identifier id : idTable.keySet()){
