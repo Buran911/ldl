@@ -67,12 +67,14 @@
 		<fileset dir="${lib}" includes="*.jar" excludes="junit.jar"/>
 	</path>
 	
+	<path id="compile.mapedclasspath"/>
+	
+	<pathconvert targetos="windows" property="compile.mapedclasspath" refid="compile.classpath" pathsep=" ">
+		<map from="C:\Users\Sergey\workspace\ldl\" to=""/>
+	</pathconvert>
+	
 	<!-- создание бинарников -->
     <target name="make build" depends="init, generate lexparse" description="Creating jar from ldl project">    	
-    	<manifestclasspath property="jar.classpath" jarfile="${releaseDir}/${jarFile}">
-    		<classpath refid="compile.classpath"/>
-    	</manifestclasspath>
-    	
 		<!-- компиляция исходников -->
     	<mkdir dir="${build.classes}"/>
     	<echo> All sources will be recompiled.</echo>
@@ -86,7 +88,7 @@
         		<attribute name="Built-Time" value="${release date}"/>
         		<attribute name="Built-By" value="${user.name}"/>
         		<attribute name="Main-Class" value="application.Application"/>
-        		<attribute name="Class-Path" value="${jar.classpath}"/>
+        		<attribute name="Class-Path" value="${compile.mapedclasspath}"/>
         	</manifest>
         </jar>
     	<echo> ${jarFile} created </echo>

@@ -33,7 +33,6 @@ public class App {
 	private ErrorHandler errh;
 	private Engine engine;
 	private DbConectionData connection;
-	private int columnCount;
 	private Policy policy;
 	private QueryMaker queryMaker;
 	private IdTable table;
@@ -91,8 +90,6 @@ public class App {
 		tree.accept( new IdConvertor( new IdParsigStrategy(),table));
 		tree.accept( new TemplateEqClassesFiller(new BottomUpWalkingStrategy(), qConstraints));
 		
-		columnCount = table.getDbIdCount();
-		
 		qConstraints.makeUnmodifiable();
 		engine = new Engine(new QueryData(table), qConstraints);
 		System.out.println("Генерация запроса(-ов).");
@@ -101,7 +98,7 @@ public class App {
 	
 	public void makeQuery() {
 		System.out.println("Работа с БД.");
-		queryMaker = new QueryMaker(connection, engine.getQuery(), columnCount);
+		queryMaker = new QueryMaker(connection, engine.getQuery());
 		try {
 			queryMaker.makeQuerys();
 		} catch (ClassNotFoundException e) {
