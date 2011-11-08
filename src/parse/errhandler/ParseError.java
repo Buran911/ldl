@@ -96,4 +96,40 @@ public class ParseError {
 	public void setPossibleSolution(String possibleSolution) {
 		this.possibleSolution = possibleSolution;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((errClass == null) ? 0 : errClass.hashCode());
+		result = prime * result + ((errType == null) ? 0 : errType.hashCode());
+		result = prime * result + ((lineNo == null) ? 0 : lineNo.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ParseError other = (ParseError) obj;
+		if (errClass != other.errClass)
+			return false;
+		if (errType != other.errType)
+			return false;
+		if (lineNo == null) {
+			if (other.lineNo != null)
+				return false;
+		} else if (!lineNo.equals(other.lineNo))
+			return false;
+		return true;
+	}
+	
+	
+	
+	
 }

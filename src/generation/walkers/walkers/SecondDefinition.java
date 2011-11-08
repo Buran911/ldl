@@ -1,5 +1,14 @@
 package generation.walkers.walkers;
 
+import generation.idtable.IdTable;
+import generation.idtable.Identifier;
+import generation.idtable.Predicate;
+import generation.walkers.TreeWalker;
+import generation.walkers.WalkerStrategy;
+import parse.errhandler.ErrorClass;
+import parse.errhandler.ErrorHandler;
+import parse.errhandler.ErrorType;
+import parse.errhandler.ParseError;
 import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
 import parse.syntaxtree.nodes.BinaryOpAST;
@@ -28,20 +37,25 @@ import parse.syntaxtree.nodes.VariableAST;
 import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
-import generation.idtable.Predicate;
-import generation.walkers.TreeWalker;
-import generation.walkers.WalkerStrategy;
 
-public class PositionEstimater extends TreeWalker {
+;
 
-	public PositionEstimater(WalkerStrategy strategy) {
+public class SecondDefinition extends TreeWalker {
+	private IdTable table;
+	private String contextName;
+	private ErrorHandler errh;
+
+	public SecondDefinition(WalkerStrategy strategy, IdTable table,
+			ErrorHandler errh) {
 		super(strategy);
+		this.table = table;
+		this.errh = errh;
 	}
 
 	@Override
 	public void visit(AttributeCallAST attrCall) {
-		attrCall.setLineNo(attrCall.getIdentifier().getLineNo());
-		attrCall.setColumnNo(attrCall.getIdentifier().getColumnNo());
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -70,14 +84,25 @@ public class PositionEstimater extends TreeWalker {
 
 	@Override
 	public void visit(ContextAST context) {
-		// TODO Auto-generated method stub
-
+		contextName = context.getContextName().getName();
 	}
 
 	@Override
 	public void visit(DescriptionAST description) {
-		description.setLineNo(description.getIdentifier().getLineNo());
-		description.setColumnNo(description.getIdentifier().getColumnNo());
+		Identifier id = new Identifier();
+
+		id.setNamespace(contextName);
+		id.setName(description.getIdentifier().getId());
+//		id.setType(description.getType().getType());
+
+		if (table.getId(id.getName(), id.getNamespace()) == null) {
+			table.addId(id, description);
+		} 
+		else {
+			errh.addError(new ParseError(ErrorClass.semantic,
+					ErrorType.IdentifierRedefenition, description.getLineNo(),
+					description.getColumnNo()));
+		}
 
 	}
 
@@ -119,8 +144,8 @@ public class PositionEstimater extends TreeWalker {
 
 	@Override
 	public void visit(OperationCallAST operationCall) {
-		operationCall.setLineNo(operationCall.getIdentifier().getLineNo());
-		operationCall.setColumnNo(operationCall.getIdentifier().getColumnNo());
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -137,14 +162,35 @@ public class PositionEstimater extends TreeWalker {
 
 	@Override
 	public void visit(PredicateAST predicate) {
-	    predicate.setLineNo(predicate.getOprCall().getIdentifier().getLineNo());
-	    predicate.setColumnNo(predicate.getOprCall().getIdentifier().getColumnNo());
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
 	public void visit(PredicateImplAST impl) {
-		impl.setLineNo(impl.getPathName().getContextName().getLineNo());
-		impl.setColumnNo(impl.getPathName().getContextName().getColumnNo());
+		
+		Predicate predicate = new Predicate();
+		
+		if(impl.getFuncPart().getGroup() != null){
+			predicate.setGroup(impl.getFuncPart().getGroup().getString());
+		}
+		if(impl.getFuncPart().getPriority() != null){
+			predicate.setPriority(impl.getFuncPart().getPriority().getNumber());
+		}
+		predicate.setName(impl.getPathName().getPredicateName().getName());
+		predicate.setNamespace(impl.getPathName().getContextName().getName());
+		predicate.setImpl(impl);
+		
+
+
+		if (table.getPredicate(predicate.getName(), predicate.getNamespace()) == null) {
+			table.addPredicate(predicate, impl);
+		} 
+		else {
+			errh.addError(new ParseError(ErrorClass.semantic,
+					ErrorType.IdentifierRedefenition, impl.getLineNo(),
+					impl.getColumnNo()));
+		}
 	}
 
 	@Override
@@ -179,8 +225,7 @@ public class PositionEstimater extends TreeWalker {
 
 	@Override
 	public void visit(srcBlockAST block) {
-		block.setLineNo(block.getIdentifier().getLineNo());
-		block.setColumnNo(block.getIdentifier().getColumnNo());
+		// TODO Auto-generated method stub
 
 	}
 
@@ -204,8 +249,8 @@ public class PositionEstimater extends TreeWalker {
 
 	@Override
 	public void visit(VariableAST var) {
-		var.setLineNo(var.getIdentifier().getLineNo());
-		var.setColumnNo(var.getIdentifier().getColumnNo());
+		// TODO Auto-generated method stub
+
 	}
 
 }

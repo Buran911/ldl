@@ -1,0 +1,8 @@
+context Payer{
+	inn instanceof String;
+	inn instanceof BankRu;
+}
+
+context BankRu{
+	id instanceof Integer;
+}

@@ -70,7 +70,7 @@
 	<path id="compile.mapedclasspath"/>
 	
 	<pathconvert targetos="windows" property="compile.mapedclasspath" refid="compile.classpath" pathsep=" ">
-		<map from="C:\Users\Sergey\workspace\ldl\" to=""/>
+		<map from="C:\Users\gituser\workspace\ldl\" to=""/>
 	</pathconvert>
 	
 	<!-- создание бинарников -->
@@ -80,7 +80,7 @@
     	<echo> All sources will be recompiled.</echo>
     	<javac proceed="true" encoding="cp1251" debug="off" optimize="on" includeantruntime="true"
     		srcdir="${src}" destdir="${build.classes}" classpathref="compile.classpath"
-    		excludes="testcases/**, testcode/**" target="1.6"/>
+    		excludes="testcases/**, testcode/**" target="1.6" source="1.6"/>
     	
     	<!-- создание jar -->
         <jar destfile="${releaseDir}/${jarFile}" basedir="${build.classes}">

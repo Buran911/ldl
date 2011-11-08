@@ -6,12 +6,16 @@ import java.util.LinkedList;
 import java.util.List;
 
 import parse.syntaxtree.NodeAST;
+import parse.util.Positionable;
 
-public class PredicateImplAST extends NodeAST {
+public class PredicateImplAST extends NodeAST implements Positionable {
 	private PathNameAST pathName;
 	private FunctionalPartAST funcPart;
 	private FormalParamsAST formalParams;
 	private List<ConstraintAST> constraints;
+	private Integer lineNo;
+	private Integer columnNo;
+	
 	
 	{
 		constraints = new LinkedList<ConstraintAST>();
@@ -57,6 +61,22 @@ public class PredicateImplAST extends NodeAST {
 	public void accept(TreeWalker walker) {
 		walker.accept(this);
 
+	}
+
+	public Integer getLineNo() {
+		return lineNo;
+	}
+
+	public void setLineNo(Integer lineNo) {
+		this.lineNo = lineNo;
+	}
+
+	public Integer getColumnNo() {
+		return columnNo;
+	}
+
+	public void setColumnNo(Integer columnNo) {
+		this.columnNo = columnNo;
 	}
 
 }

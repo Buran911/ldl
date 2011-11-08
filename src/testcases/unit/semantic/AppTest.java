@@ -1,4 +1,4 @@
-package application;
+package testcases.unit.semantic;
 
 import generation.idtable.IdTable;
 import generation.templateengine.Engine;
@@ -9,8 +9,8 @@ import generation.walkers.strategys.IdParsigStrategy;
 import generation.walkers.walkers.IdConvertor;
 import generation.walkers.walkers.IdTableFiller;
 import generation.walkers.walkers.IdTableMaker;
+import generation.walkers.walkers.NoDefinition;
 import generation.walkers.walkers.PositionEstimater;
-import generation.walkers.walkers.SecondDefinition;
 import generation.walkers.walkers.TemplateEqClassesFiller;
 import generation.walkers.walkers.TemplateTypeFiller;
 
@@ -27,7 +27,7 @@ import application.util.Policy;
 import application.util.QueryMaker;
 import application.util.YamlWriter;
 
-public class App {
+public class AppTest {
 	private String[] args;
 	private Source src;
 	private SyntaxTree tree;
@@ -38,7 +38,7 @@ public class App {
 	private QueryMaker queryMaker;
 	private IdTable table;
 	
-	public App(String[] args) {
+	public AppTest(String[] args) {
 		this.args = args;
 	}
 
@@ -99,8 +99,13 @@ public class App {
 	
 	public void checkSemantics(){
 		IdTable idTable = new IdTable();
-		tree.accept( new PositionEstimater( new IdParsigStrategy()));		
-		tree.accept( new SecondDefinition( new IdParsigStrategy(), table, errh));
+		tree.accept( new PositionEstimater( new IdParsigStrategy()));	
+		tree.accept( new NoDefinition( new IdParsigStrategy(), table, errh));
+//		tree.accept( new SecondDefinition( new IdParsigStrategy(), table, errh));
+	}
+	
+	public SyntaxTree getTree(){
+		return tree;
 	}
 	
 	public void makeQuery() {
@@ -122,6 +127,10 @@ public class App {
 		System.out.println("Запись YAML.");
 		YamlWriter yw = new YamlWriter(queryMaker.getQueryResults(), policy, table);
 		yw.writeYAMLs();
+	}
+
+	public ErrorHandler getErrh() {
+		return errh;
 	}
 
 
