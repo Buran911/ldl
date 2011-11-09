@@ -1,0 +1,5 @@
+context Payment{
+	a instanceof int;
+	b instanceof String;
+	a = b;	
+}
