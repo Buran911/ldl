@@ -6,5 +6,5 @@ context Payment{
 	a instanceof int;
 	b instanceof BankRu;
 	
-	a = b.isKO();	
+	a = b.isKO();
 }

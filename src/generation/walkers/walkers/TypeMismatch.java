@@ -58,65 +58,37 @@ public class TypeMismatch extends TreeWalker {
 
     @Override
     public void visit(BinaryExpressionAST binaryExp) {
-	System.out.println("In binaryExp");
+	/** Left-side part of expression */
 	String leftVar = null;
+	/** Right-side part of expression */
 	String rightVar = null;
-	// first expr
 
-	if (binaryExp.getFirstExpression() instanceof AttributeCallAST) {
+	// first expression
+	if (binaryExp.getFirstExpression() instanceof AttributeCallAST)
 	    leftVar = ((AttributeCallAST) binaryExp.getFirstExpression()).getId().getType();
-	    System.out.println("FirstAtt");
-	}
-	else if (binaryExp.getFirstExpression() instanceof VariableAST) {
+	else if (binaryExp.getFirstExpression() instanceof VariableAST)
 	    leftVar = ((VariableAST) binaryExp.getFirstExpression()).getId().getType();
-	    System.out.println("FirstVar");
-	}
-	else if (binaryExp.getFirstExpression() instanceof StringAST) {
+	else if (binaryExp.getFirstExpression() instanceof StringAST)
 	    leftVar = "String";
-	    System.out.println("SecondStr");
-	}
-	else if (binaryExp.getFirstExpression() instanceof NumberAST) {
+	else if (binaryExp.getFirstExpression() instanceof NumberAST)
 	    leftVar = "int";
-	    System.out.println("SecondNum");
-	}
-	else if (binaryExp.getFirstExpression() instanceof BooleanAST) {
+	else if (binaryExp.getFirstExpression() instanceof BooleanAST)
 	    leftVar = "boolean";
-	    System.out.println("SecondBoo");
-	}
-	// second expr
 
-	if (binaryExp.getSecondExpression() instanceof AttributeCallAST) {
+	// second expression
+	if (binaryExp.getSecondExpression() instanceof AttributeCallAST)
 	    rightVar = ((AttributeCallAST) binaryExp.getSecondExpression()).getId().getType();
-	    System.out.println("SecondAtt");
-	}
-	else if (binaryExp.getSecondExpression() instanceof VariableAST) {
+	else if (binaryExp.getSecondExpression() instanceof VariableAST)
 	    rightVar = ((VariableAST) binaryExp.getSecondExpression()).getId().getType();
-	    System.out.println("SecondVar");
-	}
-	else if (binaryExp.getSecondExpression() instanceof StringAST) {
+	else if (binaryExp.getSecondExpression() instanceof StringAST)
 	    rightVar = "String";
-	    System.out.println("SecondStr");
-	}
-	else if (binaryExp.getSecondExpression() instanceof NumberAST) {
+	else if (binaryExp.getSecondExpression() instanceof NumberAST)
 	    rightVar = "int";
-	    System.out.println("SecondNum");
-	}
-	else if (binaryExp.getSecondExpression() instanceof BooleanAST) {
+	else if (binaryExp.getSecondExpression() instanceof BooleanAST)
 	    rightVar = "boolean";
-	    System.out.println("SecondBoo");
-	}
 
-	if (leftVar.equalsIgnoreCase(rightVar)) {
-	    System.out.println("equals");
-	    System.out.println(leftVar + " == " + rightVar);
-	}
-	else {
-	    System.out.println("not equals");
-	    System.out.println(leftVar + " != " + rightVar);
+	if (!leftVar.equalsIgnoreCase(rightVar))
 	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.UncompatibleTypes, binaryExp.getRelation().getLineNo(), binaryExp.getRelation().getColumnNo()));
-	}
-
-	System.out.println("End");
     }
 
     @Override
