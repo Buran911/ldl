@@ -6,3 +6,8 @@ BIC::isRKC<'bic', 1>(){
 Payment::Participiants_in_equal_region(){
 	payer.bic.region = payee.bic.region;
 }
+
+BIC::isGRKC(){
+	true;	
+}
+

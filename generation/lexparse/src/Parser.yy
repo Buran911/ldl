@@ -422,6 +422,15 @@ BinaryExp : Expression Relation Expression{
 	(( Expression ) $3).setParent( (BinaryExp)$$ );
 }  
 
+BinaryExp : Bool{ 
+	tree.saveNode( new BinaryExp() ); 
+	$$ = tree.getLast(); 
+	(( Bool ) $1).setParent( (BinaryExp)$$ ); 
+}  
+
+
+
+
 Condition : If Binary "{"
 	IfBlocks
 "}" { 

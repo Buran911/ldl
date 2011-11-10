@@ -54,9 +54,15 @@ public class BottomUpWalkingStrategy extends WalkerStrategy {
 
 	@Override
 	public void accept(TreeWalker walker, BinaryExpressionAST binaryExp) {
-		binaryExp.getFirstExpression().accept(walker);
-		binaryExp.getRelation().accept(walker);
-		binaryExp.getSecondExpression().accept(walker);
+		if(binaryExp.getRelation() != null){
+			binaryExp.getFirstExpression().accept(walker);
+			binaryExp.getRelation().accept(walker);
+			binaryExp.getSecondExpression().accept(walker);
+		}
+		
+		if(binaryExp.getBool() != null){
+			binaryExp.getBool().accept(walker);
+		}
 		
 		walker.visit(binaryExp);
 

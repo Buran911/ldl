@@ -6,6 +6,7 @@ import generation.templateengine.QueryConstraints;
 import generation.templateengine.QueryData;
 import generation.walkers.strategys.BottomUpWalkingStrategy;
 import generation.walkers.strategys.IdParsigStrategy;
+import generation.walkers.walkers.FunctionalImplementedChecker;
 import generation.walkers.walkers.IdConvertor;
 import generation.walkers.walkers.IdTableFiller;
 import generation.walkers.walkers.IdTableMaker;
@@ -89,6 +90,10 @@ public class App {
 		tree.accept( new TemplateTypeFiller( new BottomUpWalkingStrategy()));
 		tree.accept( new IdConvertor( new IdParsigStrategy(),table));
 		tree.accept( new TemplateEqClassesFiller(new BottomUpWalkingStrategy(), qConstraints));
+		
+
+		// Семантика
+		tree.accept( new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
 		
 		qConstraints.makeUnmodifiable();
 		engine = new Engine(new QueryData(table), qConstraints);
