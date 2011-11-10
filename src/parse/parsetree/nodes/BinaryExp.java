@@ -3,6 +3,7 @@ package parse.parsetree.nodes;
 import parse.parsetree.Node;
 import parse.syntaxtree.NodeAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
+import parse.syntaxtree.nodes.BooleanAST;
 import parse.syntaxtree.nodes.ExpressionAST;
 import parse.syntaxtree.nodes.RelationAST;
 
@@ -30,6 +31,10 @@ public class BinaryExp extends Node {
 				
 				if(node instanceof Relation){
 					binExp.setRelation( (RelationAST) node.getConvertedSubtree());
+				}
+				
+				if(node instanceof Bool){
+					binExp.setBool((BooleanAST) node.getConvertedSubtree());
 				}
 			}
 			

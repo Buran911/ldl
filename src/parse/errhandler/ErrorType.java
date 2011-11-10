@@ -14,5 +14,7 @@ public enum ErrorType {
 	UncompatibleTypes,
 	ParamCount,
 	SchemeTranslation,
-	InputData
+	InputData,
+	
+	NotImplementedYet;
 }
