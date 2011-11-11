@@ -10,7 +10,8 @@ import java.util.List;
  * */
 public abstract class NodeAST extends NodeProperty{
 	private NodeAST parent;
-	private List<NodeAST> successors;
+	// FUU List изменен на LinkedList;
+	private LinkedList<NodeAST> successors;
 	
 	{
 		successors = new LinkedList<NodeAST>();
@@ -35,7 +36,7 @@ public abstract class NodeAST extends NodeProperty{
 		successors.addAll(nodes);
 	}
 	
-	public List<NodeAST> getSuccessors(){
+	public LinkedList<NodeAST> getSuccessors(){
 		return successors;
 	}
 }

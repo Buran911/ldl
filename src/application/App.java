@@ -107,7 +107,7 @@ public class App {
 
     private void checkSemantics() {
 	// TODO Сделать копию дерева
-	SyntaxTree treeSemantic = (SyntaxTree) DeepCopy.getCopy(tree);
+	SyntaxTree treeSemantic = tree.clone();
 	IdTable idTable = new IdTable();
 	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
 	
@@ -118,7 +118,7 @@ public class App {
 	
 	treeSemantic.accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
 	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
-	
+//	
     }
 
     public void makeQuery() {
