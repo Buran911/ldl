@@ -35,8 +35,8 @@ public class ErrorHandler {
 		handle();
 	}
 	
-	public void hasError(ParseError error){
-		errors.contains(error);
+	public boolean hasError(ParseError error){		
+		return errors.contains(error);
 	}
 	
 	public boolean hasErrors(){

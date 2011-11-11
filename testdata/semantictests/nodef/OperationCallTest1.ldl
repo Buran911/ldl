@@ -1,0 +1,14 @@
+--BankRu::isKO(){true = true;}
+
+context BIC{
+	bankru instanceof BankRu;
+	bankru.isKO();
+}
+context Payment{
+	var instanceof BIC;
+	var.bankru.isKO();
+}
+context Bill{
+	varr instanceof Payment;
+	varr.var.bankru.isKO();
+}

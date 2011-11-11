@@ -1,0 +1,8 @@
+context Cvar{
+	a instanceof int;
+}
+context Payment{
+	a instanceof int;
+	b instanceof Cvar;
+	a = b;	
+}
