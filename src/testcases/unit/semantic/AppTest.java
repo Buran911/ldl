@@ -2,20 +2,6 @@ package testcases.unit.semantic;
 
 import generation.idtable.IdTable;
 import generation.templateengine.Engine;
-import generation.templateengine.QueryConstraints;
-import generation.templateengine.QueryData;
-import generation.walkers.strategys.BottomUpWalkingStrategy;
-import generation.walkers.strategys.IdParsigStrategy;
-import generation.walkers.walkers.IdConvertor;
-import generation.walkers.walkers.IdTableFiller;
-import generation.walkers.walkers.IdTableMaker;
-import generation.walkers.walkers.NoDefinition;
-import generation.walkers.walkers.PositionEstimater;
-import generation.walkers.walkers.TemplateEqClassesFiller;
-import generation.walkers.walkers.TemplateTypeFiller;
-
-import java.sql.SQLException;
-
 import parse.errhandler.ErrorHandler;
 import parse.ldlsettingsparser.XMLParser;
 import parse.parser.Parser;
@@ -25,18 +11,13 @@ import application.util.CmdLineParser;
 import application.util.DbConectionData;
 import application.util.Policy;
 import application.util.QueryMaker;
-import application.util.YamlWriter;
 
 public class AppTest {
 	private String[] args;
 	private Source src;
 	private SyntaxTree tree;
 	private ErrorHandler errh;
-	private Engine engine;
 	private DbConectionData connection;
-	private Policy policy;
-	private QueryMaker queryMaker;
-	private IdTable table;
 	
 	public AppTest(String[] args) {
 		this.args = args;
@@ -57,7 +38,6 @@ public class AppTest {
 		connection.setConnectionString(parser.getConnectionString());
 		connection.setUser(parser.getUser());
 		connection.setPassword(parser.getPassword());
-		policy = Policy.valueOf(parser.getPolicy());
 		
 		src = new Source(cmdLineParser.getLdlFiles());
 		errh = new ErrorHandler(src);
@@ -77,58 +57,10 @@ public class AppTest {
 		tree = new SyntaxTree(parser.getTree());
 	}
 	
-
-
-	public void generateEQ() {
-		System.out.println("Обработка АСТ.");
-		table = new IdTable();
-		QueryConstraints qConstraints = new QueryConstraints();
-		
-		tree.accept( new IdTableMaker( new IdParsigStrategy(), table));
-		tree.accept( new PositionEstimater( new IdParsigStrategy()));
-		tree.accept( new IdTableFiller( new IdParsigStrategy(), table));
-		tree.accept( new TemplateTypeFiller( new BottomUpWalkingStrategy()));
-		tree.accept( new IdConvertor( new IdParsigStrategy(),table));
-		tree.accept( new TemplateEqClassesFiller(new BottomUpWalkingStrategy(), qConstraints));
-		
-		qConstraints.makeUnmodifiable();
-		engine = new Engine(new QueryData(table), qConstraints);
-		System.out.println("Генерация запроса(-ов).");
-		engine.generate();
-	}
-	
-	public void checkSemantics(){
-		IdTable idTable = new IdTable();
-		tree.accept( new PositionEstimater( new IdParsigStrategy()));	
-		tree.accept( new NoDefinition( new IdParsigStrategy(), table, errh));
-//		tree.accept( new SecondDefinition( new IdParsigStrategy(), table, errh));
-	}
-	
 	public SyntaxTree getTree(){
 		return tree;
 	}
 	
-	public void makeQuery() {
-		System.out.println("Работа с БД.");
-		queryMaker = new QueryMaker(connection, engine.getQuery());
-		try {
-			queryMaker.makeQuerys();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new RuntimeException();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
-		
-	}
-
-	public void writeYAML() {
-		System.out.println("Запись YAML.");
-		YamlWriter yw = new YamlWriter(queryMaker.getQueryResults(), policy, table);
-		yw.writeYAMLs();
-	}
-
 	public ErrorHandler getErrh() {
 		return errh;
 	}

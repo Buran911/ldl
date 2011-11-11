@@ -3,7 +3,7 @@ package testcases.unit.semantic;
 import generation.idtable.IdTable;
 import generation.walkers.strategys.IdParsigStrategy;
 import generation.walkers.walkers.IdTableMaker;
-import generation.walkers.walkers.NoDefinition;
+import generation.walkers.walkers.IdNotDefinedChecker;
 import generation.walkers.walkers.PositionEstimater;
 
 import org.junit.Assert;
@@ -25,7 +25,7 @@ public class NoDefinitionTest {
 	IdTable idTable = new IdTable();
 	app.getTree().accept(new IdTableMaker(new IdParsigStrategy(), idTable));
 	app.getTree().accept(new PositionEstimater(new IdParsigStrategy()));
-	app.getTree().accept(new NoDefinition(new IdParsigStrategy(), idTable, app.getErrh()));
+	app.getTree().accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, app.getErrh()));
 
 	Assert.assertTrue(app.getErrh().hasError(templateErr));
     }
@@ -40,7 +40,7 @@ public class NoDefinitionTest {
 	IdTable idTable = new IdTable();
 	app.getTree().accept(new IdTableMaker(new IdParsigStrategy(), idTable));
 	app.getTree().accept(new PositionEstimater(new IdParsigStrategy()));
-	app.getTree().accept(new NoDefinition(new IdParsigStrategy(), idTable, app.getErrh()));
+	app.getTree().accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, app.getErrh()));
 
 	Assert.assertTrue(app.getErrh().hasError(templateErr));
     }
@@ -57,7 +57,7 @@ public class NoDefinitionTest {
 	IdTable idTable = new IdTable();
 	app.getTree().accept(new IdTableMaker(new IdParsigStrategy(), idTable));
 	app.getTree().accept(new PositionEstimater(new IdParsigStrategy()));
-	app.getTree().accept(new NoDefinition(new IdParsigStrategy(), idTable, app.getErrh()));
+	app.getTree().accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, app.getErrh()));
 
 	Assert.assertTrue(app.getErrh().hasError(templateErr1));
 	Assert.assertTrue(app.getErrh().hasError(templateErr2));

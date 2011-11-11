@@ -79,7 +79,7 @@ public class AttributeCallAST extends ExpressionAST implements Positionable {
     public Identifier getLastId(IdTable table, String contextName) {
 	List<String> attrChain = new LinkedList<String>();
 	AttributeCallAST attrFollower = getAttrCall();
-	// XXX Переписать с утречка
+	
 	if (attrFollower == null) {
 	    attrChain.add(getIdentifier().getData());
 	    attrChain.add(getVariable().getIdentifier().getData());

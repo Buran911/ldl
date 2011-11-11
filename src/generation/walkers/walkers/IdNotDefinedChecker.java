@@ -2,6 +2,7 @@ package generation.walkers.walkers;
 
 import generation.idtable.IdTable;
 import generation.idtable.Identifier;
+import generation.idtable.Predicate;
 import generation.walkers.TreeWalker;
 import generation.walkers.WalkerStrategy;
 import parse.errhandler.ErrorClass;
@@ -37,213 +38,211 @@ import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 
-public class TypeMismatch extends TreeWalker {
+public class IdNotDefinedChecker extends TreeWalker {
     private IdTable table;
     private String contextName;
     private ErrorHandler errh;
 
-    public TypeMismatch(WalkerStrategy strategy, IdTable table, ErrorHandler errh) {
+    public IdNotDefinedChecker(WalkerStrategy strategy, IdTable table, ErrorHandler errh) {
 	super(strategy);
 	this.table = table;
 	this.errh = errh;
-	System.out.println("TM constr");
-
     }
 
     @Override
     public void visit(AttributeCallAST attrCall) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(BinaryExpressionAST binaryExp) {
-	/** Left-side part of expression */
-	String leftVar = null;
-	/** Right-side part of expression */
-	String rightVar = null;
+	// Empty
 
-	// first expression
-	if (binaryExp.getFirstExpression() instanceof AttributeCallAST)
-	    leftVar = ((AttributeCallAST) binaryExp.getFirstExpression()).getId().getType();
-	else if (binaryExp.getFirstExpression() instanceof VariableAST)
-	    leftVar = ((VariableAST) binaryExp.getFirstExpression()).getId().getType();
-	else if (binaryExp.getFirstExpression() instanceof StringAST)
-	    leftVar = "String";
-	else if (binaryExp.getFirstExpression() instanceof NumberAST)
-	    leftVar = "int";
-	else if (binaryExp.getFirstExpression() instanceof BooleanAST)
-	    leftVar = "boolean";
-
-	// second expression
-	if (binaryExp.getSecondExpression() instanceof AttributeCallAST)
-	    rightVar = ((AttributeCallAST) binaryExp.getSecondExpression()).getId().getType();
-	else if (binaryExp.getSecondExpression() instanceof VariableAST)
-	    rightVar = ((VariableAST) binaryExp.getSecondExpression()).getId().getType();
-	else if (binaryExp.getSecondExpression() instanceof StringAST)
-	    rightVar = "String";
-	else if (binaryExp.getSecondExpression() instanceof NumberAST)
-	    rightVar = "int";
-	else if (binaryExp.getSecondExpression() instanceof BooleanAST)
-	    rightVar = "boolean";
-
-	if (!leftVar.equalsIgnoreCase(rightVar))
-	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.UncompatibleTypes, binaryExp.getRelation().getLineNo(), binaryExp.getRelation().getColumnNo()));
     }
 
     @Override
     public void visit(BinaryOpAST binaryOp) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(BooleanAST bool) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(ConditionAST condition) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(ContextAST context) {
-	// TODO Auto-generated method stub
-
+	contextName = context.getContextName().getName();
     }
 
     @Override
     public void visit(DescriptionAST description) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(EqClassAST eqClass) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(FormalParamsAST formalParams) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(FunctionalPartAST funcPart) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(IdentifierAST id) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(ldlAST ldl) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(NumberAST number) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(OperationCallAST operationCall) {
-	// TODO Auto-generated method stub
 
     }
 
     @Override
     public void visit(ParametresAST params) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(PathNameAST pathName) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(PredicateAST predicate) {
-	// TODO Auto-generated method stub
+	Predicate pred = new Predicate();
 
+	pred.setName(predicate.getOprCall().getIdentifier().getId());
+	String namespace = null;
+	if (predicate.getVariable() != null) {
+	    namespace = table.getId(predicate.getVariable().getIdentifier().getId(), contextName)
+		    .getType();
+	}
+	if (predicate.getAttrCall() != null) {
+	    namespace = predicate.getAttrCall().getLastId(table, contextName).getNamespace();
+	}
+	if ((predicate.getAttrCall() == null) && (predicate.getVariable() == null)) {
+	    namespace = contextName;
+	}
+	pred.setNamespace(namespace);
+
+	if (table.getPredicate(pred.getName(), pred.getNamespace()) == null) {
+	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined,
+		    predicate.getLineNo(), predicate.getColumnNo()));
+	}
     }
 
     @Override
     public void visit(PredicateImplAST impl) {
-	// TODO Auto-generated method stub
 
     }
 
     @Override
     public void visit(RelationAST relation) {
-	// TODO Auto-generated method stub
-	System.out.println("In relationAst");
+	// Empty
+
     }
 
     @Override
     public void visit(SetAST set) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(SetOpAST setOp) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(SimpleNameAST simpleName) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(SourceAST src) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(srcBlockAST block) {
-	// TODO Auto-generated method stub
+	Identifier id = new Identifier();
 
+	id.setNamespace(contextName);
+	id.setName(block.getIdentifier().getId());
+
+	if (table.getId(id.getName(), id.getNamespace()) == null) {
+	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, block.getLineNo(),
+		    block.getColumnNo()));
+	}
     }
 
     @Override
     public void visit(srcExprAST expr) {
+	// Empty
 
     }
 
     @Override
     public void visit(StringAST string) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(TypeAST type) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(VariableAST var) {
-	// TODO Auto-generated method stub
+	Identifier id = new Identifier();
 
+	id.setNamespace(contextName);
+	id.setName(var.getIdentifier().getId());
+
+	if (table.getId(id.getName(), id.getNamespace()) == null) {
+	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, var.getLineNo(),
+		    var.getColumnNo()));
+	}
     }
-
 }
