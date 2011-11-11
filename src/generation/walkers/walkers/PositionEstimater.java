@@ -28,6 +28,7 @@ import parse.syntaxtree.nodes.VariableAST;
 import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
+import generation.idtable.Predicate;
 import generation.walkers.TreeWalker;
 import generation.walkers.WalkerStrategy;
 
@@ -39,8 +40,8 @@ public class PositionEstimater extends TreeWalker {
 
 	@Override
 	public void visit(AttributeCallAST attrCall) {
-		attrCall.setLineNo( attrCall.getIdentifier().getLineNo());
-		attrCall.setColumnNo( attrCall.getIdentifier().getColumnNo());
+		attrCall.setLineNo(attrCall.getIdentifier().getLineNo());
+		attrCall.setColumnNo(attrCall.getIdentifier().getColumnNo());
 	}
 
 	@Override
@@ -75,8 +76,8 @@ public class PositionEstimater extends TreeWalker {
 
 	@Override
 	public void visit(DescriptionAST description) {
-		description.setLineNo( description.getIdentifier().getLineNo());
-		description.setColumnNo( description.getIdentifier().getColumnNo());
+		description.setLineNo(description.getIdentifier().getLineNo());
+		description.setColumnNo(description.getIdentifier().getColumnNo());
 
 	}
 
@@ -118,8 +119,8 @@ public class PositionEstimater extends TreeWalker {
 
 	@Override
 	public void visit(OperationCallAST operationCall) {
-		operationCall.setLineNo( operationCall.getIdentifier().getLineNo());
-		operationCall.setColumnNo( operationCall.getIdentifier().getColumnNo());
+		operationCall.setLineNo(operationCall.getIdentifier().getLineNo());
+		operationCall.setColumnNo(operationCall.getIdentifier().getColumnNo());
 	}
 
 	@Override
@@ -136,14 +137,14 @@ public class PositionEstimater extends TreeWalker {
 
 	@Override
 	public void visit(PredicateAST predicate) {
-		// TODO Auto-generated method stub
-
+	    predicate.setLineNo(predicate.getOprCall().getIdentifier().getLineNo());
+	    predicate.setColumnNo(predicate.getOprCall().getIdentifier().getColumnNo());
 	}
 
 	@Override
 	public void visit(PredicateImplAST impl) {
-		// TODO Auto-generated method stub
-
+		impl.setLineNo(impl.getPathName().getContextName().getLineNo());
+		impl.setColumnNo(impl.getPathName().getContextName().getColumnNo());
 	}
 
 	@Override
@@ -178,8 +179,8 @@ public class PositionEstimater extends TreeWalker {
 
 	@Override
 	public void visit(srcBlockAST block) {
-		block.setLineNo( block.getIdentifier().getLineNo());
-		block.setColumnNo( block.getIdentifier().getColumnNo());
+		block.setLineNo(block.getIdentifier().getLineNo());
+		block.setColumnNo(block.getIdentifier().getColumnNo());
 
 	}
 
@@ -203,8 +204,8 @@ public class PositionEstimater extends TreeWalker {
 
 	@Override
 	public void visit(VariableAST var) {
-		var.setLineNo( var.getIdentifier().getLineNo());
-		var.setColumnNo( var.getIdentifier().getColumnNo());
+		var.setLineNo(var.getIdentifier().getLineNo());
+		var.setColumnNo(var.getIdentifier().getColumnNo());
 	}
 
 }

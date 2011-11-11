@@ -1,0 +1,8 @@
+context Payment{
+	-- number instanceof int;
+	source{
+		number:{
+			_type = db;
+		}
+	}
+}

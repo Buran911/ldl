@@ -1,0 +1,10 @@
+BankRu::isKO(){
+	true = true;
+}
+
+context Payment{
+	a instanceof int;
+	b instanceof BankRu;
+	
+	a = b.isKO();
+}

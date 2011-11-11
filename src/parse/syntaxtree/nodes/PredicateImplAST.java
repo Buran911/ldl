@@ -6,57 +6,78 @@ import java.util.LinkedList;
 import java.util.List;
 
 import parse.syntaxtree.NodeAST;
+import parse.util.Positionable;
 
-public class PredicateImplAST extends NodeAST {
-	private PathNameAST pathName;
-	private FunctionalPartAST funcPart;
-	private FormalParamsAST formalParams;
-	private List<ConstraintAST> constraints;
-	
-	{
-		constraints = new LinkedList<ConstraintAST>();
-	}
-	
-	public void setPathName(PathNameAST pathName) {
-		this.pathName = pathName;
-		addSuccessor(pathName);
-	}
+public class PredicateImplAST extends NodeAST implements Positionable {
+    private PathNameAST pathName;
+    private FunctionalPartAST funcPart;
+    private FormalParamsAST formalParams;
+    private List<ConstraintAST> constraints;
+    private Integer lineNo;
+    private Integer columnNo;
 
-	public void setFuncPart(FunctionalPartAST funcPart) {
-		this.funcPart = funcPart;
-		addSuccessor(funcPart);
-	}
+    {
+	constraints = new LinkedList<ConstraintAST>();
+    }
 
-	public void setFormalParams(FormalParamsAST formalParams) {
-		this.formalParams = formalParams;
-		addSuccessor(formalParams);
-	}
+    public void setPathName(PathNameAST pathName) {
+	this.pathName = pathName;
+	addSuccessor(pathName);
+    }
 
-	public void addConstraint(ConstraintAST constraint) {
-		constraints.add(constraint);
-		addSuccessor(constraint);
-	}
+    public void setFuncPart(FunctionalPartAST funcPart) {
+	this.funcPart = funcPart;
+	addSuccessor(funcPart);
+    }
 
-	public PathNameAST getPathName() {
-		return pathName;
-	}
+    public void setFormalParams(FormalParamsAST formalParams) {
+	this.formalParams = formalParams;
+	addSuccessor(formalParams);
+    }
 
-	public FunctionalPartAST getFuncPart() {
-		return funcPart;
-	}
+    public void addConstraint(ConstraintAST constraint) {
+	constraints.add(constraint);
+	addSuccessor(constraint);
+    }
 
-	public FormalParamsAST getFormalParams() {
-		return formalParams;
-	}
+    public PathNameAST getPathName() {
+	return pathName;
+    }
 
-	public List<ConstraintAST> getConstraints() {
-		return constraints;
-	}
+    public FunctionalPartAST getFuncPart() {
+	return funcPart;
+    }
 
-	@Override
-	public void accept(TreeWalker walker) {
-		walker.accept(this);
+    public FormalParamsAST getFormalParams() {
+	return formalParams;
+    }
 
-	}
+    public List<ConstraintAST> getConstraints() {
+	return constraints;
+    }
+
+    @Override
+    public void accept(TreeWalker walker) {
+	walker.accept(this);
+
+    }
+
+    @Override
+    public Integer getLineNo() {
+	return lineNo;
+    }
+
+    public void setLineNo(Integer lineNo) {
+	this.lineNo = lineNo;
+    }
+
+    @Override
+    public Integer getColumnNo() {
+	return columnNo;
+    }
+
+    public void setColumnNo(Integer columnNo) {
+	this.columnNo = columnNo;
+    }
 
 }

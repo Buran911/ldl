@@ -1,12 +1,15 @@
 package parse.syntaxtree.nodes;
 
+import parse.util.Positionable;
 import generation.walkers.TreeWalker;
 
-public class PredicateAST extends BinaryExpAST {
+public class PredicateAST extends BinaryExpAST implements Positionable {
 	private AttributeCallAST attrCall;
 	private VariableAST variable;
 	private OperationCallAST oprCall;
 	private PredicateImplAST impl;
+	private Integer lineNo;
+	private Integer columnNo;
 	
 	public void setAttrCall(AttributeCallAST attrCall) {
 		this.attrCall = attrCall;
@@ -47,6 +50,22 @@ public class PredicateAST extends BinaryExpAST {
 	public void accept(TreeWalker walker) {
 		walker.accept(this);
 
+	}
+	@Override
+	public Integer getLineNo() {
+	    return lineNo;
+	}
+
+	public void setLineNo(Integer lineNo) {
+	    this.lineNo = lineNo;
+	}
+	@Override
+	public Integer getColumnNo() {
+	    return columnNo;
+	}
+
+	public void setColumnNo(Integer columnNo) {
+	    this.columnNo = columnNo;
 	}
 
 }

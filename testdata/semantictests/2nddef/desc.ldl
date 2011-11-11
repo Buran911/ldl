@@ -1,0 +1,4 @@
+context Payer{
+	inn instanceof String;
+	inn instanceof String;
+}
