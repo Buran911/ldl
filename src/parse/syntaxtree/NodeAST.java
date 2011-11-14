@@ -8,10 +8,9 @@ import java.util.List;
 /** Общий класс для всех элементов дерева. 
  * Дает возможность обхода дерева.
  * */
-public abstract class NodeAST extends NodeProperty{
+public abstract class NodeAST extends NodeProperty implements Cloneable{
 	private NodeAST parent;
-	// FUU List изменен на LinkedList;
-	private LinkedList<NodeAST> successors;
+	private List<NodeAST> successors;
 	
 	{
 		successors = new LinkedList<NodeAST>();
@@ -36,7 +35,9 @@ public abstract class NodeAST extends NodeProperty{
 		successors.addAll(nodes);
 	}
 	
-	public LinkedList<NodeAST> getSuccessors(){
+	public List<NodeAST> getSuccessors(){
 		return successors;
 	}
+	public abstract NodeAST clone();
+
 }

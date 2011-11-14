@@ -70,5 +70,9 @@ public class BinaryExpressionAST extends BinaryExpAST implements Positionable {
 	public void setColumnNo(Integer columnNo) {
 		this.columnNo = columnNo;
 	}
-
+	public BinaryExpressionAST clone(){
+	    BinaryExpressionAST copy = new BinaryExpressionAST();
+	    
+	    return copy;
+	}
 }

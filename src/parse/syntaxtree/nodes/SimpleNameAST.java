@@ -40,4 +40,8 @@ public class SimpleNameAST extends NodeAST implements Datable, Positionable {
 	public Integer getColumnNo() {
 		return columnNo;
 	}
+	public SimpleNameAST clone(){
+	    SimpleNameAST copy = new SimpleNameAST(new String(name),new Integer(lineNo),new Integer(columnNo));
+	    return copy;
+	}
 }

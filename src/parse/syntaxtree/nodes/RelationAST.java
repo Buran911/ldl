@@ -38,4 +38,8 @@ public class RelationAST extends NodeAST  implements Datable, Positionable{
 	public Integer getColumnNo() {
 		return columnNo;
 	}
+	public RelationAST clone(){
+	    RelationAST copy = new RelationAST(this.ratio,new Integer(this.lineNo),new Integer(this.columnNo));
+	    return copy;
+	}
 }

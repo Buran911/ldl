@@ -79,7 +79,7 @@ public class App {
 	}
 
 	tree = new SyntaxTree(parser.getTree());
-	
+
 	checkSemantics();
     }
 
@@ -94,10 +94,9 @@ public class App {
 	tree.accept(new TemplateTypeFiller(new BottomUpWalkingStrategy()));
 	tree.accept(new IdConvertor(new IdParsigStrategy(), table));
 	tree.accept(new TemplateEqClassesFiller(new BottomUpWalkingStrategy(), qConstraints));
-		
 
 	// Семантика
-	tree.accept( new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
+	tree.accept(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
 
 	qConstraints.makeUnmodifiable();
 	engine = new Engine(new QueryData(table), qConstraints);
@@ -110,15 +109,15 @@ public class App {
 	SyntaxTree treeSemantic = tree.clone();
 	IdTable idTable = new IdTable();
 	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
-	
+
 	treeSemantic.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
-	
+
 	treeSemantic.accept(new IdTableMaker(new IdParsigStrategy(), idTable));
 	treeSemantic.accept(new IdConvertor(new IdParsigStrategy(), idTable));
-	
+
 	treeSemantic.accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
 	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
-//	
+
     }
 
     public void makeQuery() {

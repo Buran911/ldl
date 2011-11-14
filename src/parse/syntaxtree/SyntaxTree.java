@@ -3,10 +3,9 @@ package parse.syntaxtree;
 import generation.walkers.TreeWalker;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.ListIterator;
 
 import parse.parsetree.ParseTree;
+import parse.syntaxtree.nodes.ldlAST;
 
 public class SyntaxTree implements Serializable {
     private NodeAST root;
@@ -17,19 +16,9 @@ public class SyntaxTree implements Serializable {
     }
 
     public SyntaxTree clone() {
-	SyntaxTree tt;
-	NodeAST node;
-	ListIterator it;
-	LinkedList LL;
-	node = root;
-
-	{
-	    LL = node.getSuccessors();
-	    it = LL.listIterator();
-	    while (it.hasNext()) {
-		it.next();
-	    }
-	}
+	ldlAST rootcopy = new ldlAST();
+	rootcopy = ((ldlAST) root).clone();
+	
 	
 	System.out.print("return");
 	return null;

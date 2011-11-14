@@ -8,7 +8,7 @@ import java.util.List;
 import parse.syntaxtree.NodeAST;
 import parse.util.Positionable;
 
-public class PredicateImplAST extends NodeAST implements Positionable {
+public class PredicateImplAST extends NodeAST implements Positionable, Cloneable {
     private PathNameAST pathName;
     private FunctionalPartAST funcPart;
     private FormalParamsAST formalParams;
@@ -79,5 +79,25 @@ public class PredicateImplAST extends NodeAST implements Positionable {
     public void setColumnNo(Integer columnNo) {
 	this.columnNo = columnNo;
     }
+
+    public PredicateImplAST clone() {
+	PredicateImplAST copy = new PredicateImplAST();
+	copy.pathName = this.pathName.clone();
+	copy.funcPart = this.funcPart.clone();
+	copy.formalParams = this.funcPart.clone();
+	for(ConstraintAST  constraint : constraints){
+	    copy.addConstraint((ConstraintAST)constraint.clone());
+	}
+	copy.lineNo = new Integer(this.lineNo);
+	copy.columnNo = new Integer(this.columnNo);
+	return copy;
+    }
+
+//    private PathNameAST pathName;
+//    private FunctionalPartAST funcPart;
+//    private FormalParamsAST formalParams;
+//    private List<ConstraintAST> constraints;
+//    private Integer lineNo;
+//    private Integer columnNo;
 
 }

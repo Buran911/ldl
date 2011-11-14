@@ -36,4 +36,8 @@ public class TypeAST extends NodeAST implements Datable, Positionable{
 	public Integer getColumnNo() {
 		return columnNo;
 	}
+	public TypeAST clone(){
+	    TypeAST copy = new TypeAST(new String(this.type),new Integer(this.lineNo), new Integer(this.columnNo));
+	    return copy;
+	}
 }

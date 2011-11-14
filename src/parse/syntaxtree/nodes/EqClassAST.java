@@ -32,5 +32,15 @@ public class EqClassAST extends NodeAST {
 	public void accept(TreeWalker walker) {
 		walker.accept(this);
 	}
+	
+	public EqClassAST clone(){
+	    EqClassAST copy = new EqClassAST();
+	    
+	    for(ConstraintAST constraint : constraints){
+		copy.addConstraint((ConstraintAST)constraint.clone());
+	    }
+	    return copy;
+	}
+
 
 }

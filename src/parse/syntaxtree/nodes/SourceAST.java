@@ -7,7 +7,7 @@ import java.util.List;
 
 import parse.syntaxtree.NodeAST;
 
-public class SourceAST extends NodeAST {
+public class SourceAST extends NodeAST implements Cloneable{
 	private List<srcBlockAST> srcBlocks;
 	
 	{
@@ -27,6 +27,13 @@ public class SourceAST extends NodeAST {
 	public void accept(TreeWalker walker) {
 		walker.accept(this);
 
+	}
+	public SourceAST clone(){
+	    SourceAST copy = new SourceAST();
+	    for(srcBlockAST srcBlock : srcBlocks){
+		copy.addSrcBlock(srcBlock.clone());
+	    }
+	    return copy;
 	}
 
 }
