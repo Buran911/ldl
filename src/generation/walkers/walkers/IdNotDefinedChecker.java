@@ -169,7 +169,7 @@ public class IdNotDefinedChecker extends TreeWalker {
 
     @Override
     public void visit(PredicateImplAST impl) {
-
+	contextName = impl.getPathName().getContextName().getName();
     }
 
     @Override
