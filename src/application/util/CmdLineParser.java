@@ -12,95 +12,89 @@ import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+import org.apache.log4j.Logger;
 
 /**
  * Класс для разбора строки образца
  * "prog -p <propertyFileName.xml> -s <file1.ldl ... fileN.ldl>"
  */
 public class CmdLineParser {
+    private Logger logger = Logger.getLogger(CmdLineParser.class);
+    private CommandLineParser parser = new PosixParser();
+    private Options options = new Options();
+    private HelpFormatter formatter = new HelpFormatter();
+    private CommandLine cmd;
+    private String args[];
 
-	private CommandLineParser parser = new PosixParser();
-	private Options options = new Options();
-	private HelpFormatter formatter = new HelpFormatter();
-	private CommandLine cmd;
-	private String args[];
+    @SuppressWarnings("static-access")
+    private Option property = OptionBuilder.withArgName("propertyFileName.xml").hasArgs(1)
+	    .isRequired().withDescription("файл, содержащий настройки Модуля ОКЭ ОПД").create("p");
 
-	@SuppressWarnings("static-access")
-	private Option property = OptionBuilder.withArgName("propertyFileName.xml")
-			.hasArgs(1).isRequired()
-			.withDescription("файл, содержащий настройки Модуля ОКЭ ОПД")
-			.create("p");
+    @SuppressWarnings("static-access")
+    private Option files = OptionBuilder.hasArgs().isRequired()
+	    .withArgName("file1.ldl file2.ldl ... fileN.ldl")
+	    .withDescription("файлы, содержащие формальное описание тестовых наборов").create("s");
 
-	@SuppressWarnings("static-access")
-	private Option files = OptionBuilder
-			.hasArgs()
-			.isRequired()
-			.withArgName("file1.ldl file2.ldl ... fileN.ldl")
-			.withDescription(
-					"файлы, содержащие формальное описание тестовых наборов")
-			.create("s");
+    private String propertyFile;
+    private List<String> ldlFiles = new ArrayList<String>();
 
-	private String propertyFile;
-	private List<String> ldlFiles = new ArrayList<String>();
+    public CmdLineParser(String args[]) {
+	this.args = args;
 
-	public CmdLineParser(String args[]) {
-		this.args = args;
+	options.addOption(files);
+	options.addOption(property);
+    }
 
-		options.addOption(files);
-		options.addOption(property);
-	}
+    /** Функция разбора строки */
+    public boolean parse() {
+	try {
+	    cmd = parser.parse(options, args);
 
-	/** Функция разбора строки*/
-	public boolean parse() {
-		try {
-			cmd = parser.parse(options, args);
+	    if (cmd.getOptionValue("p").endsWith(".xml")) {
+		propertyFile = cmd.getOptionValue("p");
+	    }
+	    else {
+		throw new ParseException("Неверное расширение файла xml");
+	    }
 
-			if (cmd.getOptionValue("p").endsWith(".xml")) {
-				propertyFile = cmd.getOptionValue("p");
-			} else {
-				throw new ParseException("Неверное расширение файла xml");
-			}
+	    String[] fileList = cmd.getOptionValues("s");
 
-			String[] fileList = cmd.getOptionValues("s");
-
-			for (String file : fileList) {
-				if (file.endsWith(".ldl")) {
-					ldlFiles.add(file);
-				} else {
-					throw new ParseException(
-							"Неверное расширение файла(ов) ldl");
-				}
-			}
-
-		} catch (ParseException exp) {
-			System.out.println(exp.getMessage());
-			this.help();
-			
-			return false;
+	    for (String file : fileList) {
+		if (file.endsWith(".ldl")) {
+		    ldlFiles.add(file);
 		}
-		
-		return true;
+		else {
+		    throw new ParseException("Неверное расширение файла(ов) ldl");
+		}
+	    }
+
+	} catch (ParseException exp) {
+	    logger.error(exp.getMessage());
+	    this.help();
+
+	    return false;
 	}
 
-	/** Возврат iterator'а на список файлов ldl */
-	public Iterator<String> getFileListIterator() {
-		return ldlFiles.iterator();
-	}
+	return true;
+    }
 
-	public List<String> getLdlFiles() {
-		return ldlFiles;
-	}
+    /** Возврат iterator'а на список файлов ldl */
+    public Iterator<String> getFileListIterator() {
+	return ldlFiles.iterator();
+    }
 
-	/** Возврат файла xml */
-	public String getPropertyFile() {
-		return propertyFile;
-	}
+    public List<String> getLdlFiles() {
+	return ldlFiles;
+    }
 
-	private void help() {
-		formatter
-				.printHelp(
-						"prog -p <propertyFileName.xml> -s <file1.ldl ... fileN.ldl>",
-						"Модуль описания классов эквивалентности обобщенных платежных документов",
-						options, null);
-	}
+    /** Возврат файла xml */
+    public String getPropertyFile() {
+	return propertyFile;
+    }
+
+    private void help() {
+	formatter.printHelp("prog -p <propertyFileName.xml> -s <file1.ldl ... fileN.ldl>",
+		"Модуль описания классов эквивалентности обобщенных платежных документов", options,
+		null);
+    }
 }

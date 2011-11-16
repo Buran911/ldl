@@ -10,15 +10,17 @@ import generation.walkers.strategys.IdParsigStrategy;
 import generation.walkers.walkers.FunctionalImplementedChecker;
 import generation.walkers.walkers.IdConvertor;
 import generation.walkers.walkers.IdNotDefinedChecker;
+import generation.walkers.walkers.IdRedefinedChecker;
 import generation.walkers.walkers.IdTableFiller;
 import generation.walkers.walkers.IdTableMaker;
 import generation.walkers.walkers.PositionEstimater;
-import generation.walkers.walkers.IdRedefinedChecker;
 import generation.walkers.walkers.TemplateEqClassesFiller;
 import generation.walkers.walkers.TemplateTypeFiller;
 import generation.walkers.walkers.TypeMismatchChecker;
 
 import java.sql.SQLException;
+
+import org.apache.log4j.Logger;
 
 import parse.errhandler.ErrorHandler;
 import parse.ldlsettingsparser.XMLParser;
@@ -27,8 +29,10 @@ import parse.syntaxtree.SyntaxTree;
 import parse.util.Source;
 import application.util.CmdLineParser;
 import application.util.DbConectionData;
+import application.util.Halt;
 import application.util.Policy;
 import application.util.QueryMaker;
+import application.util.StackTrace;
 import application.util.YamlWriter;
 
 public class App {
@@ -41,50 +45,96 @@ public class App {
     private Policy policy;
     private QueryMaker queryMaker;
     private IdTable table;
+    private Logger logger = Logger.getLogger(App.class);
 
     public App(String[] args) {
 	this.args = args;
     }
 
     public void readFiles() {
-	System.out.println("Парсинг параметров командной строки.");
+	logger.info("Парсинг параметров командной строки.");
 	CmdLineParser cmdLineParser = new CmdLineParser(args);
 
 	if (!cmdLineParser.parse()) {
 	    System.err.println("Не могу считать параметры командной строки");
 	    throw new RuntimeException();
 	}
-	System.out.println("Парсинг настроечного файла.");
 	XMLParser parser = new XMLParser(cmdLineParser.getPropertyFile());
+	logger.info("Парсинг настроечного файла.");
 	parser.parse();
+	
+	
+	logger.trace("connection string: " + parser.getConnectionString());
+	logger.trace("user: " + parser.getUser());
+	logger.trace("password: " + parser.getPassword());
+	logger.trace("policy: " + parser.getPolicy());
+	
 	connection = new DbConectionData();
 	connection.setConnectionString(parser.getConnectionString());
 	connection.setUser(parser.getUser());
 	connection.setPassword(parser.getPassword());
-	policy = Policy.valueOf(parser.getPolicy());
+	
+	if(parser.getPolicy() == null){
+	    // default policy
+	    policy = Policy.first;
+	}
+	else{
+	    policy = Policy.valueOf(parser.getPolicy());
+	}
+	
 
 	src = new Source(cmdLineParser.getLdlFiles());
 	errh = new ErrorHandler(src);
 
     }
 
-    public void checkErrors() {
+    public void parseAndCheckErrors() {
 	Parser parser = new Parser(src, errh);
+	logger.info("Парсинг исходных файлов.");
 	parser.parse();
-	System.out.println("Парсинг исходных файлов.");
+	
 
+	// Синтаксические ошибки
+	logger.info("Проверка синтаксических ошибок");
 	if (errh.hasErrors()) {
 	    errh.printErrors();
-	    throw new RuntimeException();
+	    throw new Halt();
 	}
 
 	tree = new SyntaxTree(parser.getTree());
 	
+	logger.info("Проверка семантических ошибок.");
 	checkSemantics();
+	
+	// Семантические ошибки
+	if (errh.hasErrors()) {
+	    errh.printErrors();
+	    throw new Halt();
+	}
     }
 
+    private void checkSemantics() {
+	// TODO Сделать копию дерева
+	SyntaxTree treeSemantic = (SyntaxTree) DeepCopy.getCopy(tree);
+	IdTable idTable = new IdTable();
+	
+	tree.accept( new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
+	
+	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
+	
+	treeSemantic.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
+	
+	treeSemantic.accept(new IdTableMaker(new IdParsigStrategy(), idTable));
+	treeSemantic.accept(new IdTableFiller(new IdParsigStrategy(), idTable));
+	treeSemantic.accept(new IdConvertor(new IdParsigStrategy(), idTable));
+	
+
+	treeSemantic.accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
+	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
+	
+    }
     public void generateEQ() {
-	System.out.println("Обработка АСТ.");
+	logger.info("Обработка АСТ.");
 	table = new IdTable();
 	QueryConstraints qConstraints = new QueryConstraints();
 
@@ -94,50 +144,34 @@ public class App {
 	tree.accept(new TemplateTypeFiller(new BottomUpWalkingStrategy()));
 	tree.accept(new IdConvertor(new IdParsigStrategy(), table));
 	tree.accept(new TemplateEqClassesFiller(new BottomUpWalkingStrategy(), qConstraints));
-		
-
-	// Семантика
-	tree.accept( new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
 
 	qConstraints.makeUnmodifiable();
 	engine = new Engine(new QueryData(table), qConstraints);
-	System.out.println("Генерация запроса(-ов).");
+	logger.info("Генерация запроса(-ов).");
 	engine.generate();
     }
 
-    private void checkSemantics() {
-	// TODO Сделать копию дерева
-	SyntaxTree treeSemantic = (SyntaxTree) DeepCopy.getCopy(tree);
-	IdTable idTable = new IdTable();
-	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
-	
-	treeSemantic.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
-	
-	treeSemantic.accept(new IdTableMaker(new IdParsigStrategy(), idTable));
-	treeSemantic.accept(new IdConvertor(new IdParsigStrategy(), idTable));
-	
-	treeSemantic.accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
-	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
-	
-    }
+
 
     public void makeQuery() {
-	System.out.println("Работа с БД.");
+	logger.info("Работа с БД.");
 	queryMaker = new QueryMaker(connection, engine.getQuery());
 	try {
 	    queryMaker.makeQuerys();
 	} catch (ClassNotFoundException e) {
-	    e.printStackTrace();
-	    throw new RuntimeException();
+	    logger.error("Не найден драйвер БД.");
+	    logger.trace( StackTrace.getStackTrace(e));
+	    throw new Halt();
 	} catch (SQLException e) {
-	    e.printStackTrace();
-	    throw new RuntimeException();
+	    logger.error("Ошибка в SQL запросе.");
+	    logger.trace( StackTrace.getStackTrace(e));
+	    throw new Halt();
 	}
 
     }
 
     public void writeYAML() {
-	System.out.println("Запись YAML.");
+	logger.info("Запись YAML.");
 	YamlWriter yw = new YamlWriter(queryMaker.getQueryResults(), policy, table);
 	yw.writeYAMLs();
     }

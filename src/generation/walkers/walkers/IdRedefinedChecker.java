@@ -91,7 +91,7 @@ public class IdRedefinedChecker extends TreeWalker {
 	id.setName(description.getIdentifier().getId());
 
 	if (table.getId(id.getName(), id.getNamespace()) == null) {
-	    table.addId(id, description);
+	    table.addId(id);
 	}
 	else {
 	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition,
@@ -167,7 +167,7 @@ public class IdRedefinedChecker extends TreeWalker {
 	predicate.setNamespace(impl.getPathName().getContextName().getName());
 
 	if (table.getPredicate(predicate.getName(), predicate.getNamespace()) == null) {
-	    table.addPredicate(predicate, impl);
+	    table.addPredicate(predicate);
 	}
 	else {
 	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition,
