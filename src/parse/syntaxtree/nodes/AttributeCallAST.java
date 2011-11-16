@@ -9,7 +9,7 @@ import generation.idtable.IdTable;
 import generation.idtable.Identifier;
 import generation.walkers.TreeWalker;
 
-public class AttributeCallAST extends ExpressionAST implements Positionable , Cloneable{
+public class AttributeCallAST extends ExpressionAST implements Positionable, Cloneable {
     private AttributeCallAST attrCall;
     private VariableAST variable;
     private IdentifierAST identifier;
@@ -79,7 +79,7 @@ public class AttributeCallAST extends ExpressionAST implements Positionable , Cl
     public Identifier getLastId(IdTable table, String contextName) {
 	List<String> attrChain = new LinkedList<String>();
 	AttributeCallAST attrFollower = getAttrCall();
-	
+
 	if (attrFollower == null) {
 	    attrChain.add(getIdentifier().getData());
 	    attrChain.add(getVariable().getIdentifier().getData());
@@ -103,15 +103,14 @@ public class AttributeCallAST extends ExpressionAST implements Positionable , Cl
 	}
 	return id;
     }
+
     public AttributeCallAST clone(){
 	AttributeCallAST copy = new AttributeCallAST();
 	copy.setAttrCall(new AttributeCallAST());
-	copy.setVariable(new );
-//	    private AttributeCallAST attrCall;
-//	    private VariableAST variable;
-//	    private IdentifierAST identifier;
-//	    private Identifier id;
-//	    private Integer lineNo;
-//	    private Integer columnNo;
+	copy.setVariable(new VariableAST());
+	copy.id = this.id;
+	copy.setIdentifier(new IdentifierAST());
+	copy.lineNo = new Integer(this.lineNo);
+	copy.columnNo = new Integer(this.columnNo);
     }
 }
