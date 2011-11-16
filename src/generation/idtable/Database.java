@@ -17,4 +17,11 @@ public class Database extends SourceData {
 	public void setColumn(String column) {
 		this.column = column;
 	}
+	public Database clone(){
+	    Database copy = new Database();
+	    copy.table = new String(table);
+	    copy.column = new String(column);
+	    
+	    return copy;
+	}
 }

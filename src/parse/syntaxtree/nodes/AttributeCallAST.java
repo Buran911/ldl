@@ -106,11 +106,13 @@ public class AttributeCallAST extends ExpressionAST implements Positionable, Clo
 
     public AttributeCallAST clone(){
 	AttributeCallAST copy = new AttributeCallAST();
-	copy.setAttrCall(new AttributeCallAST());
-	copy.setVariable(new VariableAST());
-	copy.id = this.id;
-	copy.setIdentifier(new IdentifierAST());
-	copy.lineNo = new Integer(this.lineNo);
-	copy.columnNo = new Integer(this.columnNo);
+	copy.setAttrCall(getAttrCall().clone());
+	copy.setVariable(getVariable().clone());
+	copy.id = id.clone();
+	copy.setIdentifier(getIdentifier().clone());
+	copy.lineNo = new Integer(lineNo);
+	copy.columnNo = new Integer(columnNo);
+	
+	return copy;
     }
 }

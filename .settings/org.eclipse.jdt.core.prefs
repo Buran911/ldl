@@ -1,4 +1,8 @@
+<<<<<<< Updated upstream
 #Mon Nov 14 13:04:55 MSK 2011
+=======
+#Fri Nov 11 12:49:23 MSK 2011
+>>>>>>> Stashed changes
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.codegen.inlineJsrBytecode=enabled
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6

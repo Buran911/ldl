@@ -55,9 +55,9 @@ public class DescriptionAST extends NodeAST implements Positionable, Cloneable {
     public DescriptionAST clone() {
 	DescriptionAST copy = new DescriptionAST();
 	copy.identifier = this.identifier.clone();
-	copy.type = this.type.clone();
-	copy.lineNo = new Integer(this.lineNo);
-	copy.columnNo = new Integer(this.columnNo);
+	copy.type = type.clone();
+	copy.lineNo = (lineNo != null) ? lineNo : null;
+	copy.columnNo = (columnNo != null) ? columnNo : null;
 	return copy;
     }
 

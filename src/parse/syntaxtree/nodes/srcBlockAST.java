@@ -61,14 +61,15 @@ public class srcBlockAST extends NodeAST implements Positionable, Cloneable {
     }
 
     public srcBlockAST clone() {
+	System.out.print("srcBlockAST clone()");
 	srcBlockAST copy = new srcBlockAST();
-	copy.setIdentifier(this.identifier.clone());
+	copy.setIdentifier(identifier.clone());
 	for (srcExprAST srcExpr : srcExprs) {
 	    copy.addSrcExpr(srcExpr.clone());
 	}
 
-	copy.lineNo = new Integer(this.lineNo);
-	copy.columnNo = new Integer(this.columnNo);
+	copy.lineNo = (lineNo != null) ? lineNo : null;
+	copy.columnNo = (columnNo != null) ? columnNo : null;
 
 	return copy;
     }

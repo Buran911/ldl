@@ -33,8 +33,8 @@ public class PathNameAST extends NodeAST implements Cloneable {
     @Override
     public PathNameAST clone() {
 	PathNameAST copy = new PathNameAST();
-	copy.setContextName(this.contextName.clone());
-	copy.setPredicateName(this.predicateName.clone());
+	copy.setContextName(contextName.clone());
+	copy.setPredicateName(predicateName.clone());
 	return copy;
     }
 }

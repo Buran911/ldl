@@ -73,12 +73,18 @@ public class PredicateAST extends BinaryExpAST implements Positionable, Cloneabl
 
     public PredicateAST clone() {
 	PredicateAST copy = new PredicateAST();
-	copy.attrCall = this.attrCall;
-	copy.variable = this.variable;
-	copy.oprCall = this.oprCall;
-	copy.impl = this.impl;
-	copy.lineNo = this.lineNo;
-	copy.columnNo = this.columnNo;
+	if (attrCall != null) {
+	    copy.attrCall = attrCall.clone();
+	}
+	if (variable != null) {
+	    copy.variable = variable.clone();
+	}
+	copy.oprCall = oprCall.clone();
+	if (impl != null) {
+	    copy.impl = impl.clone();
+	}
+	copy.lineNo = (lineNo != null) ? lineNo : null;
+	copy.columnNo = (columnNo != null) ? columnNo : null;
 
 	return copy;
     }

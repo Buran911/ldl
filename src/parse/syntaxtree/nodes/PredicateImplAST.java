@@ -82,14 +82,16 @@ public class PredicateImplAST extends NodeAST implements Positionable, Cloneable
 
     public PredicateImplAST clone() {
 	PredicateImplAST copy = new PredicateImplAST();
-	copy.pathName = this.pathName.clone();
-	copy.funcPart = this.funcPart.clone();
-	copy.formalParams = this.formalParams.clone();
-	for(ConstraintAST  constraint : constraints){
-	    copy.addConstraint((ConstraintAST)constraint.clone());
+	copy.pathName = pathName.clone();
+	copy.funcPart = funcPart.clone();
+	if (formalParams != null) {
+	    copy.formalParams = formalParams.clone();
 	}
-	copy.lineNo = new Integer(this.lineNo);
-	copy.columnNo = new Integer(this.columnNo);
+	for (ConstraintAST constraint : constraints) {
+	    copy.addConstraint((ConstraintAST) constraint.clone());
+	}
+	copy.lineNo = (lineNo != null) ? lineNo : null;
+	copy.columnNo = (columnNo != null) ? columnNo : null;
 	return copy;
     }
 }

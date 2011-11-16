@@ -32,7 +32,7 @@ public class SetAST extends NodeAST implements Cloneable {
     public SetAST clone() {
 	SetAST copy = new SetAST();
 	for(LiteralAST element : elements){
-	    copy.addElement((LiteralAST)element.clone());
+	    copy.addElement(element.clone());
 	}
 	return copy;
     }

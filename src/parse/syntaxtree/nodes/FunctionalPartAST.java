@@ -3,7 +3,7 @@ package parse.syntaxtree.nodes;
 import generation.walkers.TreeWalker;
 import parse.syntaxtree.NodeAST;
 
-public class FunctionalPartAST extends NodeAST implements Cloneable{
+public class FunctionalPartAST extends NodeAST implements Cloneable {
     private StringAST group;
     private NumberAST priority;
 
@@ -34,9 +34,12 @@ public class FunctionalPartAST extends NodeAST implements Cloneable{
     @Override
     public FunctionalPartAST clone() {
 	FunctionalPartAST copy = new FunctionalPartAST();
-	copy.setGroup(this.group.clone());
-	copy.setPriority(this.priority.clone());
-	
+	if (group != null) {
+	    copy.setGroup(group.clone());
+	}
+	if (priority != null) {
+	    copy.setPriority(priority.clone());
+	}
 	return copy;
     }
 

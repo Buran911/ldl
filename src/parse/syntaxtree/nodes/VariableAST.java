@@ -52,12 +52,12 @@ public class VariableAST extends ExpressionAST implements Positionable, Cloneabl
     }
     public VariableAST clone(){
 	VariableAST copy = new VariableAST();
-	copy.setIdentifier(this.identifier.clone());
+	copy.setIdentifier(identifier.clone());
 	// XXX fuu
-	copy.setId(this.id);
+	copy.setId(id.clone());
 	
-	copy.lineNo = new Integer(this.lineNo);
-	copy.columnNo = new Integer(this.columnNo);
+	copy.lineNo = new Integer(lineNo);
+	copy.columnNo = new Integer(columnNo);
 	return copy;
     }
 }

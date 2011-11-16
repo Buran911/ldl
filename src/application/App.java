@@ -105,8 +105,9 @@ public class App {
     }
 
     private void checkSemantics() {
+
 	// TODO Сделать копию дерева
-	SyntaxTree treeSemantic = tree.clone();
+	SyntaxTree treeSemantic = (SyntaxTree)tree.clone();
 	IdTable idTable = new IdTable();
 	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
 

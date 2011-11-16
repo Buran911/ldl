@@ -42,6 +42,8 @@ public class NoDefinitionTest {
 	app.getTree().accept(new PositionEstimater(new IdParsigStrategy()));
 	app.getTree().accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, app.getErrh()));
 
+	app.getErrh().printErrors();
+	
 	Assert.assertTrue(app.getErrh().hasError(templateErr));
     }
 

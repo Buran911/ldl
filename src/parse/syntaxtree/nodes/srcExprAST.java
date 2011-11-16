@@ -51,12 +51,19 @@ public class srcExprAST extends NodeAST implements Cloneable {
 
     public srcExprAST clone() {
 	srcExprAST copy = new srcExprAST();
-	
-	copy.setFirstId(this.firstId.clone());
-	copy.setSecondId(this.secondId.clone());
-	copy.setSet(this.set.clone());
-	copy.setLiteral((LiteralAST)this.literal.clone());
-	
+	if (firstId != null) {
+	    copy.setFirstId(firstId.clone());
+	}
+	if (secondId != null) {
+	    copy.setSecondId(secondId.clone());
+	}
+	if (set != null) {
+	    copy.setSet(set.clone());
+	}
+	if (literal != null) {
+	    copy.setLiteral((LiteralAST) literal.clone());
+	}
+
 	return copy;
     }
 }

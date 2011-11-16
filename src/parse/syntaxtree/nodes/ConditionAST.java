@@ -10,11 +10,12 @@ import parse.syntaxtree.NodeAST;
 public class ConditionAST extends ConstraintAST {
     private BinaryAST condition;
     private List<ConstraintAST> constraints;
-    private List<ConstraintAST> eqClasseses;
+    // XXX eqClasseses -> eqClasses , разобраться с названиями
+    private List<ConstraintAST> eqClasses;
 
     {
 	constraints = new LinkedList<ConstraintAST>();
-	eqClasseses = new LinkedList<ConstraintAST>();
+	eqClasses = new LinkedList<ConstraintAST>();
     }
 
     public void setCondition(BinaryAST condition) {
@@ -26,9 +27,9 @@ public class ConditionAST extends ConstraintAST {
 	addSuccessor(constraint);
     }
 
-    public void addEqClasses(ConstraintAST eqClasses) {
-	eqClasseses.add(eqClasses);
-	addSuccessor(eqClasses);
+    public void addEqClasses(ConstraintAST eqClassesParam) {
+	eqClasses.add(eqClassesParam);
+	addSuccessor(eqClassesParam);
     }
 
     public BinaryAST getCondition() {
@@ -40,7 +41,7 @@ public class ConditionAST extends ConstraintAST {
     }
 
     public List<ConstraintAST> getEqClasseses() {
-	return eqClasseses;
+	return eqClasses;
     }
 
     @Override
@@ -51,6 +52,14 @@ public class ConditionAST extends ConstraintAST {
 
     public ConditionAST clone() {
 	ConditionAST copy = new ConditionAST();
+	copy.condition = condition.clone();
+
+	for (ConstraintAST constraint : constraints) {
+	    copy.addConstraint(constraint.clone());
+	}
+	for (ConstraintAST eqClass : eqClasses) {
+	    copy.addEqClasses(eqClass.clone());
+	}
 	return copy;
     }
 
