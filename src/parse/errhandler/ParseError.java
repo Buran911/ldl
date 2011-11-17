@@ -65,7 +65,7 @@ public class ParseError {
 	return context;
     }
 
-    public String getPossibleSolution() {
+	public String getPossibleReason() {
 	return possibleSolution;
     }
 

@@ -79,7 +79,7 @@ public class AttributeCallAST extends ExpressionAST implements Positionable {
     public Identifier getLastId(IdTable table, String contextName) {
 	List<String> attrChain = new LinkedList<String>();
 	AttributeCallAST attrFollower = getAttrCall();
-	
+
 	if (attrFollower == null) {
 	    attrChain.add(getIdentifier().getData());
 	    attrChain.add(getVariable().getIdentifier().getData());
@@ -102,5 +102,23 @@ public class AttributeCallAST extends ExpressionAST implements Positionable {
 	    curContext = id.getType();
 	}
 	return id;
+    }
+    
+    @Override
+    public Object clone() {
+	AttributeCallAST copy = new AttributeCallAST();
+
+	if (attrCall != null) {
+	    copy.setAttrCall((AttributeCallAST) getAttrCall().clone());
+	}
+	copy.setVariable(getVariable().clone());
+	if (id != null) {
+	    copy.id = (Identifier) id.clone();
+	}
+	copy.setIdentifier((IdentifierAST) getIdentifier().clone());
+	copy.lineNo = (lineNo != null) ? lineNo : null;
+	copy.columnNo = (columnNo != null) ? columnNo : null;
+
+	return copy;
     }
 }

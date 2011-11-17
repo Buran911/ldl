@@ -109,7 +109,7 @@ public class App {
 	}
 
 	tree = new SyntaxTree(parser.getTree());
-	
+
 	logger.info("Проверка семантических ошибок.");
 	checkSemantics();
 	
@@ -122,24 +122,23 @@ public class App {
 
     // Проверяет семантическую правильность исходного кода, проверка идет по копиям объектов 
     private void checkSemantics() {
+
 	// TODO Сделать копию дерева
-	SyntaxTree treeSemantic = (SyntaxTree) DeepCopy.getCopy(tree);
+	SyntaxTree treeSemantic = (SyntaxTree)tree.clone();
 	IdTable idTable = new IdTable();
 	
 	treeSemantic.accept( new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
-	
 	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
-	
+
 	treeSemantic.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
-	
+
 	treeSemantic.accept(new IdTableMaker(new IdParsigStrategy(), idTable));
 	treeSemantic.accept(new IdTableFiller(new IdParsigStrategy(), idTable));
 	treeSemantic.accept(new IdConvertor(new IdParsigStrategy(), idTable));
-	
 
 	treeSemantic.accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
 	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
-	
+
     }
     
     // Предобработка AST и генерация по нему запросов. 

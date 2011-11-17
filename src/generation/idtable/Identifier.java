@@ -8,7 +8,7 @@ import generation.languageconstants.Type;
  * 
  * @author hindu
  * */
-public class Identifier {
+public class Identifier implements Cloneable {
     private String name;
     private String namespace;
     private String type;
@@ -86,5 +86,21 @@ public class Identifier {
 
     public void setVisible(Boolean visible) {
 	this.visible = visible;
+    }
+
+    @Override
+    public Object clone() {
+	Identifier copy = new Identifier();
+
+	copy.name = new String(name);
+	copy.namespace = new String(namespace);
+	copy.type = new String(type);
+	copy.srcType = srcType;
+	copy.srcData = (SourceData) srcData.clone();
+	copy.visible = new Boolean(visible);
+	copy.index = new Integer(index);
+	copy.alias = new String(alias);
+
+	return copy;
     }
 }

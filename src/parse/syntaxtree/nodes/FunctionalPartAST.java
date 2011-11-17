@@ -4,31 +4,41 @@ import generation.walkers.TreeWalker;
 import parse.syntaxtree.NodeAST;
 
 public class FunctionalPartAST extends NodeAST {
-	private StringAST group;
-	private NumberAST priority;
-	
-	public void setGroup(StringAST group) {
-		this.group = group;
-		addSuccessor(group);
-	}
+    private StringAST group;
+    private NumberAST priority;
 
-	public void setPriority(NumberAST priority) {
-		this.priority = priority;
-		addSuccessor(priority);
-	}
+    public void setGroup(StringAST group) {
+	this.group = group;
+	addSuccessor(group);
+    }
 
-	public StringAST getGroup() {
-		return group;
-	}
+    public void setPriority(NumberAST priority) {
+	this.priority = priority;
+	addSuccessor(priority);
+    }
 
-	public NumberAST getPriority() {
-		return priority;
-	}
+    public StringAST getGroup() {
+	return group;
+    }
 
-	@Override
-	public void accept(TreeWalker walker) {
-		walker.accept(this);
+    public NumberAST getPriority() {
+	return priority;
+    }
 
+    @Override
+    public void accept(TreeWalker walker) {
+	walker.accept(this);
+
+    }
+
+    @Override
+    public Object clone() {
+	FunctionalPartAST copy = new FunctionalPartAST();
+	if ((group != null) && (priority != null)) {
+	    copy.setGroup((StringAST) group.clone());
+	    copy.setPriority((NumberAST) priority.clone());
 	}
+	return copy;
+    }
 
 }

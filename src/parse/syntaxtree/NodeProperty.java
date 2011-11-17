@@ -1,12 +1,11 @@
 package parse.syntaxtree;
 
-import java.io.Serializable;
 
 /**
  * Класс содержит в себе типы узлов АСТ. Необходимо шаблонизатору.
  * @author hindu
  * */
-public class NodeProperty implements Serializable {
+public class NodeProperty{
     /**
      * @see NodeTypeVisitor булевы значения isNode, isLeaf, etc устанавливаются в
      *      этом классе.
