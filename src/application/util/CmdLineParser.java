@@ -15,8 +15,9 @@ import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.Logger;
 
 /**
- * Класс для разбора строки образца
- * "prog -p <propertyFileName.xml> -s <file1.ldl ... fileN.ldl>"
+ * Класс для парсинга параметров командной строки вида
+ * "<program_name> -p <property_file_name.xml> -s <file1.ldl ... fileN.ldl>"
+ * @author exellent
  */
 public class CmdLineParser {
     private Logger logger = Logger.getLogger(CmdLineParser.class);
@@ -78,7 +79,7 @@ public class CmdLineParser {
 	return true;
     }
 
-    /** Возврат iterator'а на список файлов ldl */
+    // Возврат iterator'а на список файлов ldl 
     public Iterator<String> getFileListIterator() {
 	return ldlFiles.iterator();
     }
@@ -87,13 +88,13 @@ public class CmdLineParser {
 	return ldlFiles;
     }
 
-    /** Возврат файла xml */
+    // Возврат файла xml 
     public String getPropertyFile() {
 	return propertyFile;
     }
 
     private void help() {
-	formatter.printHelp("prog -p <propertyFileName.xml> -s <file1.ldl ... fileN.ldl>",
+	formatter.printHelp("<program_name> -p <property_file_name.xml> -s <file1.ldl ... fileN.ldl>",
 		"Модуль описания классов эквивалентности обобщенных платежных документов", options,
 		null);
     }

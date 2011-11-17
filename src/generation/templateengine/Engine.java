@@ -8,6 +8,10 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
+/**
+ * Шаблонизатор. Класс генерирует запросы по исходным данным: SyntaxTree, EqualityClass и SelectFrom.
+ * @author hindu
+ * */
 public class Engine {
     private QueryData queryData;
     private QueryConstraints queryConstraints;
@@ -32,14 +36,10 @@ public class Engine {
 	while (queryConstraints.hasNext()) {
 	    String where = generateWhere();
 
-	    // FIXME убрать костыль
 	    String q = selFrom + where;
-	    q = q.replaceAll("''", "###");
-	    q = q.replaceAll("'", "");
-	    q = q.replaceAll("###", "'");
-	    q = q.replaceAll("\r\n\r\n", "\r\n");
-	    q = q.replaceAll("\r\n\r\n", "\r\n");
-	    q = q.replaceAll("\r\n\r\n", "\r\n");
+	    while(q.contains("\r\n\r\n")){
+		q = q.replaceAll("\r\n\r\n", "\r\n");
+	    }
 	    
 	    logger.trace("Query:\n" +q);
 	    query.add(q);

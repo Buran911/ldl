@@ -1,14 +1,13 @@
 package generation.idtable;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import parse.syntaxtree.NodeAST;
-
+/**
+ * Класс содержит в себе таблицу идентификаторов(идентификаторы и предикаты) а так же методы доступа к ним.
+ * @author hindu
+ * */
 public class IdTable {
     private List<Identifier> idTable;
     private List<Predicate> predicateTable;

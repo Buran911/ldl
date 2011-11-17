@@ -38,7 +38,9 @@ import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 
-/** Проверка повторного определения идентификатора */
+/** Волкер ищет повторные определения идентификаторов. 
+ * @author exellent
+ * */
 public class IdRedefinedChecker extends TreeWalker {
     private IdTable table = new IdTable();
     private String contextName;

@@ -1,5 +1,8 @@
 package application;
 
+import generation.db.DbConectionData;
+import generation.db.Policy;
+import generation.db.QueryMaker;
 import generation.idtable.IdTable;
 import generation.templateengine.Engine;
 import generation.templateengine.QueryConstraints;
@@ -28,13 +31,14 @@ import parse.parser.Parser;
 import parse.syntaxtree.SyntaxTree;
 import parse.util.Source;
 import application.util.CmdLineParser;
-import application.util.DbConectionData;
 import application.util.Halt;
-import application.util.Policy;
-import application.util.QueryMaker;
 import application.util.StackTrace;
 import application.util.YamlWriter;
 
+/**
+ * Класс интегрирует модули приложения и инкапсулирует всю работу приложения на верхнем уровне.
+ * @author hindu
+ * */
 public class App {
     private String[] args;
     private Source src;
@@ -51,16 +55,18 @@ public class App {
 	this.args = args;
     }
 
+    // считывание и подготовка исходных файлов и считывание и парсинг настроечного файла
     public void readFiles() {
 	logger.info("Парсинг параметров командной строки.");
 	CmdLineParser cmdLineParser = new CmdLineParser(args);
 
 	if (!cmdLineParser.parse()) {
-	    System.err.println("Не могу считать параметры командной строки");
-	    throw new RuntimeException();
+	    logger.error("Не могу считать параметры командной строки");
+	    throw new Halt();
 	}
 	XMLParser parser = new XMLParser(cmdLineParser.getPropertyFile());
 	logger.info("Парсинг настроечного файла.");
+	logger.trace("property file:"+ cmdLineParser.getPropertyFile());
 	parser.parse();
 	
 	
@@ -81,13 +87,14 @@ public class App {
 	else{
 	    policy = Policy.valueOf(parser.getPolicy());
 	}
-	
+	logger.trace("source file names: " + cmdLineParser.getLdlFiles());
 
 	src = new Source(cmdLineParser.getLdlFiles());
 	errh = new ErrorHandler(src);
 
     }
 
+    // парсинг исходных файлов и проверка синтаксических и семантических ошибок
     public void parseAndCheckErrors() {
 	Parser parser = new Parser(src, errh);
 	logger.info("Парсинг исходных файлов.");
@@ -113,12 +120,13 @@ public class App {
 	}
     }
 
+    // Проверяет семантическую правильность исходного кода, проверка идет по копиям объектов 
     private void checkSemantics() {
 	// TODO Сделать копию дерева
 	SyntaxTree treeSemantic = (SyntaxTree) DeepCopy.getCopy(tree);
 	IdTable idTable = new IdTable();
 	
-	tree.accept( new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
+	treeSemantic.accept( new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
 	
 	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
 	
@@ -133,6 +141,8 @@ public class App {
 	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
 	
     }
+    
+    // Предобработка AST и генерация по нему запросов. 
     public void generateEQ() {
 	logger.info("Обработка АСТ.");
 	table = new IdTable();
@@ -141,18 +151,17 @@ public class App {
 	tree.accept(new IdTableMaker(new IdParsigStrategy(), table));
 	tree.accept(new PositionEstimater(new IdParsigStrategy()));
 	tree.accept(new IdTableFiller(new IdParsigStrategy(), table));
-	tree.accept(new TemplateTypeFiller(new BottomUpWalkingStrategy()));
+	tree.accept(new TemplateTypeFiller());
 	tree.accept(new IdConvertor(new IdParsigStrategy(), table));
-	tree.accept(new TemplateEqClassesFiller(new BottomUpWalkingStrategy(), qConstraints));
+	tree.accept(new TemplateEqClassesFiller( qConstraints));
 
-	qConstraints.makeUnmodifiable();
 	engine = new Engine(new QueryData(table), qConstraints);
 	logger.info("Генерация запроса(-ов).");
 	engine.generate();
     }
 
 
-
+    // Соединение с БД, запросы и обработка результата.
     public void makeQuery() {
 	logger.info("Работа с БД.");
 	queryMaker = new QueryMaker(connection, engine.getQuery());
@@ -170,6 +179,7 @@ public class App {
 
     }
 
+    // запись результатов в yaml файлы
     public void writeYAML() {
 	logger.info("Запись YAML.");
 	YamlWriter yw = new YamlWriter(queryMaker.getQueryResults(), policy, table);

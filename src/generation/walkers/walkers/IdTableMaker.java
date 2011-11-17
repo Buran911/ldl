@@ -35,6 +35,10 @@ import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 
+/**
+ * Волкер заполняет таблицу идентификаторов.
+ * @author hindu
+ * */
 public class IdTableMaker extends TreeWalker {
     private IdTable table;
     private String contextName;
@@ -46,31 +50,31 @@ public class IdTableMaker extends TreeWalker {
 
     @Override
     public void visit(AttributeCallAST attrCall) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(BinaryExpressionAST binaryExp) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(BinaryOpAST binaryOp) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(BooleanAST bool) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(ConditionAST condition) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
@@ -92,25 +96,25 @@ public class IdTableMaker extends TreeWalker {
 
     @Override
     public void visit(EqClassAST eqClass) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(FormalParamsAST formalParams) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(FunctionalPartAST funcPart) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(IdentifierAST id) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
@@ -127,31 +131,31 @@ public class IdTableMaker extends TreeWalker {
 
     @Override
     public void visit(NumberAST number) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(OperationCallAST operationCall) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(ParametresAST params) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(PathNameAST pathName) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(PredicateAST predicate) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
@@ -174,31 +178,31 @@ public class IdTableMaker extends TreeWalker {
 
     @Override
     public void visit(RelationAST relation) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(SetAST set) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(SetOpAST setOp) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(SimpleNameAST simpleName) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(SourceAST src) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
@@ -209,25 +213,25 @@ public class IdTableMaker extends TreeWalker {
 
     @Override
     public void visit(srcExprAST expr) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(StringAST string) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(TypeAST type) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 
     @Override
     public void visit(VariableAST var) {
-	// TODO Auto-generated method stub
+	// Empty
 
     }
 

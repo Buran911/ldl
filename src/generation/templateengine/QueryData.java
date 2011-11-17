@@ -9,7 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Класс содержит в себе информацию для генерации Select From join части запроса
+ * Класс содержит в себе информацию для генерации Select From части запроса
+ * @author hindu
  */
 
 public class QueryData {

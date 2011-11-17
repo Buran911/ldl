@@ -1,7 +1,3 @@
-/**
- * Ётот класс парсит настроечный файл(создаетс€ DOM) и
- * предоставл€ет доступ к его пол€м и аттрибутам.
- * */
 package parse.ldlsettingsparser;
 
 import java.io.File;
@@ -20,7 +16,11 @@ import org.xml.sax.SAXException;
 
 import application.util.Halt;
 import application.util.StackTrace;
-
+/**
+ * Ётот класс парсит настроечный файл(создаетс€ DOM) и
+ * предоставл€ет доступ к его пол€м и аттрибутам.
+ * @author hindu
+ * */
 public class XMLParser {
     private String pathToFile;
     private Document doc = null;

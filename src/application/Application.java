@@ -5,13 +5,14 @@ import org.apache.log4j.Logger;
 import application.util.Halt;
 import application.util.StackTrace;
 /**
- * 
+ * Главный, запускаемый, класс приложения. Запускает выполнение и отлавливает RTE.
+ * @author hindu
  * */
 public class Application {
 
     private static Logger logger = Logger.getLogger(App.class);
     public static void main(String[] args) {
-	logger.trace("Запуск приложения.");
+	logger.info("Запуск приложения.");
 	App app = new App(args);
 	try {
 	    app.readFiles();
@@ -26,7 +27,8 @@ public class Application {
 	    logger.error("Ошибка выполнения приложения. Stack trace в логе.");
 	    logger.trace( StackTrace.getStackTrace(e));
 	} finally{
-	    logger.trace("конец лога\n\n\n\n\n\n");
+	    logger.trace("конец лога\n\n\n#\n#\n#\n#\n#\n\n".replaceAll("#", 
+		    "####################################################################################################"));
 	}
 	
     }

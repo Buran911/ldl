@@ -9,7 +9,8 @@ import parse.syntaxtree.nodes.ConstraintAST;
 
 /**
  * Класс работающий как генератор, выдает шаблонизатору набор ограничений для
- * построения where части запроса.
+ * построения where части запроса. 
+ * @author hindu
  * */
 public class QueryConstraints {
     private EqualityClass constPart;

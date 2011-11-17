@@ -1,5 +1,7 @@
 package application.util;
 
+import generation.db.Policy;
+import generation.db.QueryResult;
 import generation.idtable.IdTable;
 
 import java.io.FileNotFoundException;
@@ -16,6 +18,11 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
+/**
+ * Класс пребразует выходные данные генератора в ОПД в формате yaml, фильтруя ненужное.
+ * Выходные данные формируются с помощью габлонов StringTemplate.
+ * @author hindu
+ * */
 public class YamlWriter {
     private List<QueryResult> queryResults;
     private String dir = "out/";
@@ -68,7 +75,7 @@ public class YamlWriter {
 	List<List<String>> patternData = new LinkedList<List<String>>();
 
 	for (String key : queryResult.getQueryResult().keySet()) {
-	    // проверяем, нужно ли отображзать?
+	    // проверяем, нужно ли отображать?
 	    if (table.getId(key).isVisible()) {
 		List<String> values = queryResult.get(key);
 		List<String> pairs = new LinkedList<String>();
