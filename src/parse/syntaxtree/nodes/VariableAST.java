@@ -4,7 +4,7 @@ import parse.util.Positionable;
 import generation.idtable.Identifier;
 import generation.walkers.TreeWalker;
 
-public class VariableAST extends ExpressionAST implements Positionable, Cloneable {
+public class VariableAST extends ExpressionAST implements Positionable {
     private IdentifierAST identifier;
     private Identifier id;
     private Integer lineNo;
@@ -50,14 +50,18 @@ public class VariableAST extends ExpressionAST implements Positionable, Cloneabl
     public void setColumnNo(Integer columnNo) {
 	this.columnNo = columnNo;
     }
-    public VariableAST clone(){
+
+    @Override
+    public VariableAST clone() {
 	VariableAST copy = new VariableAST();
-	copy.setIdentifier(identifier.clone());
-	// XXX fuu
-	copy.setId(id.clone());
+	copy.setIdentifier((IdentifierAST) identifier.clone());
+	if (id != null) {
+	    copy.id = (Identifier) id.clone();
+	}
+
+	copy.lineNo = (lineNo != null) ? lineNo : null;
+	copy.columnNo = (columnNo != null) ? columnNo : null;
 	
-	copy.lineNo = new Integer(lineNo);
-	copy.columnNo = new Integer(columnNo);
 	return copy;
     }
 }

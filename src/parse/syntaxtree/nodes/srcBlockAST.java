@@ -8,7 +8,7 @@ import java.util.List;
 import parse.syntaxtree.NodeAST;
 import parse.util.Positionable;
 
-public class srcBlockAST extends NodeAST implements Positionable, Cloneable {
+public class srcBlockAST extends NodeAST implements Positionable {
     private IdentifierAST identifier;
     private List<srcExprAST> srcExprs;
     private Integer lineNo;
@@ -59,13 +59,13 @@ public class srcBlockAST extends NodeAST implements Positionable, Cloneable {
     public void setColumnNo(Integer columnNo) {
 	this.columnNo = columnNo;
     }
-
-    public srcBlockAST clone() {
-	System.out.print("srcBlockAST clone()");
+    
+    @Override
+    public Object clone() {
 	srcBlockAST copy = new srcBlockAST();
-	copy.setIdentifier(identifier.clone());
+	copy.setIdentifier((IdentifierAST) identifier.clone());
 	for (srcExprAST srcExpr : srcExprs) {
-	    copy.addSrcExpr(srcExpr.clone());
+	    copy.addSrcExpr((srcExprAST) srcExpr.clone());
 	}
 
 	copy.lineNo = (lineNo != null) ? lineNo : null;

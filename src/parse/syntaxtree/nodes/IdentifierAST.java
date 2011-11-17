@@ -5,7 +5,7 @@ import parse.syntaxtree.Datable;
 import parse.syntaxtree.NodeAST;
 import parse.util.Positionable;
 
-public class IdentifierAST extends NodeAST implements Datable, Positionable, Cloneable {
+public class IdentifierAST extends NodeAST implements Datable, Positionable {
     private String id;
     private Integer lineNo;
     private Integer columnNo;
@@ -40,9 +40,10 @@ public class IdentifierAST extends NodeAST implements Datable, Positionable, Clo
     public Integer getColumnNo() {
 	return columnNo;
     }
+
     @Override
-    public IdentifierAST clone(){
-	IdentifierAST copy = new IdentifierAST(new String(id),new Integer(lineNo),new Integer(columnNo));
+    public Object clone() {
+	IdentifierAST copy = new IdentifierAST(new String(id), new Integer(lineNo), new Integer(columnNo));
 	return copy;
     }
 }

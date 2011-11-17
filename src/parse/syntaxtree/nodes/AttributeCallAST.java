@@ -9,7 +9,7 @@ import generation.idtable.IdTable;
 import generation.idtable.Identifier;
 import generation.walkers.TreeWalker;
 
-public class AttributeCallAST extends ExpressionAST implements Positionable, Cloneable {
+public class AttributeCallAST extends ExpressionAST implements Positionable {
     private AttributeCallAST attrCall;
     private VariableAST variable;
     private IdentifierAST identifier;
@@ -103,16 +103,22 @@ public class AttributeCallAST extends ExpressionAST implements Positionable, Clo
 	}
 	return id;
     }
-
-    public AttributeCallAST clone(){
+    
+    @Override
+    public Object clone() {
 	AttributeCallAST copy = new AttributeCallAST();
-	copy.setAttrCall(getAttrCall().clone());
+
+	if (attrCall != null) {
+	    copy.setAttrCall((AttributeCallAST) getAttrCall().clone());
+	}
 	copy.setVariable(getVariable().clone());
-	copy.id = id.clone();
-	copy.setIdentifier(getIdentifier().clone());
-	copy.lineNo = new Integer(lineNo);
-	copy.columnNo = new Integer(columnNo);
-	
+	if (id != null) {
+	    copy.id = (Identifier) id.clone();
+	}
+	copy.setIdentifier((IdentifierAST) getIdentifier().clone());
+	copy.lineNo = (lineNo != null) ? lineNo : null;
+	copy.columnNo = (columnNo != null) ? columnNo : null;
+
 	return copy;
     }
 }

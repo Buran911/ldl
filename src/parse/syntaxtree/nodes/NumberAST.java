@@ -4,7 +4,7 @@ import generation.walkers.TreeWalker;
 import parse.syntaxtree.Datable;
 import parse.util.Positionable;
 
-public class NumberAST extends LiteralAST implements Datable, Positionable, Cloneable {
+public class NumberAST extends LiteralAST implements Datable, Positionable {
     private Double number;
     private Integer lineNo;
     private Integer columnNo;
@@ -40,9 +40,9 @@ public class NumberAST extends LiteralAST implements Datable, Positionable, Clon
 	return columnNo;
     }
 
-    public NumberAST clone() {
-	NumberAST copy = new NumberAST(new Double(number), new Integer(lineNo), new Integer(
-		columnNo));
+    @Override
+    public Object clone() {
+	NumberAST copy = new NumberAST(new Double(number), new Integer(lineNo), new Integer(columnNo));
 	return copy;
     }
 }

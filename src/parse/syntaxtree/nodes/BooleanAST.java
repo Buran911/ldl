@@ -4,7 +4,7 @@ import generation.walkers.TreeWalker;
 import parse.syntaxtree.Datable;
 import parse.util.Positionable;
 
-public class BooleanAST extends LiteralAST implements Datable, Positionable, Cloneable {
+public class BooleanAST extends LiteralAST implements Datable, Positionable {
     private Boolean bool;
     private Integer lineNo;
     private Integer columnNo;
@@ -40,9 +40,9 @@ public class BooleanAST extends LiteralAST implements Datable, Positionable, Clo
 	return columnNo;
     }
 
-    public BooleanAST clone() {
-	BooleanAST copy = new BooleanAST(new Boolean(bool), new Integer(lineNo), new Integer(
-		columnNo));
+    @Override
+    public Object clone() {
+	BooleanAST copy = new BooleanAST(new Boolean(bool), new Integer(lineNo), new Integer(columnNo));
 	return copy;
     }
 }

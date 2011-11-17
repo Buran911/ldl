@@ -1,29 +1,23 @@
 package parse.syntaxtree;
 
 import generation.walkers.TreeWalker;
-
-import java.io.Serializable;
-
 import parse.parsetree.ParseTree;
-import parse.syntaxtree.nodes.ldlAST;
 
-
-public class SyntaxTree implements Cloneable{
-
+public class SyntaxTree implements Cloneable {
     private NodeAST root;
 
     public SyntaxTree(ParseTree tree) {
 	root = tree.getAST();
 	prepare();
     }
-    public SyntaxTree(NodeAST root){
+
+    public SyntaxTree(NodeAST root) {
 	this.root = root;
     }
+
     @Override
     public Object clone() {
-	NodeAST rootcopy = root.clone();
-	
-	System.out.print("return");
+	NodeAST rootcopy = (NodeAST) root.clone();
 	return new SyntaxTree(rootcopy);
     }
 

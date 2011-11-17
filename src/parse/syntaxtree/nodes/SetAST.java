@@ -7,7 +7,7 @@ import java.util.List;
 
 import parse.syntaxtree.NodeAST;
 
-public class SetAST extends NodeAST implements Cloneable {
+public class SetAST extends NodeAST {
     private List<LiteralAST> elements;
 
     {
@@ -29,11 +29,13 @@ public class SetAST extends NodeAST implements Cloneable {
 
     }
 
-    public SetAST clone() {
+    @Override
+    public Object clone() {
 	SetAST copy = new SetAST();
-	for(LiteralAST element : elements){
-	    copy.addElement(element.clone());
+	for (LiteralAST element : elements) {
+	    copy.addElement((LiteralAST) element.clone());
 	}
+	
 	return copy;
     }
 }

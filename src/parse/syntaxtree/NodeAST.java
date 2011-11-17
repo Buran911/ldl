@@ -5,39 +5,39 @@ import generation.walkers.TreeWalker;
 import java.util.LinkedList;
 import java.util.List;
 
-/** Общий класс для всех элементов дерева. 
- * Дает возможность обхода дерева.
+/**
+ * Общий класс для всех элементов дерева. Дает возможность обхода дерева.
  * */
-public abstract class NodeAST extends NodeProperty implements Cloneable{
-	private NodeAST parent;
-	private List<NodeAST> successors;
-	
-	{
-		successors = new LinkedList<NodeAST>();
-	}
-	
-	
-	public abstract void accept(TreeWalker walker);
+public abstract class NodeAST extends NodeProperty implements Cloneable {
+    private NodeAST parent;
+    private List<NodeAST> successors;
 
-	public NodeAST getParent() {
-		return parent;
-	}
+    {
+	successors = new LinkedList<NodeAST>();
+    }
 
-	public void setParent(NodeAST parent) {
-		this.parent = parent;
-	}
-	
-	public void addSuccessor(NodeAST node){
-		successors.add(node);
-	}
-	
-	public void addSuccessos(List<NodeAST> nodes){
-		successors.addAll(nodes);
-	}
-	
-	public List<NodeAST> getSuccessors(){
-		return successors;
-	}
-	public abstract NodeAST clone();
+    public abstract void accept(TreeWalker walker);
+
+    public NodeAST getParent() {
+	return parent;
+    }
+
+    public void setParent(NodeAST parent) {
+	this.parent = parent;
+    }
+
+    public void addSuccessor(NodeAST node) {
+	successors.add(node);
+    }
+
+    public void addSuccessos(List<NodeAST> nodes) {
+	successors.addAll(nodes);
+    }
+
+    public List<NodeAST> getSuccessors() {
+	return successors;
+    }
+
+    public abstract Object clone();
 
 }

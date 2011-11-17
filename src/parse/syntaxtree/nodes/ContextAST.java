@@ -7,7 +7,7 @@ import java.util.List;
 
 import parse.syntaxtree.NodeAST;
 
-public class ContextAST extends NodeAST implements Cloneable {
+public class ContextAST extends NodeAST {
     private SimpleNameAST contextName;
     private List<DescriptionAST> descriptions;
     private List<SourceAST> sources;
@@ -71,22 +71,23 @@ public class ContextAST extends NodeAST implements Cloneable {
 	walker.accept(this);
 
     }
-
-    public ContextAST clone() {
+    
+    @Override
+    public Object clone() {
 
 	ContextAST copy = new ContextAST();
-	copy.setContextName(this.contextName.clone());
+	copy.setContextName((SimpleNameAST) contextName.clone());
 	for (DescriptionAST description : descriptions) {
-	    copy.addDescription(description.clone());
+	    copy.addDescription((DescriptionAST) description.clone());
 	}
 	for (SourceAST source : sources) {
-	    copy.addSource(source.clone());
+	    copy.addSource((SourceAST) source.clone());
 	}
 	for (ConstraintAST constraint : constraints) {
 	    copy.addConstraint((ConstraintAST)constraint.clone());
 	}
 	for (EqClassAST eqClass : eqClasses) {
-	    copy.addEqClass(eqClass.clone());
+	    copy.addEqClass((EqClassAST) eqClass.clone());
 	}
 	return copy;
     }

@@ -87,7 +87,7 @@ public class App {
 	System.out.println("Обработка АСТ.");
 	table = new IdTable();
 	QueryConstraints qConstraints = new QueryConstraints();
-
+	
 	tree.accept(new IdTableMaker(new IdParsigStrategy(), table));
 	tree.accept(new PositionEstimater(new IdParsigStrategy()));
 	tree.accept(new IdTableFiller(new IdParsigStrategy(), table));

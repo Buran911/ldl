@@ -10,7 +10,7 @@ import java.util.List;
 
 import parse.syntaxtree.NodeAST;
 
-public class ldlAST extends NodeAST implements Cloneable{
+public class ldlAST extends NodeAST {
     private List<ContextAST> contexts;
     private List<PredicateImplAST> impls;
 
@@ -43,14 +43,15 @@ public class ldlAST extends NodeAST implements Cloneable{
 
     }
 
-    public ldlAST clone(){
-	   ldlAST copy = new ldlAST();
-	   for(ContextAST context : contexts){
-	       copy.addContext(context.clone());
-	   }
-	   for(PredicateImplAST predicateImpl : impls){
-	       copy.addPredicateImpl(predicateImpl.clone());
-	   }
-	   return copy;
+    @Override
+    public Object clone() {
+	ldlAST copy = new ldlAST();
+	for (ContextAST context : contexts) {
+	    copy.addContext((ContextAST) context.clone());
+	}
+	for (PredicateImplAST predicateImpl : impls) {
+	    copy.addPredicateImpl((PredicateImplAST) predicateImpl.clone());
+	}
+	return copy;
     }
 }

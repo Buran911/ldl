@@ -3,7 +3,7 @@ package parse.syntaxtree.nodes;
 import generation.walkers.TreeWalker;
 import parse.syntaxtree.NodeAST;
 
-public class PathNameAST extends NodeAST implements Cloneable {
+public class PathNameAST extends NodeAST {
     private SimpleNameAST contextName;
     private SimpleNameAST predicateName;
 
@@ -30,11 +30,13 @@ public class PathNameAST extends NodeAST implements Cloneable {
 	walker.accept(this);
 
     }
+
     @Override
-    public PathNameAST clone() {
+    public Object clone() {
 	PathNameAST copy = new PathNameAST();
-	copy.setContextName(contextName.clone());
-	copy.setPredicateName(predicateName.clone());
+	copy.setContextName((SimpleNameAST) contextName.clone());
+	copy.setPredicateName((SimpleNameAST) predicateName.clone());
+	
 	return copy;
     }
 }

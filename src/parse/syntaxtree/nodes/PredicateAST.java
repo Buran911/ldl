@@ -1,10 +1,9 @@
 package parse.syntaxtree.nodes;
 
-import parse.syntaxtree.NodeAST;
-import parse.util.Positionable;
 import generation.walkers.TreeWalker;
+import parse.util.Positionable;
 
-public class PredicateAST extends BinaryExpAST implements Positionable, Cloneable {
+public class PredicateAST extends BinaryExpAST implements Positionable {
     private AttributeCallAST attrCall;
     private VariableAST variable;
     private OperationCallAST oprCall;
@@ -71,17 +70,19 @@ public class PredicateAST extends BinaryExpAST implements Positionable, Cloneabl
 	this.columnNo = columnNo;
     }
 
+    @Override
     public PredicateAST clone() {
 	PredicateAST copy = new PredicateAST();
 	if (attrCall != null) {
-	    copy.attrCall = attrCall.clone();
+	    copy.attrCall = (AttributeCallAST) attrCall.clone();
 	}
 	if (variable != null) {
 	    copy.variable = variable.clone();
 	}
-	copy.oprCall = oprCall.clone();
+	copy.oprCall = (OperationCallAST) oprCall.clone();
 	if (impl != null) {
-	    copy.impl = impl.clone();
+	    // FIXME impl должен ссылаться на объект своего дерева
+	    copy.impl = (PredicateImplAST) impl.clone();
 	}
 	copy.lineNo = (lineNo != null) ? lineNo : null;
 	copy.columnNo = (columnNo != null) ? columnNo : null;

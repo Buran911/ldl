@@ -2,7 +2,7 @@ package generation.idtable;
 
 import generation.languageconstants.Type;
 
-public class Identifier {
+public class Identifier implements Cloneable {
     private String name;
     private String namespace;
     private String type;
@@ -81,16 +81,20 @@ public class Identifier {
     public void setVisible(Boolean visible) {
 	this.visible = visible;
     }
-    public Identifier clone(){
-	Identifier copy = new Identifier();
-	copy.name = name;
 
-	copy.namespace = namespace;
-	copy.type = type;
+    @Override
+    public Object clone() {
+	Identifier copy = new Identifier();
+
+	copy.name = new String(name);
+	copy.namespace = new String(namespace);
+	copy.type = new String(type);
 	copy.srcType = srcType;
-	copy.srcData = srcData.clone();
-	copy.visible = visible;
-	
+	copy.srcData = (SourceData) srcData.clone();
+	copy.visible = new Boolean(visible);
+	copy.index = new Integer(index);
+	copy.alias = new String(alias);
+
 	return copy;
     }
 }

@@ -5,17 +5,15 @@ import generation.walkers.TreeWalker;
 import java.util.LinkedList;
 import java.util.List;
 
-import parse.syntaxtree.NodeAST;
-
 public class ConditionAST extends ConstraintAST {
     private BinaryAST condition;
     private List<ConstraintAST> constraints;
     // XXX eqClasseses -> eqClasses , разобраться с названиями
-    private List<ConstraintAST> eqClasses;
+    private List<ConstraintAST> eqClassesList;
 
     {
 	constraints = new LinkedList<ConstraintAST>();
-	eqClasses = new LinkedList<ConstraintAST>();
+	eqClassesList = new LinkedList<ConstraintAST>();
     }
 
     public void setCondition(BinaryAST condition) {
@@ -28,7 +26,7 @@ public class ConditionAST extends ConstraintAST {
     }
 
     public void addEqClasses(ConstraintAST eqClassesParam) {
-	eqClasses.add(eqClassesParam);
+	eqClassesList.add(eqClassesParam);
 	addSuccessor(eqClassesParam);
     }
 
@@ -41,7 +39,7 @@ public class ConditionAST extends ConstraintAST {
     }
 
     public List<ConstraintAST> getEqClasseses() {
-	return eqClasses;
+	return eqClassesList;
     }
 
     @Override
@@ -50,15 +48,16 @@ public class ConditionAST extends ConstraintAST {
 
     }
 
-    public ConditionAST clone() {
+    @Override
+    public Object clone() {
 	ConditionAST copy = new ConditionAST();
-	copy.condition = condition.clone();
+	copy.condition = (BinaryAST) condition.clone();
 
 	for (ConstraintAST constraint : constraints) {
-	    copy.addConstraint(constraint.clone());
+	    copy.addConstraint((ConstraintAST) constraint.clone());
 	}
-	for (ConstraintAST eqClass : eqClasses) {
-	    copy.addEqClasses(eqClass.clone());
+	for (ConstraintAST eqClass : eqClassesList) {
+	    copy.addEqClasses((ConstraintAST) eqClass.clone());
 	}
 	return copy;
     }

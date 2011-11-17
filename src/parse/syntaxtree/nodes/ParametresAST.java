@@ -3,7 +3,7 @@ package parse.syntaxtree.nodes;
 import generation.walkers.TreeWalker;
 import parse.syntaxtree.NodeAST;
 
-public class ParametresAST extends NodeAST implements Cloneable {
+public class ParametresAST extends NodeAST {
 
     @Override
     public void accept(TreeWalker walker) {
@@ -11,8 +11,10 @@ public class ParametresAST extends NodeAST implements Cloneable {
 
     }
 
-    public ParametresAST clone() {
+    @Override
+    public Object clone() {
 	ParametresAST copy = new ParametresAST();
+	
 	return copy;
     }
 }

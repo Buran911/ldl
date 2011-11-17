@@ -3,7 +3,7 @@ package parse.syntaxtree.nodes;
 import generation.walkers.TreeWalker;
 import parse.syntaxtree.NodeAST;
 
-public class srcExprAST extends NodeAST implements Cloneable {
+public class srcExprAST extends NodeAST {
     private IdentifierAST firstId;
     private IdentifierAST secondId;
     private SetAST set;
@@ -49,16 +49,17 @@ public class srcExprAST extends NodeAST implements Cloneable {
 
     }
 
-    public srcExprAST clone() {
+    @Override
+    public Object clone() {
 	srcExprAST copy = new srcExprAST();
 	if (firstId != null) {
-	    copy.setFirstId(firstId.clone());
+	    copy.setFirstId((IdentifierAST) firstId.clone());
 	}
 	if (secondId != null) {
-	    copy.setSecondId(secondId.clone());
+	    copy.setSecondId((IdentifierAST) secondId.clone());
 	}
 	if (set != null) {
-	    copy.setSet(set.clone());
+	    copy.setSet((SetAST) set.clone());
 	}
 	if (literal != null) {
 	    copy.setLiteral((LiteralAST) literal.clone());

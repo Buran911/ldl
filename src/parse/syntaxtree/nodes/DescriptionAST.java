@@ -4,7 +4,7 @@ import generation.walkers.TreeWalker;
 import parse.syntaxtree.NodeAST;
 import parse.util.Positionable;
 
-public class DescriptionAST extends NodeAST implements Positionable, Cloneable {
+public class DescriptionAST extends NodeAST implements Positionable {
     private IdentifierAST identifier;
     private TypeAST type;
     private Integer lineNo;
@@ -51,11 +51,12 @@ public class DescriptionAST extends NodeAST implements Positionable, Cloneable {
     public void setColumnNo(Integer columnNo) {
 	this.columnNo = columnNo;
     }
-
-    public DescriptionAST clone() {
+    
+    @Override
+    public Object clone() {
 	DescriptionAST copy = new DescriptionAST();
-	copy.identifier = this.identifier.clone();
-	copy.type = type.clone();
+	copy.identifier = (IdentifierAST) identifier.clone();
+	copy.type = (TypeAST) type.clone();
 	copy.lineNo = (lineNo != null) ? lineNo : null;
 	copy.columnNo = (columnNo != null) ? columnNo : null;
 	return copy;
