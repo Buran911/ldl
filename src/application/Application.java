@@ -1,18 +1,36 @@
 package application;
 
+import org.apache.log4j.Logger;
 
+import application.util.Halt;
+import application.util.StackTrace;
+/**
+ * Главный, запускаемый, класс приложения. Запускает выполнение и отлавливает RTE.
+ * @author hindu
+ * */
 public class Application {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		App app = new App(args);
-		app.readFiles(); 
-		app.checkErrors();
-		app.generateEQ();
-		app.makeQuery();
-		app.writeYAML();
+    private static Logger logger = Logger.getLogger(App.class);
+    public static void main(String[] args) {
+	logger.info("Запуск приложения.");
+	App app = new App(args);
+	try {
+	    app.readFiles();
+	    app.parseAndCheckErrors();
+	    app.generateEQ();
+	    app.makeQuery();
+	    app.writeYAML();
+	    logger.info("Работа приложения завершена корректно. Результаты в папке out.");
+	} catch (Halt halt) {
+	    logger.error("Ошибка выполнения приложения. Stack trace в логе.");
+	} catch (Exception e) {
+	    logger.error("Ошибка выполнения приложения. Stack trace в логе.");
+	    logger.trace( StackTrace.getStackTrace(e));
+	} finally{
+	    logger.trace("конец лога\n\n\n#\n#\n#\n#\n#\n\n".replaceAll("#", 
+		    "####################################################################################################"));
 	}
+	
+    }
 
 }

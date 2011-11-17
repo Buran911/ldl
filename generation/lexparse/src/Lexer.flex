@@ -1,8 +1,6 @@
 package parse.lexer;
 import parse.parser.*;
 import parse.errhandler.*;
-import parse.exceptions.UnknownTokenException;
-import parse.exceptions.InvalidIdentifierException;
 
 %%
 
@@ -142,7 +140,7 @@ error = .
 	return identifier; }
 	
 { string  } { 
-	ParserVal yylval = new ParserVal(yytext());
+	ParserVal yylval = new ParserVal(yytext().substring(1, yytext().length() - 1));
 	yyparser.setYylval(yylval);
 	return string; }
 

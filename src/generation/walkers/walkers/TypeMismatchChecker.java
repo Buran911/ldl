@@ -1,6 +1,5 @@
 package generation.walkers.walkers;
 
-import generation.idtable.IdTable;
 import generation.walkers.TreeWalker;
 import generation.walkers.WalkerStrategy;
 import parse.errhandler.ErrorClass;
@@ -37,11 +36,12 @@ import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 
 /**
- * Проверка типов выражений при сравнивании 
+ * Волкер ищет несоотвествия типов.
  * TODO проверить FormalParamsAST 
  * TODO проверить ParametresAST
  * TODO проверить ElementsAST
  * TODO определить системные типы
+ * @author exellent
  * */
 
 public class TypeMismatchChecker extends TreeWalker {

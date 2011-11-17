@@ -1,7 +1,11 @@
 package generation.languageconstants;
 
+/**
+ * Тип источника данных для идентификатора.
+ * @author hindu
+ * */
 public enum Type {
-	db,
-	set,
-	own
+    db,
+    set,
+    own
 }

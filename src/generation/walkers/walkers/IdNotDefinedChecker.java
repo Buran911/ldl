@@ -38,6 +38,10 @@ import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 
+/**
+ * Волкер ищет неопредленные идентификаторы.
+ * @author exellent
+ * */
 public class IdNotDefinedChecker extends TreeWalker {
     private IdTable table;
     private String contextName;
@@ -169,7 +173,7 @@ public class IdNotDefinedChecker extends TreeWalker {
 
     @Override
     public void visit(PredicateImplAST impl) {
-
+	contextName = impl.getPathName().getContextName().getName();
     }
 
     @Override

@@ -1,5 +1,8 @@
 package testcases.unit.semantic;
 
+import generation.db.DbConectionData;
+import generation.db.Policy;
+import generation.db.QueryMaker;
 import generation.idtable.IdTable;
 import generation.templateengine.Engine;
 import parse.errhandler.ErrorHandler;
@@ -8,9 +11,6 @@ import parse.parser.Parser;
 import parse.syntaxtree.SyntaxTree;
 import parse.util.Source;
 import application.util.CmdLineParser;
-import application.util.DbConectionData;
-import application.util.Policy;
-import application.util.QueryMaker;
 
 public class AppTest {
 	private String[] args;

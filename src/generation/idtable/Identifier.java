@@ -2,6 +2,12 @@ package generation.idtable;
 
 import generation.languageconstants.Type;
 
+/**
+ *  ласс определ€ет идентификатор. »м€ идентификатора и его контекст(namespace)
+ * однозначно определ€ют его.
+ * 
+ * @author hindu
+ * */
 public class Identifier implements Cloneable {
     private String name;
     private String namespace;

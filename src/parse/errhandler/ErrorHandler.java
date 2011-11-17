@@ -1,7 +1,8 @@
 package parse.errhandler;
 
 import java.util.LinkedList;
-import java.util.Queue;
+
+import org.apache.log4j.Logger;
 
 import parse.util.PairSet;
 import parse.util.Source;
@@ -23,6 +24,7 @@ public class ErrorHandler {
     private PairSet incompatibleErrors; // набор несовместимых друг с другом
 					// ошибок
     private Source src;
+    private Logger logger = Logger.getLogger(ErrorHandler.class);
 
     {
 	errors = new LinkedList<ParseError>();
@@ -59,7 +61,7 @@ public class ErrorHandler {
     public void printErrors() {
 	// XXX распечатать в удобном виде информацию по ошибкам
 	for (ParseError error : errors) {
-//	    System.err.println(error.getErrType() + " error in line number " + error.getLineNo() + " .Possible reason = " + error.getPossibleReason());
+	    logger.error(("Error[" + error.getLineNo() + "]" + error.getErrorLine()));
 	}
     }
 

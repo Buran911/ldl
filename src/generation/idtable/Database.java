@@ -1,5 +1,10 @@
 package generation.idtable;
 
+/**
+ * Класс определяет источник-бд.
+ * 
+ * @author hindu
+ * */
 public class Database extends SourceData {
     private String table;
     private String column;
