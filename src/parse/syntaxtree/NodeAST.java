@@ -7,6 +7,7 @@ import java.util.List;
 
 /** Общий класс для всех элементов дерева. 
  * Дает возможность обхода дерева.
+ * @author hindu
  * */
 public abstract class NodeAST extends NodeProperty{
 	private NodeAST parent;

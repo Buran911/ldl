@@ -38,7 +38,9 @@ import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 
-/** Проверка повторного определения идентификатора */
+/** Волкер ищет повторные определения идентификаторов. 
+ * @author exellent
+ * */
 public class IdRedefinedChecker extends TreeWalker {
     private IdTable table = new IdTable();
     private String contextName;
@@ -91,7 +93,7 @@ public class IdRedefinedChecker extends TreeWalker {
 	id.setName(description.getIdentifier().getId());
 
 	if (table.getId(id.getName(), id.getNamespace()) == null) {
-	    table.addId(id, description);
+	    table.addId(id);
 	}
 	else {
 	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition,
@@ -167,7 +169,7 @@ public class IdRedefinedChecker extends TreeWalker {
 	predicate.setNamespace(impl.getPathName().getContextName().getName());
 
 	if (table.getPredicate(predicate.getName(), predicate.getNamespace()) == null) {
-	    table.addPredicate(predicate, impl);
+	    table.addPredicate(predicate);
 	}
 	else {
 	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition,
