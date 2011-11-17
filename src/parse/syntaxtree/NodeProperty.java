@@ -1,9 +1,8 @@
 package parse.syntaxtree;
 
-import java.io.Serializable;
 
 
-public class NodeProperty implements Serializable{
+public class NodeProperty{
 	/**@see  NodeTypeVisitor
 	 * булевы значения isNode, isLeaf, etc устанавливаются в этом классе. */
 	private boolean isNode; // true, если у объекта есть "дети" и будет необходимо их разбирать

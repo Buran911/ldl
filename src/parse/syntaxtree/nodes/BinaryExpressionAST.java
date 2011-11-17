@@ -4,71 +4,87 @@ import parse.util.Positionable;
 import generation.walkers.TreeWalker;
 
 public class BinaryExpressionAST extends BinaryExpAST implements Positionable {
-	private ExpressionAST firstExpression;
-	private RelationAST relation;
-	private ExpressionAST secondExpression;
-	private BooleanAST bool;
-	private Integer lineNo;
-	private Integer columnNo;
-	
-	
-	public void setFirstExpression(ExpressionAST firstExpression) {
-		this.firstExpression = firstExpression;
-		addSuccessor(firstExpression);
-	}
+    private ExpressionAST firstExpression;
+    private RelationAST relation;
+    private ExpressionAST secondExpression;
+    private BooleanAST bool;
+    private Integer lineNo;
+    private Integer columnNo;
 
-	public void setRelation(RelationAST relation) {
-		this.relation = relation;
-		addSuccessor(relation);
-	}
+    public void setFirstExpression(ExpressionAST firstExpression) {
+	this.firstExpression = firstExpression;
+	addSuccessor(firstExpression);
+    }
 
-	public void setSecondExpression(ExpressionAST secondExpression) {
-		this.secondExpression = secondExpression;
-		addSuccessor(secondExpression);
-	}
+    public void setRelation(RelationAST relation) {
+	this.relation = relation;
+	addSuccessor(relation);
+    }
 
-	public ExpressionAST getFirstExpression() {
-		return firstExpression;
-	}
+    public void setSecondExpression(ExpressionAST secondExpression) {
+	this.secondExpression = secondExpression;
+	addSuccessor(secondExpression);
+    }
 
-	public RelationAST getRelation() {
-		return relation;
-	}
+    public ExpressionAST getFirstExpression() {
+	return firstExpression;
+    }
 
-	public ExpressionAST getSecondExpression() {
-		return secondExpression;
-	}
+    public RelationAST getRelation() {
+	return relation;
+    }
 
-	public BooleanAST getBool() {
-		return bool;
-	}
+    public ExpressionAST getSecondExpression() {
+	return secondExpression;
+    }
 
-	public void setBool(BooleanAST bool) {
-		this.bool = bool;
-	}
+    public BooleanAST getBool() {
+	return bool;
+    }
 
-	@Override
-	public void accept(TreeWalker walker) {
-		walker.accept(this);
+    public void setBool(BooleanAST bool) {
+	this.bool = bool;
+    }
 
-	}
-	
-	@Override
-	public Integer getLineNo() {
-		return lineNo;
-	}
+    @Override
+    public void accept(TreeWalker walker) {
+	walker.accept(this);
 
-	public void setLineNo(Integer lineNo) {
-		this.lineNo = lineNo;
-	}
+    }
 
-	@Override
-	public Integer getColumnNo() {
-		return columnNo;
-	}
+    @Override
+    public Integer getLineNo() {
+	return lineNo;
+    }
 
-	public void setColumnNo(Integer columnNo) {
-		this.columnNo = columnNo;
-	}
+    public void setLineNo(Integer lineNo) {
+	this.lineNo = lineNo;
+    }
 
+    @Override
+    public Integer getColumnNo() {
+	return columnNo;
+    }
+
+    public void setColumnNo(Integer columnNo) {
+	this.columnNo = columnNo;
+    }
+
+    @Override
+    public Object clone() {
+	BinaryExpressionAST copy = new BinaryExpressionAST();
+
+	if ((firstExpression != null) && (secondExpression != null) && (relation != null)) {
+	    copy.setFirstExpression((ExpressionAST) firstExpression.clone());
+	    copy.setRelation((RelationAST) relation.clone());
+	    copy.setSecondExpression((ExpressionAST) secondExpression.clone());
+	}
+	if (bool != null) {
+	    copy.bool = (BooleanAST) bool.clone();
+	}
+	copy.lineNo = (lineNo != null) ? lineNo : null;
+	copy.columnNo = (columnNo != null) ? columnNo : null;
+
+	return copy;
+    }
 }

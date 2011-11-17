@@ -5,10 +5,17 @@ import parse.syntaxtree.NodeAST;
 
 public class FormalParamsAST extends NodeAST {
 
-	@Override
-	public void accept(TreeWalker walker) {
-		walker.accept(this);
+    @Override
+    public void accept(TreeWalker walker) {
+	walker.accept(this);
 
-	}
+    }
+    
+    @Override
+    public Object clone() {
+	FormalParamsAST copy = new FormalParamsAST();
+
+	return copy;
+    }
 
 }

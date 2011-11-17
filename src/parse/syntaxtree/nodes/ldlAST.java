@@ -1,4 +1,5 @@
 package parse.syntaxtree.nodes;
+
 /**
  * Класс содержит ссылки на основные конструкции языка: контексты и описания предикатов.
  * */
@@ -10,37 +11,47 @@ import java.util.List;
 import parse.syntaxtree.NodeAST;
 
 public class ldlAST extends NodeAST {
-	private List<ContextAST> contexts;
-	private List<PredicateImplAST> impls;
-	
-	{
-		contexts = new LinkedList<ContextAST>();
-		impls = new LinkedList<PredicateImplAST>();
+    private List<ContextAST> contexts;
+    private List<PredicateImplAST> impls;
+
+    {
+	contexts = new LinkedList<ContextAST>();
+	impls = new LinkedList<PredicateImplAST>();
+    }
+
+    public void addContext(ContextAST context) {
+	contexts.add(context);
+	addSuccessor(context);
+    }
+
+    public void addPredicateImpl(PredicateImplAST impl) {
+	impls.add(impl);
+	addSuccessor(impl);
+    }
+
+    public List<ContextAST> getContexts() {
+	return contexts;
+    }
+
+    public List<PredicateImplAST> getImpls() {
+	return impls;
+    }
+
+    @Override
+    public void accept(TreeWalker walker) {
+	walker.accept(this);
+
+    }
+
+    @Override
+    public Object clone() {
+	ldlAST copy = new ldlAST();
+	for (ContextAST context : contexts) {
+	    copy.addContext((ContextAST) context.clone());
 	}
-	
-
-	public void addContext(ContextAST context) {
-		contexts.add(context);
-		addSuccessor(context);
+	for (PredicateImplAST predicateImpl : impls) {
+	    copy.addPredicateImpl((PredicateImplAST) predicateImpl.clone());
 	}
-
-	public void addPredicateImpl(PredicateImplAST impl) {
-		impls.add(impl);
-		addSuccessor(impl);
-	}
-
-	public List<ContextAST> getContexts() {
-		return contexts;
-	}
-
-	public List<PredicateImplAST> getImpls() {
-		return impls;
-	}
-
-	@Override
-	public void accept(TreeWalker walker) {
-		walker.accept(this);
-
-	}
-
+	return copy;
+    }
 }
