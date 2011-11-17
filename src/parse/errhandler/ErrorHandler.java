@@ -61,7 +61,7 @@ public class ErrorHandler {
     public void printErrors() {
 	// XXX распечатать в удобном виде информацию по ошибкам
 	for (ParseError error : errors) {
-	    logger.error(("Error[" + error.getLineNo() + "]" + error.getErrorLine()));
+	    logger.error("!!!Ошибка!!!\nКоординаты : строка " + error.getLineNo() + " символ " + error.getColumnNo() + " \nВыражение  : "  + error.getErrorLine().trim() + "\nОписание   : " + error.getErrType().toString() + "\nФайл       : " + src.getFileName(error.getLineNo()));
 	}
     }
 

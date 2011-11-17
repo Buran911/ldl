@@ -14,23 +14,23 @@ public class ParseError {
     private String errorLine;
     private String context; // контекст ошибки, на данный момент - строчка перед
 			    // ней
-    private String possibleSolution;
+  //  private String possibleSolution;
 
     public ParseError() {
 
     }
 
     public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo) {
-	this(errClass, errType, lineNo, columnNo, null, null, null);
+	this(errClass, errType, lineNo, columnNo, null, null);
     }
-
+//FIXME поправить possibleSolution
     public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo,
 	    String possibleSolution) {
-	this(errClass, errType, lineNo, columnNo, null, null, possibleSolution);
+	this(errClass, errType, lineNo, columnNo, null, null);
     }
 
     public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo,
-	    String errorLine, String context, String possibleSolution) {
+	    String errorLine, String context) {
 	super();
 	this.errClass = errClass;
 	this.errType = errType;
@@ -38,7 +38,7 @@ public class ParseError {
 	this.columnNo = columnNo;
 	this.errorLine = errorLine;
 	this.context = context;
-	this.possibleSolution = possibleSolution;
+	//this.possibleSolution = possibleSolution;
     }
 
     public ErrorClass getErrClass() {
@@ -65,9 +65,9 @@ public class ParseError {
 	return context;
     }
 
-	public String getPossibleReason() {
-	return possibleSolution;
-    }
+//    public String getPossibleReason() {
+//	return possibleSolution;
+//    }
 
     public void setErrClass(ErrorClass errClass) {
 	this.errClass = errClass;
@@ -93,9 +93,9 @@ public class ParseError {
 	this.context = context;
     }
 
-    public void setPossibleSolution(String possibleSolution) {
-	this.possibleSolution = possibleSolution;
-    }
+//    public void setPossibleSolution(String possibleSolution) {
+//	this.possibleSolution = possibleSolution;
+//    }
 
     @Override
     public int hashCode() {
