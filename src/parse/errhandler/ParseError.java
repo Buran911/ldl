@@ -12,25 +12,28 @@ public class ParseError {
     private Integer lineNo;
     private Integer columnNo;
     private String errorLine;
-    private String context; // контекст ошибки, на данный момент - строчка перед
-			    // ней
-  //  private String possibleSolution;
+    private String context;// контекст ошибки, на данный момент - строчка перед
+    // ней
+    private String fileName;
+    private Integer errorPos;
+    private Integer contextPos;
+    private String info;
 
     public ParseError() {
 
     }
 
     public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo) {
-	this(errClass, errType, lineNo, columnNo, null, null);
+	this(errClass, errType, lineNo, columnNo, null, null,null);
     }
 //FIXME поправить possibleSolution
     public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo,
-	    String possibleSolution) {
-	this(errClass, errType, lineNo, columnNo, null, null);
+	    String info) {
+	this(errClass, errType, lineNo, columnNo, null, null , info);
     }
 
     public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo,
-	    String errorLine, String context) {
+	    String errorLine, String context,String info) {
 	super();
 	this.errClass = errClass;
 	this.errType = errType;
@@ -38,7 +41,7 @@ public class ParseError {
 	this.columnNo = columnNo;
 	this.errorLine = errorLine;
 	this.context = context;
-	//this.possibleSolution = possibleSolution;
+	this.info = info;
     }
 
     public ErrorClass getErrClass() {
@@ -97,13 +100,45 @@ public class ParseError {
 //	this.possibleSolution = possibleSolution;
 //    }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public Integer getErrorPos() {
+        return errorPos;
+    }
+
+    public void setErrorPos(Integer errorPos) {
+        this.errorPos = errorPos;
+    }
+
+    public Integer getContextPos() {
+        return contextPos;
+    }
+
+    public void setContextPos(Integer contextPos) {
+        this.contextPos = contextPos;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
     @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
 	result = prime * result + ((errClass == null) ? 0 : errClass.hashCode());
 	result = prime * result + ((errType == null) ? 0 : errType.hashCode());
-	result = prime * result + ((lineNo == null) ? 0 : lineNo.hashCode());
+	result = prime * result + ((errorPos == null) ? 0 : errorPos.hashCode());
 	return result;
     }
 
@@ -120,13 +155,15 @@ public class ParseError {
 	    return false;
 	if (errType != other.errType)
 	    return false;
-	if (lineNo == null) {
-	    if (other.lineNo != null)
+	if (errorPos == null) {
+	    if (other.errorPos != null)
 		return false;
 	}
-	else if (!lineNo.equals(other.lineNo))
+	else if (!errorPos.equals(other.errorPos))
 	    return false;
 	return true;
     }
+
+
 
 }

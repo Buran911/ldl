@@ -3,6 +3,9 @@ package parse.errhandler;
 import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
 
 import parse.util.PairSet;
 import parse.util.Source;
@@ -54,15 +57,20 @@ public class ErrorHandler {
 	// прочая
 	ParseError lastErr = errors.getLast();
 	String errorLine = src.getLine(lastErr.getLineNo());
-
-	lastErr.setErrorLine(errorLine);
+	String context = src.getContext(lastErr.getLineNo());
+	// TODO делать unit-тест метода getContext()
+	lastErr.setFileName(src.getFileName(lastErr.getLineNo()));
+	lastErr.setErrorPos(src.getLinePos(lastErr.getLineNo()));
+	lastErr.setContextPos(src.getContextPos(lastErr.getLineNo()));
+	lastErr.setErrorLine(errorLine.trim());
+	lastErr.setContext(context.trim());
     }
 
     public void printErrors() {
-	// XXX распечатать в удобном виде информацию по ошибкам
-	for (ParseError error : errors) {
-	    logger.error("!!!Ошибка!!!\nКоординаты : строка " + error.getLineNo() + " символ " + error.getColumnNo() + " \nВыражение  : "  + error.getErrorLine().trim() + "\nОписание   : " + error.getErrType().toString() + "\nФайл       : " + src.getFileName(error.getLineNo()));
-	}
+	STGroup group = new STGroupFile("generation/templates/errors.stg");
+	ST st = group.getInstanceOf("errors");
+	st.add("errs", errors);
+	logger.error(st.render());
     }
 
 }

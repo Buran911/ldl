@@ -2,6 +2,7 @@ package parse.errhandler;
 
 /**
  * Перечисление всех возможных типов ошибок.
+ * 
  * @author hindu
  * */
 public enum ErrorType {
@@ -21,15 +22,15 @@ public enum ErrorType {
     InputData("Ошибка входных файлов"),
 
     NotImplementedYet("Данная функция до конца не реализована");
-    
+
     private final String ERRORTYPE;
-    
-    public String toString() {
+
+    public String getDescription() {
 	return ERRORTYPE;
     }
 
     ErrorType(String errorType) {
 	this.ERRORTYPE = errorType;
     }
-    
+
 }

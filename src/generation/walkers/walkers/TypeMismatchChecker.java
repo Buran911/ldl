@@ -36,11 +36,10 @@ import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 
 /**
- * ¬олкер ищет несоотвестви€ типов.
- * TODO проверить FormalParamsAST 
- * TODO проверить ParametresAST
- * TODO проверить ElementsAST
- * TODO определить системные типы
+ * ¬олкер ищет несоотвестви€ типов. TODO проверить FormalParamsAST TODO
+ * проверить ParametresAST TODO проверить ElementsAST TODO определить системные
+ * типы
+ * 
  * @author exellent
  * */
 
@@ -64,36 +63,59 @@ public class TypeMismatchChecker extends TreeWalker {
     @Override
     public void visit(BinaryExpressionAST binaryExp) {
 	// Left-side part of expression
-	String leftVar = null;
+	String leftType = null;
+	String leftName = null;
 	// Right-side part of expression
-	String rightVar = null;
+	String rightType = null;
+	String rightName = null;
 
 	// ќпредел€ем тип первого выражени€
-	if (binaryExp.getFirstExpression() instanceof AttributeCallAST)
-	    leftVar = ((AttributeCallAST) binaryExp.getFirstExpression()).getId().getType();
-	else if (binaryExp.getFirstExpression() instanceof VariableAST)
-	    leftVar = ((VariableAST) binaryExp.getFirstExpression()).getId().getType();
-	else if (binaryExp.getFirstExpression() instanceof StringAST)
-	    leftVar = STR;
-	else if (binaryExp.getFirstExpression() instanceof NumberAST)
-	    leftVar = INT;
-	else if (binaryExp.getFirstExpression() instanceof BooleanAST)
-	    leftVar = BOOL;
+	if (binaryExp.getFirstExpression() instanceof AttributeCallAST) {
+	    leftType = ((AttributeCallAST) binaryExp.getFirstExpression()).getId().getType();
+	    leftName = ((AttributeCallAST) binaryExp.getFirstExpression()).getId().getName();
+	}
+	else if (binaryExp.getFirstExpression() instanceof VariableAST) {
+	    leftType = ((VariableAST) binaryExp.getFirstExpression()).getId().getType();
+	    leftName = ((VariableAST) binaryExp.getFirstExpression()).getId().getName();
+	}
+	else if (binaryExp.getFirstExpression() instanceof StringAST){
+	    leftType = STR;
+	    leftName = ((StringAST)binaryExp.getFirstExpression()).getString();
+	}
+	else if (binaryExp.getFirstExpression() instanceof NumberAST){
+	    leftType = INT;
+	    leftName = ((NumberAST)binaryExp.getFirstExpression()).getNumber().toString();
+	}
+	else if (binaryExp.getFirstExpression() instanceof BooleanAST){
+	    leftType = BOOL;
+	    leftName = ((BooleanAST)binaryExp.getFirstExpression()).getBool().toString();
+	}
 
 	// ќпредел€ем тип второго выражени€
-	if (binaryExp.getSecondExpression() instanceof AttributeCallAST)
-	    rightVar = ((AttributeCallAST) binaryExp.getSecondExpression()).getId().getType();
-	else if (binaryExp.getSecondExpression() instanceof VariableAST)
-	    rightVar = ((VariableAST) binaryExp.getSecondExpression()).getId().getType();
-	else if (binaryExp.getSecondExpression() instanceof StringAST)
-	    rightVar = STR;
-	else if (binaryExp.getSecondExpression() instanceof NumberAST)
-	    rightVar = INT;
-	else if (binaryExp.getSecondExpression() instanceof BooleanAST)
-	    rightVar = BOOL;
+	if (binaryExp.getSecondExpression() instanceof AttributeCallAST) {
+	    rightType = ((AttributeCallAST) binaryExp.getSecondExpression()).getId().getType();
+	    rightName = ((AttributeCallAST) binaryExp.getSecondExpression()).getId().getName();
+	}
+	else if (binaryExp.getSecondExpression() instanceof VariableAST) {
+	    rightType = ((VariableAST) binaryExp.getSecondExpression()).getId().getType();
+	    rightName = ((VariableAST) binaryExp.getSecondExpression()).getId().getName();
+	}
+	else if (binaryExp.getSecondExpression() instanceof StringAST) {
+	    rightType = STR;
+	    rightName = ((StringAST)binaryExp.getSecondExpression()).getString();
+	}
+	else if (binaryExp.getSecondExpression() instanceof NumberAST){
+	    rightType = INT;
+	    rightName = ((NumberAST)binaryExp.getSecondExpression()).getNumber().toString();
+	}
+	else if (binaryExp.getSecondExpression() instanceof BooleanAST){
+	    rightType = BOOL;
+	    rightName = ((BooleanAST)binaryExp.getSecondExpression()).getBool().toString();
+	}
 
-	if (!leftVar.contentEquals(rightVar))
-	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.UncompatibleTypes, binaryExp.getRelation().getLineNo(), binaryExp.getRelation().getColumnNo()));
+	if (!leftType.contentEquals(rightType))
+	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.UncompatibleTypes, binaryExp.getRelation().getLineNo(), binaryExp.getRelation().getColumnNo(),
+		    "ѕеременные " + leftName + "(" + leftType + ")" + " и " + rightName + "(" + rightType + ")" + " несовместимы при сравнении"));
     }
 
     @Override
