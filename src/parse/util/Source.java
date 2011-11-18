@@ -48,6 +48,10 @@ public class Source {
 	return programLines[lineNo];
     }
 
+    public String getContext(int lineNo){
+	
+	return getUnemptyLine(lineNo-1);
+    }
     /**
      * Парсер может упасть на пустой строке. Программа ищет последнюю непустую
      * строку Если непустой строки спереди таки нет - возвращаем null.
@@ -83,16 +87,53 @@ public class Source {
 	return programLines[targetContextPos];
     }
 
+    public Integer getContextPos(int lineNo) {
+	Integer targetPos = getUnemptyLinePos(lineNo);
+	if (targetPos == null) {
+	    return null;
+	}
+
+	Integer targetContextPos = getUnemptyLinePos(targetPos - 1);
+	if (targetContextPos == null) {
+	    return null;
+	}
+	
+	return targetContextPos - getFilePos(lineNo);
+    }
+    
+    private Integer getFilePos(int lineNo){
+	int pos = 0;
+	while (lineNo >= filePos.get(pos)) {
+	    pos++;
+	}
+	
+	if(pos == 0){
+	    return 0;
+	}
+	
+	return filePos.get(pos-1);
+    }
+     
     public String getFileName(Integer lineNo) {
 	int pos = 0;
-
-	while (lineNo >= filePos.get(pos)) {
+	while (lineNo > filePos.get(pos)) {
 	    pos++;
 	}
 
 	return files.get(pos).getPath();
     }
 
+    public Integer getLinePos(Integer lineNo){
+	int pos = 0;
+	
+	while (lineNo >= filePos.get(pos)) {
+	    pos++;
+	}
+	
+	int lineCount = (pos != 0) ? filePos.get(pos - 1) : 0; 
+	return (lineNo - lineCount);
+    }
+    
     private Integer getUnemptyLinePos(Integer lineNo) {
 	Integer pos = lineNo;
 	while (programLines[pos].length() == 0) {
@@ -126,7 +167,7 @@ public class Source {
 	}
 
 	// позиционируем файлы
-	filePos.add(-1); // выравнивание
+	filePos.add(0); // выравнивание
 	for (LDLfile file : files) {
 	    filePos.add(file.getLineCount() + filePos.get(filePos.size() - 1));
 	}
