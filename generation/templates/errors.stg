@@ -1,0 +1,22 @@
+errors(errs) ::=<<
+--------- Error section ---------
+<err_list(errs)>
+>>
+
+err_list(errs) ::=<<
+<error(first(errs))><if(rest(errs))><err_list(rest(errs))><endif>
+>>
+
+error(err) ::=<<
+File: <err.fileName>:<err.errorPos>
+Error: <err.errClass>(<err.errType>)
+
+<err.contextPos> : <err.context>
+<err.errorPos> : <err.errorLine> \<\<\< error
+
+<err.errType.description><if(err.info)>
+<err.info><endif>
+
+---------------------------------
+
+>>

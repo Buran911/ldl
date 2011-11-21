@@ -167,7 +167,7 @@ public class IdNotDefinedChecker extends TreeWalker {
 
 	if (table.getPredicate(pred.getName(), pred.getNamespace()) == null) {
 	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined,
-		    predicate.getLineNo(), predicate.getColumnNo()));
+		    predicate.getLineNo(), predicate.getColumnNo(),"Предикат " + pred.getName() + " не определен"));
 	}
     }
 
@@ -215,7 +215,7 @@ public class IdNotDefinedChecker extends TreeWalker {
 
 	if (table.getId(id.getName(), id.getNamespace()) == null) {
 	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, block.getLineNo(),
-		    block.getColumnNo()));
+		    block.getColumnNo() , "Идентификатор " + id.getName() + " не определен"));
 	}
     }
 
@@ -246,7 +246,7 @@ public class IdNotDefinedChecker extends TreeWalker {
 
 	if (table.getId(id.getName(), id.getNamespace()) == null) {
 	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, var.getLineNo(),
-		    var.getColumnNo()));
+		    var.getColumnNo(), "Идентификатор " + id.getName() + " не определен"));
 	}
     }
 }

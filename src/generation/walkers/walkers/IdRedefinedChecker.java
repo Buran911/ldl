@@ -97,7 +97,7 @@ public class IdRedefinedChecker extends TreeWalker {
 	}
 	else {
 	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition,
-		    description.getLineNo(), description.getColumnNo()));
+		    description.getLineNo(), description.getColumnNo(),"Идентификатор " + id.getName() + " определен более одного раза"));
 	}
     }
 
@@ -173,7 +173,7 @@ public class IdRedefinedChecker extends TreeWalker {
 	}
 	else {
 	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition,
-		    impl.getLineNo(), impl.getColumnNo()));
+		    impl.getLineNo(), impl.getColumnNo(),"Предикат " + predicate.getName() + " определен более одного раза"));
 	}
     }
 
