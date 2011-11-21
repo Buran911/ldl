@@ -57,11 +57,11 @@ public class ErrorHandler {
 	// прочая
 	ParseError lastErr = errors.getLast();
 	String errorLine = src.getLine(lastErr.getLineNo());
-	String context = src.getContext(lastErr.getLineNo());
+	String context = src.getLineContext(lastErr.getLineNo());
 	// TODO делать unit-тест метода getContext()
 	lastErr.setFileName(src.getFileName(lastErr.getLineNo()));
-	lastErr.setErrorPos(src.getLinePos(lastErr.getLineNo()));
-	lastErr.setContextPos(src.getContextPos(lastErr.getLineNo()));
+	lastErr.setErrorPos(src.getLineNo(lastErr.getLineNo()));
+	lastErr.setContextPos(src.getLineContextNo(lastErr.getLineNo()));
 	lastErr.setErrorLine(errorLine.trim());
 	lastErr.setContext(context.trim());
     }
