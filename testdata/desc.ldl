@@ -1,0 +1,17 @@
+context Payment{
+	sum instanceof int;
+	inn instanceof int;
+	
+	source{
+		sum:{
+			_type = db;
+			_table = 'Sums';
+			_column = 'sum'; 
+		}
+		inn:{
+			_type = db;
+			_table = 'Sums';
+			_column = 'inn'; 
+		}
+	}
+}
