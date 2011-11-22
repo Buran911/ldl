@@ -1,0 +1,23 @@
+context Payer{
+	foreignKey();
+}
+
+context BankRu{
+	eq_classes{
+		isKO();
+		isGRKC();
+	}
+}
+
+-- задаем сами, механизма нет
+Payer::foreignKey(){
+	bankRuId = bankRu.id;
+}
+
+BankRu::isKO(){
+	bic = '049466331' || bic = '046354678';
+}
+
+BankRu::isGRKC(){
+	bic = '046354980' || bic = '046354249';
+}

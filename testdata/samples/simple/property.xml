@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ldl-project>
+	<db connectionString = "jdbc:oracle:thin:@192.168.1.16:1521:opd"
+		user = "system"
+		password = "qwerty"/>
+</ldl-project>
