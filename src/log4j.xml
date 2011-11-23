@@ -18,10 +18,22 @@
 			<param name="AcceptOnMatch" value="true"/>
 		</filter>
 	</appender> 
+	
+	<appender name="traceconsole" class="org.apache.log4j.ConsoleAppender"> 
+		<layout class="org.apache.log4j.PatternLayout"> 
+			<param name="ConversionPattern" value="%m%n"/> 
+		</layout> 
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMax" value="trace"/>
+			<param name="LevelMin" value="trace"/>
+			<param name="AcceptOnMatch" value="true"/>
+		</filter>
+	</appender> 
 
+	<!-- -Dstdout=trace in JVM arg runs trace -->
 	<root> 
 		<level value="all"/> 
 		<appender-ref ref="file"/> 
-		<appender-ref ref="console"/> 
-	</root> 
+		<appender-ref ref="${stdout}console"/> 
+	</root>
 </log4j:configuration>
