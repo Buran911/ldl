@@ -11,7 +11,7 @@ error(err) ::=<<
 File: <err.fileName>:<err.errorPos>
 Error: <err.errClass>(<err.errType>)
 
-<err.contextPos> : <err.context>
+<if(err.contextPos)><err.contextPos> : <err.context><endif>
 <err.errorPos> : <err.errorLine> \<\<\< error
 
 <err.errType.description><if(err.info)>

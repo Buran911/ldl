@@ -10,6 +10,14 @@ import org.apache.log4j.Logger;
 
 import application.util.StackTrace;
 
+/**
+ * Класс содержащий информацию об исходных файлах и предоставляющий методы
+ * навигации
+ * 
+ * @author exellent
+ * @author Hindu
+ * */
+
 public class LDLfile {
     private String path;
     private String[] programLines; // программа построчно
@@ -38,6 +46,7 @@ public class LDLfile {
 	for (String line : programLines) {
 	    data += line + "\n";
 	}
+
 	return data;
     }
 
@@ -63,22 +72,27 @@ public class LDLfile {
 
     /** начиная с globalLineNo получить непустую строку */
     public String getLine(Integer globalLineNo) {
-	if (getLineNo(globalLineNo) == -1)
+	if (getLineNo(globalLineNo) == null)
 	    return "";
+
 	return programLines[getLineNo(globalLineNo)];
     }
 
+    /** начиная с globalLineNo получить номер непустой строки */
     public Integer getLineNo(Integer globalLineNo) {
 	return getUnemptyLinePos(getLocalLineNo(globalLineNo));
     }
 
+    /** начиная с globalLineNo получить контекст непустой строки */
     public String getLineContext(Integer globalLineNo) {
 	if ((getLineContextNo(globalLineNo) == null) || (getLineContextNo(globalLineNo) == -1)) {
 	    return "";
 	}
+
 	return programLines[getLineContextNo(globalLineNo)];
     }
 
+    /** начиная с globalLineNo получить номер контекста непустой строки */
     public Integer getLineContextNo(Integer globalLineNo) {
 	return getUnemptyLinePos(getLineNo(globalLineNo) - 1);
     }
@@ -111,13 +125,15 @@ public class LDLfile {
 	return globalLineNo - beginIndex;
     }
 
-    // -1 - отсутствие непустой строки сверху
     private Integer getUnemptyLinePos(Integer localLineNo) {
+	if (localLineNo < 0) {
+	    return null;
+	}
 	Integer pos = localLineNo;
 	while (programLines[pos].length() == 0) {
 	    pos--;
 	    if (pos == -1) {
-		return -1;
+		return null;
 	    }
 	}
 

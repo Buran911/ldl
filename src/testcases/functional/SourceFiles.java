@@ -19,13 +19,13 @@ public class SourceFiles {
 	String line17 = "	}";
 	String line31 = "context Participant{";
 	String line33 = "	account instanceof Account;";
-	String line54 = "";
-	String line55 = "context BIC{";
+//	String line54 = "";
+	String line54 = "context BIC{";
 	Assert.assertEquals(line17, src.getLine(18));
 	Assert.assertEquals(line31, src.getLine(31));
 	Assert.assertEquals(line33, src.getLine(34));
+//	Assert.assertEquals(line54, src.getLine(54));
 	Assert.assertEquals(line54, src.getLine(54));
-	Assert.assertEquals(line55, src.getLine(55));
     }
 
     @Test
