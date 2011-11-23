@@ -1,124 +1,155 @@
 package testcases.unit.semantic;
 
+import generation.idtable.IdTable;
 import generation.walkers.strategys.IdParsigStrategy;
 import generation.walkers.walkers.IdRedefinedChecker;
 import generation.walkers.walkers.PositionEstimater;
+
+import java.lang.reflect.Field;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import parse.errhandler.ErrorClass;
+import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
 import parse.errhandler.ParseError;
+import parse.parser.Parser;
+import parse.syntaxtree.SyntaxTree;
+import parse.util.Source;
+import application.App;
+import application.util.Halt;
 
 public class SecondDefinitionTest {
+    private App app;
+    private SyntaxTree tree;
+    private ErrorHandler errh;
+    
+    public void setUp(String str) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	app = new App(str.split(" "));
 
-    @Test
-    public void test1() {
-	AppTest app = new AppTest(("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc.ldl").split(" "));
-	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, 2, null);
-	templateErr2.setErrorPos(2);
 	app.readFiles();
-	app.checkErrors();
 
-	app.getTree().accept(new PositionEstimater(new IdParsigStrategy()));
-	app.getTree().accept(new IdRedefinedChecker(new IdParsigStrategy(), app.getErrh()));
+	errh = getHandler(app);
 
-	app.getErrh().printErrors();
+	Parser parser = new Parser(getSrc(app), errh);
+	parser.parse();
 
-	Assert.assertTrue(app.getErrh().hasError(templateErr2));
+	// Синтаксические ошибки
+	if (errh.hasErrors()) {
+	    errh.printErrors();
+	    throw new Halt();
+	}
+
+	tree = new SyntaxTree(parser.getTree());
+    }
+    
+    @Test
+    public void test1() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc.ldl");
+	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
+	templateErr2.setErrorPos(2);
+
+	tree.accept(new PositionEstimater(new IdParsigStrategy()));
+	tree.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
+
+	Assert.assertTrue(errh.hasError(templateErr2));
     }
 
     @Test
-    public void test2() {
-	AppTest app = new AppTest(("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc1.ldl").split(" "));
-	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, 2, null);
-	ParseError templateErr4 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, 4, null);
+    public void test2() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc1.ldl");
+	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr4 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
 	templateErr2.setErrorPos(2);
 	templateErr4.setErrorPos(4);
-	app.readFiles();
-	app.checkErrors();
 
-	app.getTree().accept(new PositionEstimater(new IdParsigStrategy()));
-	app.getTree().accept(new IdRedefinedChecker(new IdParsigStrategy(), app.getErrh()));
+	tree.accept(new PositionEstimater(new IdParsigStrategy()));
+	tree.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
 
-	app.getErrh().printErrors();
-
-	Assert.assertTrue(app.getErrh().hasError(templateErr2));
-	Assert.assertTrue(app.getErrh().hasError(templateErr4));
+	
+	
+	Assert.assertTrue(errh.hasError(templateErr2));
+	Assert.assertTrue(errh.hasError(templateErr4));
     }
 
     @Test
-    public void test3() {
-	AppTest app = new AppTest(("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc2.ldl").split(" "));
-	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, 2, null);
+    public void test3() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc2.ldl");
+	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
 	templateErr2.setErrorPos(2);
-	app.readFiles();
-	app.checkErrors();
+	
+	tree.accept(new PositionEstimater(new IdParsigStrategy()));
+	tree.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
 
-	app.getTree().accept(new PositionEstimater(new IdParsigStrategy()));
-	app.getTree().accept(new IdRedefinedChecker(new IdParsigStrategy(), app.getErrh()));
+	errh.printErrors();
 
-	app.getErrh().printErrors();
-
-	Assert.assertTrue(app.getErrh().hasError(templateErr2));
+	Assert.assertTrue(errh.hasError(templateErr2));
     }
 
     @Test
-    public void test4() {
-	AppTest app = new AppTest(("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc3.ldl").split(" "));
-	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, 2, null);
-	ParseError templateErr3 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, 3, null);
+    public void test4() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc3.ldl");
+	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr3 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
 	templateErr2.setErrorPos(2);
 	templateErr3.setErrorPos(3);
 	
-	app.readFiles();
-	app.checkErrors();
+	tree.accept(new PositionEstimater(new IdParsigStrategy()));
+	tree.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
 
-	app.getTree().accept(new PositionEstimater(new IdParsigStrategy()));
-	app.getTree().accept(new IdRedefinedChecker(new IdParsigStrategy(), app.getErrh()));
-
-	Assert.assertTrue(app.getErrh().hasError(templateErr2));
-	Assert.assertTrue(app.getErrh().hasError(templateErr3));
+	Assert.assertTrue(errh.hasError(templateErr2));
+	Assert.assertTrue(errh.hasError(templateErr3));
     }
 
     @Test
-    public void predtest1() {
-	AppTest app = new AppTest(("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/pred.ldl").split(" "));
+    public void predtest1() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/pred.ldl");
 
-	ParseError templateErr4 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, 4, null);
+	ParseError templateErr4 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
 	templateErr4.setErrorPos(4);
 	
-	app.readFiles();
-	app.checkErrors();
+	tree.accept(new PositionEstimater(new IdParsigStrategy()));
+	tree.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
 
-	app.getTree().accept(new PositionEstimater(new IdParsigStrategy()));
-	app.getTree().accept(new IdRedefinedChecker(new IdParsigStrategy(), app.getErrh()));
+	errh.printErrors();
 
-	app.getErrh().printErrors();
-
-	Assert.assertTrue(app.getErrh().hasError(templateErr4));
+	Assert.assertTrue(errh.hasError(templateErr4));
     }
 
     @Test
-    public void predtest2() {
-	AppTest app = new AppTest(("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/pred2.ldl").split(" "));
+    public void predtest2() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/pred2.ldl");
 
-	ParseError templateErr4 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, 4, null);
-	ParseError templateErr8 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, 8, null);
+	ParseError templateErr4 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr8 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
 
 	templateErr4.setErrorPos(4);
 	templateErr8.setErrorPos(8);
-	
-	app.readFiles();
-	app.checkErrors();
 
-	app.getTree().accept(new PositionEstimater(new IdParsigStrategy()));
-	app.getTree().accept(new IdRedefinedChecker(new IdParsigStrategy(), app.getErrh()));
+	tree.accept(new PositionEstimater(new IdParsigStrategy()));
+	tree.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
 
-	app.getErrh().printErrors();
+	errh.printErrors();
 
-	Assert.assertTrue(app.getErrh().hasError(templateErr4));
-	Assert.assertTrue(app.getErrh().hasError(templateErr8));
+	Assert.assertTrue(errh.hasError(templateErr4));
+	Assert.assertTrue(errh.hasError(templateErr8));
     }
+    
+    private ErrorHandler getHandler(App app) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	Field errorHandler = App.class.getDeclaredField("errh");
+
+	errorHandler.setAccessible(true);
+
+	return (ErrorHandler) errorHandler.get(app);
+    }
+
+    private Source getSrc(App app) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
+	Field src = App.class.getDeclaredField("src");
+
+	src.setAccessible(true);
+
+	return (Source) src.get(app);
+    }
+    
 }
