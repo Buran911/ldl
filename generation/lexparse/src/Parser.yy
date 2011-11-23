@@ -698,8 +698,7 @@ private int yylex (){
 
   /* error reporting */
 public void yyerror  (String error) {
-	System.err.println ("Error: " + error);
-	errHandler.addError( new ParseError(ErrorClass.syntax, ErrorType.Syntax, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()));
+	errHandler.addError( new ParseError(ErrorClass.syntax, ErrorType.AbstractCompiler, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()));
 	/* КАК ЭТО РАБОТАЕТ????? P.S. Восстановление парсера после фейла.*/
 	yyerrflag = 3;
 }
