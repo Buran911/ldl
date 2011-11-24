@@ -19,9 +19,9 @@ import application.util.StackTrace;
  * */
 
 public class LDLfile {
-    private String path;
+    private String path; // Физический путь на ldl файл
     private String[] programLines; // программа построчно
-    private int lineCount;
+    private int lineCount; // Количество строк в файле
     private int beginIndex; // Начало файла в глобальной нумерации строк
     private int endIndex; // Конец файла в глобальной нумерации строк
 			  // включительно
