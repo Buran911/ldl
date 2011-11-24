@@ -11,6 +11,10 @@ import parse.util.PairSet;
 import parse.util.Source;
 
 // TODO Научить работать хэндлер
+
+// TODO проверить на несовместимость ошибки, превышение криткаунта и
+// прочая
+
 /**
  * Класс накапливает, содержит и обрабатывает ошибки парсинга и анализа
  * исходного кода(синтаксические и семантические). Каждая ошибка содержит
@@ -20,8 +24,8 @@ import parse.util.Source;
  * 
  * @author hindu
  * */
-public class ErrorHandler {
-    private LinkedList<ParseError> errors;
+public final class ErrorHandler {
+    private LinkedList<Error> errors;
     private final int errCritCount; // количество ошибок, после которого
 				    // дальнейшие проверки нецелесообразны
     private PairSet incompatibleErrors; // набор несовместимых друг с другом
@@ -30,7 +34,7 @@ public class ErrorHandler {
     private Logger logger = Logger.getLogger(ErrorHandler.class);
 
     {
-	errors = new LinkedList<ParseError>();
+	errors = new LinkedList<Error>();
 	errCritCount = 15;
 	incompatibleErrors = new PairSet();
     }
@@ -39,12 +43,22 @@ public class ErrorHandler {
 	this.src = src;
     }
 
-    public void addError(ParseError error) {
+    public void addError(Error error) {
+	if (error instanceof ParseError) {
+	    setInfoAboutError((ParseError) error);
+	    error.setParseError();
+	}else{
+	    error.setRuntimeError();
+	}
 	errors.add(error);
 	handle();
     }
+    
+    private void handle(){
+	
+    }
 
-    public boolean hasError(ParseError error) {
+    public boolean hasError(Error error) {
 	return errors.contains(error);
     }
 
@@ -52,25 +66,14 @@ public class ErrorHandler {
 	return errors.size() > 0 ? true : false;
     }
 
-    private void handle() {
-	// TODO проверить на несовместимость ошибки, превышение криткаунта и
-	// прочая
-	ParseError lastErr = errors.getLast();
-	String errorLine = src.getLine(lastErr.getLineNo());
-	String context = src.getLineContext(lastErr.getLineNo());
-	// TODO делать unit-тест метода getContext()
-	lastErr.setFileName(src.getFileName(lastErr.getLineNo()));
-	lastErr.setErrorPos(src.getLineNo(lastErr.getLineNo()));
-	lastErr.setContextPos(src.getLineContextNo(lastErr.getLineNo()));
-	lastErr.setErrorLine(errorLine.trim());
-	lastErr.setContext(context.trim());
-    }
+    private void setInfoAboutError(ParseError error) {
+	String errorLine = src.getLine(error.getLineNo());
+	String context = src.getLineContext(error.getLineNo());
 
-    public void printErrors() {
-	STGroup group = new STGroupFile("generation/templates/errors.stg");
-	ST st = group.getInstanceOf("errors");
-	st.add("errs", errors);
-	logger.error(st.render());
+	error.setFileName(src.getFileName(error.getLineNo()));
+	error.setErrorPos(src.getLineNo(error.getLineNo()));
+	error.setContextPos(src.getLineContextNo(error.getLineNo()));
+	error.setErrorLine(errorLine.trim());
+	error.setContext(context.trim());
     }
-
 }

@@ -7,7 +7,6 @@ import generation.idtable.IdTable;
 import generation.templateengine.Engine;
 import generation.templateengine.QueryConstraints;
 import generation.templateengine.QueryData;
-import generation.util.DeepCopy;
 import generation.walkers.strategys.BottomUpWalkingStrategy;
 import generation.walkers.strategys.IdParsigStrategy;
 import generation.walkers.walkers.FunctionalImplementedChecker;
@@ -26,6 +25,8 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 
 import parse.errhandler.ErrorHandler;
+import parse.errhandler.ErrorType;
+import parse.errhandler.RuntimeError;
 import parse.ldlsettingsparser.XMLParser;
 import parse.parser.Parser;
 import parse.syntaxtree.SyntaxTree;
@@ -36,7 +37,9 @@ import application.util.StackTrace;
 import application.util.YamlWriter;
 
 /**
- * Класс интегрирует модули приложения и инкапсулирует всю работу приложения на верхнем уровне.
+ * Класс интегрирует модули приложения и инкапсулирует всю работу приложения на
+ * верхнем уровне.
+ * 
  * @author hindu
  * */
 public class App {
@@ -55,7 +58,8 @@ public class App {
 	this.args = args;
     }
 
-    // считывание и подготовка исходных файлов и считывание и парсинг настроечного файла
+    // считывание и подготовка исходных файлов и считывание и парсинг
+    // настроечного файла
     public void readFiles() {
 	logger.info("Парсинг параметров командной строки.");
 	CmdLineParser cmdLineParser = new CmdLineParser(args);
@@ -66,25 +70,24 @@ public class App {
 	}
 	XMLParser parser = new XMLParser(cmdLineParser.getPropertyFile());
 	logger.info("Парсинг настроечного файла.");
-	logger.trace("property file:"+ cmdLineParser.getPropertyFile());
+	logger.trace("property file:" + cmdLineParser.getPropertyFile());
 	parser.parse();
-	
-	
+
 	logger.trace("connection string: " + parser.getConnectionString());
 	logger.trace("user: " + parser.getUser());
 	logger.trace("password: " + parser.getPassword());
 	logger.trace("policy: " + parser.getPolicy());
-	
+
 	connection = new DbConectionData();
 	connection.setConnectionString(parser.getConnectionString());
 	connection.setUser(parser.getUser());
 	connection.setPassword(parser.getPassword());
-	
-	if(parser.getPolicy() == null){
+
+	if (parser.getPolicy() == null) {
 	    // default policy
 	    policy = Policy.first;
 	}
-	else{
+	else {
 	    policy = Policy.valueOf(parser.getPolicy());
 	}
 	logger.trace("source file names: " + cmdLineParser.getLdlFiles());
@@ -99,7 +102,6 @@ public class App {
 	Parser parser = new Parser(src, errh);
 	logger.info("Парсинг исходных файлов.");
 	parser.parse();
-	
 
 	// Синтаксические ошибки
 	logger.info("Проверка синтаксических ошибок");
@@ -112,7 +114,7 @@ public class App {
 
 	logger.info("Проверка семантических ошибок.");
 	checkSemantics();
-	
+
 	// Семантические ошибки
 	if (errh.hasErrors()) {
 	    errh.printErrors();
@@ -120,14 +122,13 @@ public class App {
 	}
     }
 
-    // Проверяет семантическую правильность исходного кода, проверка идет по копиям объектов 
+    // Проверяет семантическую правильность исходного кода, проверка идет по
+    // копиям объектов
     private void checkSemantics() {
-
-	// TODO Сделать копию дерева
-	SyntaxTree treeSemantic = (SyntaxTree)tree.clone();
+	SyntaxTree treeSemantic = (SyntaxTree) tree.clone();
 	IdTable idTable = new IdTable();
-	
-	treeSemantic.accept( new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
+
+	treeSemantic.accept(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
 	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
 
 	treeSemantic.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
@@ -140,8 +141,8 @@ public class App {
 	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
 
     }
-    
-    // Предобработка AST и генерация по нему запросов. 
+
+    // Предобработка AST и генерация по нему запросов.
     public void generateEQ() {
 	logger.info("Обработка АСТ.");
 	table = new IdTable();
@@ -152,13 +153,12 @@ public class App {
 	tree.accept(new IdTableFiller(new IdParsigStrategy(), table));
 	tree.accept(new TemplateTypeFiller());
 	tree.accept(new IdConvertor(new IdParsigStrategy(), table));
-	tree.accept(new TemplateEqClassesFiller( qConstraints));
+	tree.accept(new TemplateEqClassesFiller(qConstraints));
 
 	engine = new Engine(new QueryData(table), qConstraints);
 	logger.info("Генерация запроса(-ов).");
 	engine.generate();
     }
-
 
     // Соединение с БД, запросы и обработка результата.
     public void makeQuery() {
@@ -166,16 +166,14 @@ public class App {
 	queryMaker = new QueryMaker(connection, engine.getQuery());
 	try {
 	    queryMaker.makeQuerys();
-	} catch (ClassNotFoundException e) {
-	    logger.error("Не найден драйвер БД.");
-	    logger.trace( StackTrace.getStackTrace(e));
-	    throw new Halt();
-	} catch (SQLException e) {
-	    logger.error("Ошибка в SQL запросе.");
-	    logger.trace( StackTrace.getStackTrace(e));
-	    throw new Halt();
-	}
 
+	} catch (ClassNotFoundException e) {
+	    RuntimeError re = new RuntimeError(ErrorType.DataBaseDriverNotFound, StackTrace.getStackTrace(e), ErrorType.DataBaseDriverNotFound.getDescription());
+	    errh.addError(re);
+	} catch (SQLException e) {
+	    RuntimeError re = new RuntimeError(ErrorType.SQLError, StackTrace.getStackTrace(e), ErrorType.SQLError.getDescription());
+	    errh.addError(re);
+	}
     }
 
     // запись результатов в yaml файлы

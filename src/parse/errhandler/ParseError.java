@@ -1,13 +1,17 @@
 package parse.errhandler;
 
+import org.apache.log4j.Logger;
+import org.stringtemplate.v4.ST;
+import org.stringtemplate.v4.STGroup;
+import org.stringtemplate.v4.STGroupFile;
+
 /**
  * Класс содержит общие данные об ошибке: класс, тип, локализацию, контекст,
  * комментарии по возможному решению
  * 
  * @author hindu
  * */
-public class ParseError {
-    private ErrorClass errClass;
+public class ParseError extends Error {
     private ErrorType errType;
     private Integer lineNo;
     private Integer columnNo;
@@ -19,23 +23,21 @@ public class ParseError {
     private Integer contextPos;
     private String info;
 
+    private Logger logger = Logger.getLogger(ParseError.class);
     public ParseError() {
 
     }
 
     public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo) {
-	this(errClass, errType, lineNo, columnNo, null, null,null);
-    }
-//FIXME поправить possibleSolution
-    public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo,
-	    String info) {
-	this(errClass, errType, lineNo, columnNo, null, null , info);
+	this(errClass, errType, lineNo, columnNo, null, null, null);
     }
 
-    public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo,
-	    String errorLine, String context,String info) {
+    public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo, String info) {
+	this(errClass, errType, lineNo, columnNo, null, null, info);
+    }
+
+    public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo, String errorLine, String context, String info) {
 	super();
-	this.errClass = errClass;
 	this.errType = errType;
 	this.lineNo = lineNo;
 	this.columnNo = columnNo;
@@ -45,7 +47,7 @@ public class ParseError {
     }
 
     public ErrorClass getErrClass() {
-	return errClass;
+	return null;
     }
 
     public ErrorType getErrType() {
@@ -68,13 +70,9 @@ public class ParseError {
 	return context;
     }
 
-//    public String getPossibleReason() {
-//	return possibleSolution;
-//    }
-
-    public void setErrClass(ErrorClass errClass) {
-	this.errClass = errClass;
-    }
+    // public String getPossibleReason() {
+    // return possibleSolution;
+    // }
 
     public void setErrType(ErrorType errType) {
 	this.errType = errType;
@@ -96,53 +94,50 @@ public class ParseError {
 	this.context = context;
     }
 
-//    public void setPossibleSolution(String possibleSolution) {
-//	this.possibleSolution = possibleSolution;
-//    }
+    // public void setPossibleSolution(String possibleSolution) {
+    // this.possibleSolution = possibleSolution;
+    // }
 
     public String getFileName() {
-        return fileName;
+	return fileName;
     }
 
     public void setFileName(String fileName) {
-        this.fileName = fileName;
+	this.fileName = fileName;
     }
 
     public Integer getErrorPos() {
-        return errorPos;
+	return errorPos;
     }
 
     public void setErrorPos(Integer errorPos) {
-        this.errorPos = errorPos;
+	this.errorPos = errorPos;
     }
 
     public Integer getContextPos() {
-        return contextPos;
+	return contextPos;
     }
 
     public void setContextPos(Integer contextPos) {
-        this.contextPos = contextPos;
+	this.contextPos = contextPos;
     }
 
     public String getInfo() {
-        return info;
+	return info;
     }
 
     public void setInfo(String info) {
-        this.info = info;
+	this.info = info;
     }
 
-    @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((errClass == null) ? 0 : errClass.hashCode());
 	result = prime * result + ((errType == null) ? 0 : errType.hashCode());
 	result = prime * result + ((errorPos == null) ? 0 : errorPos.hashCode());
 	return result;
     }
 
-    @Override
     public boolean equals(Object obj) {
 	if (this == obj)
 	    return true;
@@ -151,8 +146,6 @@ public class ParseError {
 	if (getClass() != obj.getClass())
 	    return false;
 	ParseError other = (ParseError) obj;
-	if (errClass != other.errClass)
-	    return false;
 	if (errType != other.errType)
 	    return false;
 	if (errorPos == null) {
@@ -163,7 +156,12 @@ public class ParseError {
 	    return false;
 	return true;
     }
-
-
-
+    
+    public void printError() {
+	STGroup group = new STGroupFile("generation/templates/errors.stg");
+	ST st = group.getInstanceOf("error");
+	st.add("errs", error);
+	logger.error(st.render());
+    }
+    
 }

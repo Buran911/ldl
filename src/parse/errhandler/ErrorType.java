@@ -6,21 +6,23 @@ package parse.errhandler;
  * @author hindu
  * */
 public enum ErrorType {
+    // SyntaxError
     AbstractCompiler("Неизвестная ошибка"),
     InvalidIdentifier("Неизвестный идентификатор"),
     OperandNotFound("Операнд не найден"),
-    Syntax("Ошибка синтаксиса"),
     Quote("Нет гармонии в количестве ковычек"),
     UnexpectedEOF("Неожиданный конец файла"),
     UnknownToken("Неизвестный знак"),
-
+    // SemanicError
     IdentifierRedefenition("Повторное определение идентификатора"),
     IdentifierUndefined("Попытка определения идентификаторов с одинаковыми названиями в одной области видимости"),
     UncompatibleTypes("Ошибка совместимости типов"),
     ParamCount("Ошибка количества параметров"),
+    // RuntimeError
     SchemeTranslation("Ошибка трансляции файлов"),
     InputData("Ошибка входных файлов"),
-
+    DataBaseDriverNotFound("Не найден драйвер базы данных"),
+    SQLError("Ошибка в SQL запросе"),
     NotImplementedYet("Данная функция до конца не реализована");
 
     private final String ERRORTYPE;
