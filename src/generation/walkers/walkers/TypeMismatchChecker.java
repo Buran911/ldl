@@ -1,10 +1,13 @@
 package generation.walkers.walkers;
 
+import java.util.LinkedList;
+
 import generation.walkers.TreeWalker;
 import generation.walkers.WalkerStrategy;
 import parse.errhandler.ErrorClass;
 import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
+import parse.errhandler.Int;
 import parse.errhandler.ParseError;
 import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
@@ -43,7 +46,7 @@ import parse.syntaxtree.nodes.srcExprAST;
  * @author exellent
  * */
 
-public class TypeMismatchChecker extends TreeWalker {
+public class TypeMismatchChecker extends TreeWalker implements Int {
     private ErrorHandler errh;
     private final String STR = "String";
     private final String INT = "Integer";
@@ -78,17 +81,17 @@ public class TypeMismatchChecker extends TreeWalker {
 	    leftType = ((VariableAST) binaryExp.getFirstExpression()).getId().getType();
 	    leftName = ((VariableAST) binaryExp.getFirstExpression()).getId().getName();
 	}
-	else if (binaryExp.getFirstExpression() instanceof StringAST){
+	else if (binaryExp.getFirstExpression() instanceof StringAST) {
 	    leftType = STR;
-	    leftName = ((StringAST)binaryExp.getFirstExpression()).getString();
+	    leftName = ((StringAST) binaryExp.getFirstExpression()).getString();
 	}
-	else if (binaryExp.getFirstExpression() instanceof NumberAST){
+	else if (binaryExp.getFirstExpression() instanceof NumberAST) {
 	    leftType = INT;
-	    leftName = ((NumberAST)binaryExp.getFirstExpression()).getNumber().toString();
+	    leftName = ((NumberAST) binaryExp.getFirstExpression()).getNumber().toString();
 	}
-	else if (binaryExp.getFirstExpression() instanceof BooleanAST){
+	else if (binaryExp.getFirstExpression() instanceof BooleanAST) {
 	    leftType = BOOL;
-	    leftName = ((BooleanAST)binaryExp.getFirstExpression()).getBool().toString();
+	    leftName = ((BooleanAST) binaryExp.getFirstExpression()).getBool().toString();
 	}
 
 	// Определяем тип второго выражения
@@ -102,15 +105,15 @@ public class TypeMismatchChecker extends TreeWalker {
 	}
 	else if (binaryExp.getSecondExpression() instanceof StringAST) {
 	    rightType = STR;
-	    rightName = ((StringAST)binaryExp.getSecondExpression()).getString();
+	    rightName = ((StringAST) binaryExp.getSecondExpression()).getString();
 	}
-	else if (binaryExp.getSecondExpression() instanceof NumberAST){
+	else if (binaryExp.getSecondExpression() instanceof NumberAST) {
 	    rightType = INT;
-	    rightName = ((NumberAST)binaryExp.getSecondExpression()).getNumber().toString();
+	    rightName = ((NumberAST) binaryExp.getSecondExpression()).getNumber().toString();
 	}
-	else if (binaryExp.getSecondExpression() instanceof BooleanAST){
+	else if (binaryExp.getSecondExpression() instanceof BooleanAST) {
 	    rightType = BOOL;
-	    rightName = ((BooleanAST)binaryExp.getSecondExpression()).getBool().toString();
+	    rightName = ((BooleanAST) binaryExp.getSecondExpression()).getBool().toString();
 	}
 
 	if (!leftType.contentEquals(rightType))
@@ -271,4 +274,9 @@ public class TypeMismatchChecker extends TreeWalker {
 
     }
 
+    public LinkedList<ErrorType> getErrorTypes() {
+	LinkedList<ErrorType> errorType = new LinkedList<ErrorType>();
+	errorType.add(ErrorType.UncompatibleTypes);
+	return errorType;
+    }
 }

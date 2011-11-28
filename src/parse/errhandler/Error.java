@@ -3,6 +3,7 @@ package parse.errhandler;
 public abstract class Error {
     private boolean isParseError;
     private boolean isRuntimeError;
+    protected ErrorType errorType;
     
     {
 	isParseError = false;
@@ -29,5 +30,13 @@ public abstract class Error {
 
     public void setRuntimeError() {
         this.isRuntimeError = true;
+    }
+
+    public ErrorType getErrorType() {
+        return errorType;
+    }
+
+    public void setErrorType(ErrorType errorType) {
+        this.errorType = errorType;
     }
 }

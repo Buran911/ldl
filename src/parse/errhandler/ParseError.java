@@ -12,7 +12,6 @@ import org.stringtemplate.v4.STGroupFile;
  * @author hindu
  * */
 public class ParseError extends Error {
-    private ErrorType errType;
     private Integer lineNo;
     private Integer columnNo;
     private String errorLine;
@@ -28,17 +27,18 @@ public class ParseError extends Error {
 
     }
 
-    public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo) {
-	this(errClass, errType, lineNo, columnNo, null, null, null);
+    public ParseError(ErrorClass errClass, ErrorType errorType, Integer lineNo, Integer columnNo) {
+	this(errClass, errorType, lineNo, columnNo, null, null, null);
     }
 
     public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo, String info) {
 	this(errClass, errType, lineNo, columnNo, null, null, info);
     }
 
-    public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo, String errorLine, String context, String info) {
+    public ParseError(ErrorClass errClass, ErrorType errorType, Integer lineNo, Integer columnNo, String errorLine, String context, String info) {
 	super();
-	this.errType = errType;
+
+	this.errorType = errorType;
 	this.lineNo = lineNo;
 	this.columnNo = columnNo;
 	this.errorLine = errorLine;
@@ -46,12 +46,8 @@ public class ParseError extends Error {
 	this.info = info;
     }
 
-    public ErrorClass getErrClass() {
+    public ErrorClass getErrorClass() {
 	return null;
-    }
-
-    public ErrorType getErrType() {
-	return errType;
     }
 
     public Integer getLineNo() {
@@ -73,10 +69,6 @@ public class ParseError extends Error {
     // public String getPossibleReason() {
     // return possibleSolution;
     // }
-
-    public void setErrType(ErrorType errType) {
-	this.errType = errType;
-    }
 
     public void setLineNo(Integer lineNo) {
 	this.lineNo = lineNo;
@@ -133,7 +125,7 @@ public class ParseError extends Error {
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
-	result = prime * result + ((errType == null) ? 0 : errType.hashCode());
+	result = prime * result + ((errorType == null) ? 0 : errorType.hashCode());
 	result = prime * result + ((errorPos == null) ? 0 : errorPos.hashCode());
 	return result;
     }
@@ -146,7 +138,7 @@ public class ParseError extends Error {
 	if (getClass() != obj.getClass())
 	    return false;
 	ParseError other = (ParseError) obj;
-	if (errType != other.errType)
+	if (errorType != other.errorType)
 	    return false;
 	if (errorPos == null) {
 	    if (other.errorPos != null)
@@ -160,8 +152,7 @@ public class ParseError extends Error {
     public void printError() {
 	STGroup group = new STGroupFile("generation/templates/errors.stg");
 	ST st = group.getInstanceOf("error");
-	st.add("errs", error);
+	//st.add("errs", error);
 	logger.error(st.render());
     }
-    
 }

@@ -7,6 +7,7 @@ import generation.idtable.IdTable;
 import generation.templateengine.Engine;
 import generation.templateengine.QueryConstraints;
 import generation.templateengine.QueryData;
+import generation.walkers.TreeWalker;
 import generation.walkers.strategys.BottomUpWalkingStrategy;
 import generation.walkers.strategys.IdParsigStrategy;
 import generation.walkers.walkers.FunctionalImplementedChecker;
@@ -21,12 +22,15 @@ import generation.walkers.walkers.TemplateTypeFiller;
 import generation.walkers.walkers.TypeMismatchChecker;
 
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
 import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
 import parse.errhandler.RuntimeError;
+import parse.errhandler.WalkerRunner;
 import parse.ldlsettingsparser.XMLParser;
 import parse.parser.Parser;
 import parse.syntaxtree.SyntaxTree;
@@ -106,7 +110,7 @@ public class App {
 	// Синтаксические ошибки
 	logger.info("Проверка синтаксических ошибок");
 	if (errh.hasErrors()) {
-	    errh.printErrors();
+	    // errh.printErrors();
 	    throw new Halt();
 	}
 
@@ -117,7 +121,7 @@ public class App {
 
 	// Семантические ошибки
 	if (errh.hasErrors()) {
-	    errh.printErrors();
+	    // errh.printErrors();
 	    throw new Halt();
 	}
     }
@@ -128,18 +132,20 @@ public class App {
 	SyntaxTree treeSemantic = (SyntaxTree) tree.clone();
 	IdTable idTable = new IdTable();
 
-	treeSemantic.accept(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
-	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
-
-	treeSemantic.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
-
-	treeSemantic.accept(new IdTableMaker(new IdParsigStrategy(), idTable));
-	treeSemantic.accept(new IdTableFiller(new IdParsigStrategy(), idTable));
-	treeSemantic.accept(new IdConvertor(new IdParsigStrategy(), idTable));
-
-	treeSemantic.accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
-	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
-
+	WalkerRunner wRunner = new WalkerRunner(errh, idTable,treeSemantic);
+	
+	wRunner.add(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
+	wRunner.add(new PositionEstimater(new IdParsigStrategy()));
+	wRunner.add(new IdRedefinedChecker(new IdParsigStrategy(), errh));
+	wRunner.add(new IdTableMaker(new IdParsigStrategy(), idTable));
+	wRunner.add(new IdTableFiller(new IdParsigStrategy(), idTable));
+	wRunner.add(new IdConvertor(new IdParsigStrategy(), idTable));
+	wRunner.add(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
+	wRunner.add(new TypeMismatchChecker(new IdParsigStrategy(), errh));
+	
+	wRunner.run();
+	
+	errh.printErrors();
     }
 
     // Предобработка AST и генерация по нему запросов.

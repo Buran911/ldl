@@ -16,7 +16,7 @@ public class Predicates {
 		Parser parser = new Parser( src, errHandler );
 //		parser.setDebugModeOn();
 		parser.parse(); 
-		errHandler.printErrors();
+//		errHandler.printErrors();
 		Assert.assertFalse(errHandler.hasErrors());
 	}
 }

@@ -1,8 +1,13 @@
 package generation.walkers.walkers;
 
+import java.util.LinkedList;
+
+import generation.walkers.TreeWalker;
+import generation.walkers.WalkerStrategy;
 import parse.errhandler.ErrorClass;
 import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
+import parse.errhandler.Int;
 import parse.errhandler.ParseError;
 import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
@@ -32,14 +37,12 @@ import parse.syntaxtree.nodes.VariableAST;
 import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
-import generation.walkers.TreeWalker;
-import generation.walkers.WalkerStrategy;
 
 /**
  * Волкер проверяет код на наличие конструкций, которые разрешены грамматикой, но не имплементированы.
  * @author hindu
  * */
-public class FunctionalImplementedChecker extends TreeWalker {
+public class FunctionalImplementedChecker extends TreeWalker implements Int{
     private ErrorHandler errh;
 
     public FunctionalImplementedChecker(WalkerStrategy strategy, ErrorHandler errh) {
@@ -218,5 +221,10 @@ public class FunctionalImplementedChecker extends TreeWalker {
 	// Empty
 
     }
-
+    public LinkedList<ErrorType> getErrorTypes() {
+	LinkedList<ErrorType> errorType = new LinkedList<ErrorType>();
+	errorType.add(ErrorType.NotImplementedYet);
+	
+	return errorType;
+    }
 }

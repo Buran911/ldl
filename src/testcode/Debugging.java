@@ -32,7 +32,7 @@ public class Debugging {
 		parser.parse();
 		
 		if(errh.hasErrors()){
-			errh.printErrors();
+//			errh.printErrors();
 			return;
 		}
 		

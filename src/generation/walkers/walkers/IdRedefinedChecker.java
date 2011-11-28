@@ -1,5 +1,7 @@
 package generation.walkers.walkers;
 
+import java.util.LinkedList;
+
 import generation.idtable.IdTable;
 import generation.idtable.Identifier;
 import generation.idtable.Predicate;
@@ -8,6 +10,7 @@ import generation.walkers.WalkerStrategy;
 import parse.errhandler.ErrorClass;
 import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
+import parse.errhandler.Int;
 import parse.errhandler.ParseError;
 import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
@@ -38,10 +41,12 @@ import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 
-/** Волкер ищет повторные определения идентификаторов. 
+/**
+ * Волкер ищет повторные определения идентификаторов.
+ * 
  * @author exellent
  * */
-public class IdRedefinedChecker extends TreeWalker {
+public class IdRedefinedChecker extends TreeWalker implements Int {
     private IdTable table = new IdTable();
     private String contextName;
     private ErrorHandler errh;
@@ -96,8 +101,8 @@ public class IdRedefinedChecker extends TreeWalker {
 	    table.addId(id);
 	}
 	else {
-	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition,
-		    description.getLineNo(), description.getColumnNo(),"Идентификатор " + id.getName() + " определен более одного раза"));
+	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, description.getLineNo(), description.getColumnNo(), "Идентификатор " + id.getName()
+		    + " определен более одного раза"));
 	}
     }
 
@@ -164,7 +169,7 @@ public class IdRedefinedChecker extends TreeWalker {
     @Override
     public void visit(PredicateImplAST impl) {
 	Predicate predicate = new Predicate();
-	
+
 	predicate.setName(impl.getPathName().getPredicateName().getName());
 	predicate.setNamespace(impl.getPathName().getContextName().getName());
 
@@ -172,8 +177,8 @@ public class IdRedefinedChecker extends TreeWalker {
 	    table.addPredicate(predicate);
 	}
 	else {
-	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition,
-		    impl.getLineNo(), impl.getColumnNo(),"Предикат " + predicate.getName() + " определен более одного раза"));
+	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, impl.getLineNo(), impl.getColumnNo(), "Предикат " + predicate.getName()
+		    + " определен более одного раза"));
 	}
     }
 
@@ -237,4 +242,9 @@ public class IdRedefinedChecker extends TreeWalker {
 
     }
 
+    public LinkedList<ErrorType> getErrorTypes() {
+	LinkedList<ErrorType> errorType = new LinkedList<ErrorType>();
+	errorType.add(ErrorType.IdentifierRedefenition);
+	return errorType;
+    }
 }

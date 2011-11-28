@@ -1,5 +1,7 @@
 package generation.walkers.walkers;
 
+import java.util.LinkedList;
+
 import generation.idtable.IdTable;
 import generation.idtable.Identifier;
 import generation.idtable.Predicate;
@@ -8,6 +10,7 @@ import generation.walkers.WalkerStrategy;
 import parse.errhandler.ErrorClass;
 import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
+import parse.errhandler.Int;
 import parse.errhandler.ParseError;
 import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
@@ -42,7 +45,7 @@ import parse.syntaxtree.nodes.srcExprAST;
  * Волкер ищет неопредленные идентификаторы.
  * @author exellent
  * */
-public class IdNotDefinedChecker extends TreeWalker {
+public class IdNotDefinedChecker extends TreeWalker implements Int{
     private IdTable table;
     private String contextName;
     private ErrorHandler errh;
@@ -248,5 +251,12 @@ public class IdNotDefinedChecker extends TreeWalker {
 	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, var.getLineNo(),
 		    var.getColumnNo(), "Идентификатор " + id.getName() + " не определен"));
 	}
+    }
+
+    @Override
+    public LinkedList<ErrorType> getErrorTypes() {
+	LinkedList<ErrorType> errorType = new LinkedList<ErrorType>();
+	errorType.add(ErrorType.IdentifierUndefined);
+	return errorType;
     }
 }
