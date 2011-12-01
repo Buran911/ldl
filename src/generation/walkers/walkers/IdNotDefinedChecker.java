@@ -10,7 +10,7 @@ import generation.walkers.WalkerStrategy;
 import parse.errhandler.ErrorClass;
 import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
-import parse.errhandler.Int;
+import parse.errhandler.Checker;
 import parse.errhandler.ParseError;
 import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
@@ -45,7 +45,7 @@ import parse.syntaxtree.nodes.srcExprAST;
  * Волкер ищет неопредленные идентификаторы.
  * @author exellent
  * */
-public class IdNotDefinedChecker extends TreeWalker implements Int{
+public class IdNotDefinedChecker extends TreeWalker implements Checker{
     private IdTable table;
     private String contextName;
     private ErrorHandler errh;
@@ -169,7 +169,7 @@ public class IdNotDefinedChecker extends TreeWalker implements Int{
 	pred.setNamespace(namespace);
 
 	if (table.getPredicate(pred.getName(), pred.getNamespace()) == null) {
-	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined,
+	    errh.addError(new ParseError(ErrorType.IdentifierUndefined,
 		    predicate.getLineNo(), predicate.getColumnNo(),"Предикат " + pred.getName() + " не определен"));
 	}
     }
@@ -217,7 +217,7 @@ public class IdNotDefinedChecker extends TreeWalker implements Int{
 	id.setName(block.getIdentifier().getId());
 
 	if (table.getId(id.getName(), id.getNamespace()) == null) {
-	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, block.getLineNo(),
+	    errh.addError(new ParseError(ErrorType.IdentifierUndefined, block.getLineNo(),
 		    block.getColumnNo() , "Идентификатор " + id.getName() + " не определен"));
 	}
     }
@@ -248,7 +248,7 @@ public class IdNotDefinedChecker extends TreeWalker implements Int{
 	id.setName(var.getIdentifier().getId());
 
 	if (table.getId(id.getName(), id.getNamespace()) == null) {
-	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, var.getLineNo(),
+	    errh.addError(new ParseError(ErrorType.IdentifierUndefined, var.getLineNo(),
 		    var.getColumnNo(), "Идентификатор " + id.getName() + " не определен"));
 	}
     }

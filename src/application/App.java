@@ -7,7 +7,6 @@ import generation.idtable.IdTable;
 import generation.templateengine.Engine;
 import generation.templateengine.QueryConstraints;
 import generation.templateengine.QueryData;
-import generation.walkers.TreeWalker;
 import generation.walkers.strategys.BottomUpWalkingStrategy;
 import generation.walkers.strategys.IdParsigStrategy;
 import generation.walkers.walkers.FunctionalImplementedChecker;
@@ -22,13 +21,12 @@ import generation.walkers.walkers.TemplateTypeFiller;
 import generation.walkers.walkers.TypeMismatchChecker;
 
 import java.sql.SQLException;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
 import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
+import parse.errhandler.ProgramStates;
 import parse.errhandler.RuntimeError;
 import parse.errhandler.WalkerRunner;
 import parse.ldlsettingsparser.XMLParser;
@@ -105,25 +103,17 @@ public class App {
     public void parseAndCheckErrors() {
 	Parser parser = new Parser(src, errh);
 	logger.info("Парсинг исходных файлов.");
-	parser.parse();
-
-	// Синтаксические ошибки
 	logger.info("Проверка синтаксических ошибок");
-	if (errh.hasErrors()) {
-	    // errh.printErrors();
-	    throw new Halt();
-	}
-
+	
+	parser.parse();
 	tree = new SyntaxTree(parser.getTree());
+	
+	ErrorHandler.setProgramState(ProgramStates.SyntaxChecked);
 
 	logger.info("Проверка семантических ошибок.");
 	checkSemantics();
 
 	// Семантические ошибки
-	if (errh.hasErrors()) {
-	    // errh.printErrors();
-	    throw new Halt();
-	}
     }
 
     // Проверяет семантическую правильность исходного кода, проверка идет по
@@ -132,20 +122,18 @@ public class App {
 	SyntaxTree treeSemantic = (SyntaxTree) tree.clone();
 	IdTable idTable = new IdTable();
 
-	WalkerRunner wRunner = new WalkerRunner(errh, idTable,treeSemantic);
-	
-	wRunner.add(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
-	wRunner.add(new PositionEstimater(new IdParsigStrategy()));
-	wRunner.add(new IdRedefinedChecker(new IdParsigStrategy(), errh));
-	wRunner.add(new IdTableMaker(new IdParsigStrategy(), idTable));
-	wRunner.add(new IdTableFiller(new IdParsigStrategy(), idTable));
-	wRunner.add(new IdConvertor(new IdParsigStrategy(), idTable));
-	wRunner.add(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
-	wRunner.add(new TypeMismatchChecker(new IdParsigStrategy(), errh));
-	
-	wRunner.run();
-	
-	errh.printErrors();
+	WalkerRunner runner = new WalkerRunner(errh, treeSemantic);
+
+	runner.add(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
+	runner.add(new PositionEstimater(new IdParsigStrategy()));
+	runner.add(new IdRedefinedChecker(new IdParsigStrategy(), errh));
+	runner.add(new IdTableMaker(new IdParsigStrategy(), idTable));
+	runner.add(new IdTableFiller(new IdParsigStrategy(), idTable));
+	runner.add(new IdConvertor(new IdParsigStrategy(), idTable));
+	runner.add(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
+	runner.add(new TypeMismatchChecker(new IdParsigStrategy(), errh));
+
+	runner.run();
     }
 
     // Предобработка AST и генерация по нему запросов.
@@ -154,12 +142,16 @@ public class App {
 	table = new IdTable();
 	QueryConstraints qConstraints = new QueryConstraints();
 
-	tree.accept(new IdTableMaker(new IdParsigStrategy(), table));
-	tree.accept(new PositionEstimater(new IdParsigStrategy()));
-	tree.accept(new IdTableFiller(new IdParsigStrategy(), table));
-	tree.accept(new TemplateTypeFiller());
-	tree.accept(new IdConvertor(new IdParsigStrategy(), table));
-	tree.accept(new TemplateEqClassesFiller(qConstraints));
+	WalkerRunner runner = new WalkerRunner(errh, tree);
+
+	runner.add(new IdTableMaker(new IdParsigStrategy(), table));
+	runner.add(new PositionEstimater(new IdParsigStrategy()));
+	runner.add(new IdTableFiller(new IdParsigStrategy(), table));
+	runner.add(new TemplateTypeFiller());
+	runner.add(new IdConvertor(new IdParsigStrategy(), table));
+	runner.add(new TemplateEqClassesFiller(qConstraints));
+
+	runner.run();
 
 	engine = new Engine(new QueryData(table), qConstraints);
 	logger.info("Генерация запроса(-ов).");

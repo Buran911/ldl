@@ -11,6 +11,7 @@ import org.stringtemplate.v4.STGroupFile;
 
 import parse.util.PairSet;
 import parse.util.Source;
+import application.util.Halt;
 
 // TODO Научить работать хэндлер
 
@@ -28,19 +29,14 @@ import parse.util.Source;
  * */
 public final class ErrorHandler {
     private LinkedList<Error> errors;
-    private final int errCritCount; // количество ошибок, после которого
-				    // дальнейшие проверки нецелесообразны
-    private PairSet incompatibleErrors; // набор несовместимых друг с другом
-					// ошибок
     private Source src;
     private Logger logger = Logger.getLogger(ErrorHandler.class);
-
+    private static ProgramStates programState = ProgramStates.Deployed;
+    
     private HashMap<ErrorType, LinkedList<ErrorType>> hm;
 
     {
 	errors = new LinkedList<Error>();
-	errCritCount = 15;
-	incompatibleErrors = new PairSet();
 
 	hm = new HashMap<ErrorType, LinkedList<ErrorType>>();
 
@@ -82,26 +78,24 @@ public final class ErrorHandler {
 	this.src = src;
     }
 
-    public void addError(Error error) {
-	if (error instanceof ParseError) {
-	    setInfoAboutError((ParseError) error);
-	    error.setParseError();
-	}
-	else {
-	    error.setRuntimeError();
-	}
+    public void addError(RuntimeError error) {
+	error.setRuntimeError();
 	errors.add(error);
 
-	for (Error err : errors) {
-	    if (hasErrorCompatibility(error.getErrorType(), err.getErrorType())) {
-		System.out.println("Надо упасть : " + error.getErrorType() + " не совестим с " + err.getErrorType());
-		STGroup group = new STGroupFile("generation/templates/errors.stg");
-		ST st = group.getInstanceOf("errors");
-		st.add("errs", errors);
-		logger.error(st.render());
-		printErrors();
-		throw new RuntimeException();
-	    }
+	printErrors();
+
+	throw new Halt();
+    }
+
+    public void addError(ParseError error) {
+	if (error.getErrorClass() == ErrorClass.syntax) {
+	    logger.error("Syntax пыщ-пыщ");
+	}
+	else {
+	    setInfoAboutError(error);
+	    error.setParseError();
+
+	    errors.add(error);
 	}
     }
 
@@ -148,16 +142,23 @@ public final class ErrorHandler {
 	error.setContext(context.trim());
     }
 
+    public static ProgramStates getProgramState() {
+        return programState;
+    }
+
+    public static void setProgramState(ProgramStates programState) {
+        ErrorHandler.programState = programState;
+        switch(programState){
+        case  SyntaxChecked: for() break;
+            
+        }
+    }
+
     // TODO удалить этот метод и поправить где он есть
     public void printErrors() {
 	STGroup group = new STGroupFile("generation/templates/errors.stg");
 	ST st = group.getInstanceOf("errors");
 	st.add("errs", errors);
 	logger.error(st.render());
-	// for(Error err : errors){
-	// if(err instanceof ParseError){
-	// ((ParseError) err).printError();
-	// }
-	// }
     }
 }

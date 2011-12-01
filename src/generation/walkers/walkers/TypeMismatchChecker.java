@@ -7,7 +7,7 @@ import generation.walkers.WalkerStrategy;
 import parse.errhandler.ErrorClass;
 import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
-import parse.errhandler.Int;
+import parse.errhandler.Checker;
 import parse.errhandler.ParseError;
 import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
@@ -46,7 +46,7 @@ import parse.syntaxtree.nodes.srcExprAST;
  * @author exellent
  * */
 
-public class TypeMismatchChecker extends TreeWalker implements Int {
+public class TypeMismatchChecker extends TreeWalker implements Checker {
     private ErrorHandler errh;
     private final String STR = "String";
     private final String INT = "Integer";
@@ -117,7 +117,7 @@ public class TypeMismatchChecker extends TreeWalker implements Int {
 	}
 
 	if (!leftType.contentEquals(rightType))
-	    errh.addError(new ParseError(ErrorClass.semantic, ErrorType.UncompatibleTypes, binaryExp.getRelation().getLineNo(), binaryExp.getRelation().getColumnNo(),
+	    errh.addError(new ParseError(ErrorType.UncompatibleTypes, binaryExp.getRelation().getLineNo(), binaryExp.getRelation().getColumnNo(),
 		    "Переменные " + leftName + "(" + leftType + ")" + " и " + rightName + "(" + rightType + ")" + " несовместимы при сравнении"));
     }
 

@@ -6,17 +6,33 @@ errors(errs) ::=<<
 err_list(errs) ::=<<
 <error(first(errs))><if(rest(errs))><err_list(rest(errs))><endif>
 >>
-
 error(err) ::=<<
+<if(err.ParseError)>
+<parse_error(err)>
+<elseif(err.RuntimeError)>
+<runtime_error(err)><endif>
+>>
+
+
+
+parse_error(err) ::=<<
 File: <err.fileName>:<err.errorPos>
-Error: <err.errClass>(<err.errType>)
+Error: <err.errorType>
 
 <if(err.contextPos)><err.contextPos> : <err.context><endif>
 <err.errorPos> : <err.errorLine> \<\<\< error
 
-<err.errType.description><if(err.info)>
+<err.errorType.description><if(err.info)>
 <err.info><endif>
 
 ---------------------------------
+>>
 
+
+
+runtime_error(err) ::=<<
+Error: <err.errorType>
+
+<err.errorType.description>
+---------------------------------
 >>

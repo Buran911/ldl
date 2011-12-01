@@ -12,6 +12,7 @@ import org.stringtemplate.v4.STGroupFile;
  * @author hindu
  * */
 public class ParseError extends Error {
+    private ErrorClass errorClass;
     private Integer lineNo;
     private Integer columnNo;
     private String errorLine;
@@ -27,27 +28,23 @@ public class ParseError extends Error {
 
     }
 
-    public ParseError(ErrorClass errClass, ErrorType errorType, Integer lineNo, Integer columnNo) {
-	this(errClass, errorType, lineNo, columnNo, null, null, null);
+    public ParseError(ErrorType errorType, Integer lineNo, Integer columnNo) {
+	this(errorType, lineNo, columnNo, null, null, null);
     }
 
-    public ParseError(ErrorClass errClass, ErrorType errType, Integer lineNo, Integer columnNo, String info) {
-	this(errClass, errType, lineNo, columnNo, null, null, info);
+    public ParseError(ErrorType errType, Integer lineNo, Integer columnNo, String info) {
+	this(errType, lineNo, columnNo, null, null, info);
     }
 
-    public ParseError(ErrorClass errClass, ErrorType errorType, Integer lineNo, Integer columnNo, String errorLine, String context, String info) {
+    public ParseError(ErrorType errorType, Integer lineNo, Integer columnNo, String errorLine, String context, String info) {
 	super();
-
+	this.errorClass = ErrorType.getErrorClass(errorType);
 	this.errorType = errorType;
 	this.lineNo = lineNo;
 	this.columnNo = columnNo;
 	this.errorLine = errorLine;
 	this.context = context;
 	this.info = info;
-    }
-
-    public ErrorClass getErrorClass() {
-	return null;
     }
 
     public Integer getLineNo() {
@@ -66,10 +63,6 @@ public class ParseError extends Error {
 	return context;
     }
 
-    // public String getPossibleReason() {
-    // return possibleSolution;
-    // }
-
     public void setLineNo(Integer lineNo) {
 	this.lineNo = lineNo;
     }
@@ -85,11 +78,7 @@ public class ParseError extends Error {
     public void setContext(String context) {
 	this.context = context;
     }
-
-    // public void setPossibleSolution(String possibleSolution) {
-    // this.possibleSolution = possibleSolution;
-    // }
-
+    
     public String getFileName() {
 	return fileName;
     }
@@ -122,6 +111,14 @@ public class ParseError extends Error {
 	this.info = info;
     }
 
+    public ErrorClass getErrorClass() {
+        return errorClass;
+    }
+
+    public void setErrorClass(ErrorClass errorClass) {
+        this.errorClass = errorClass;
+    }
+
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
@@ -152,7 +149,6 @@ public class ParseError extends Error {
     public void printError() {
 	STGroup group = new STGroupFile("generation/templates/errors.stg");
 	ST st = group.getInstanceOf("error");
-	//st.add("errs", error);
 	logger.error(st.render());
     }
 }

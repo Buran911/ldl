@@ -3,7 +3,7 @@ package parse.errhandler;
 import java.util.LinkedList;
 
 
-public interface Int {
+public interface Checker {
     
     public LinkedList<ErrorType> getErrorTypes();
     

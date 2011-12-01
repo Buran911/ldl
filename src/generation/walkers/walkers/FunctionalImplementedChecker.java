@@ -7,7 +7,7 @@ import generation.walkers.WalkerStrategy;
 import parse.errhandler.ErrorClass;
 import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
-import parse.errhandler.Int;
+import parse.errhandler.Checker;
 import parse.errhandler.ParseError;
 import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
@@ -42,7 +42,7 @@ import parse.syntaxtree.nodes.srcExprAST;
  * Волкер проверяет код на наличие конструкций, которые разрешены грамматикой, но не имплементированы.
  * @author hindu
  * */
-public class FunctionalImplementedChecker extends TreeWalker implements Int{
+public class FunctionalImplementedChecker extends TreeWalker implements Checker{
     private ErrorHandler errh;
 
     public FunctionalImplementedChecker(WalkerStrategy strategy, ErrorHandler errh) {
@@ -59,7 +59,7 @@ public class FunctionalImplementedChecker extends TreeWalker implements Int{
     @Override
     public void visit(BinaryExpressionAST binaryExp) {
 	if (binaryExp.getBool() != null) {
-	    ParseError err = new ParseError(ErrorClass.semantic, ErrorType.NotImplementedYet,
+	    ParseError err = new ParseError(ErrorType.NotImplementedYet,
 		    binaryExp.getLineNo(), binaryExp.getColumnNo());
 	    errh.addError(err);
 	}

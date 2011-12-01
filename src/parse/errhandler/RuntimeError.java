@@ -3,18 +3,18 @@ package parse.errhandler;
 
 public class RuntimeError extends Error {
     
-    private ErrorType type;
     private String stackTrace;
     private String info;
 
-    public RuntimeError(ErrorType type,String stackTrace,String info) {
-	this.type = type;
+    public RuntimeError(ErrorType errorType,String stackTrace,String info) {
+	super();
+	this.errorType = errorType;
 	this.stackTrace = stackTrace;
 	this.info= info;
     }
 
     public ErrorType getType() {
-        return type;
+        return errorType;
     }
 
     public String getStackTrace() {
@@ -25,8 +25,8 @@ public class RuntimeError extends Error {
         return info;
     }
 
-    public void setType(ErrorType type) {
-        this.type = type;
+    public void setType(ErrorType errorType) {
+        this.errorType = errorType;
     }
 
     public void setStackTrace(String stackTrace) {
@@ -42,7 +42,7 @@ public class RuntimeError extends Error {
 	int result = 1;
 	result = prime * result + ((info == null) ? 0 : info.hashCode());
 	result = prime * result + ((stackTrace == null) ? 0 : stackTrace.hashCode());
-	result = prime * result + ((type == null) ? 0 : type.hashCode());
+	result = prime * result + ((errorType == null) ? 0 : errorType.hashCode());
 	return result;
     }
 
@@ -66,7 +66,7 @@ public class RuntimeError extends Error {
 	}
 	else if (!stackTrace.equals(other.stackTrace))
 	    return false;
-	if (type != other.type)
+	if (errorType != other.errorType)
 	    return false;
 	return true;
     }

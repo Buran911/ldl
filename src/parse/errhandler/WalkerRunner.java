@@ -1,19 +1,7 @@
 package parse.errhandler;
 
-import generation.idtable.IdTable;
 import generation.walkers.TreeWalker;
-import generation.walkers.strategys.BottomUpWalkingStrategy;
-import generation.walkers.strategys.IdParsigStrategy;
-import generation.walkers.walkers.FunctionalImplementedChecker;
-import generation.walkers.walkers.IdConvertor;
-import generation.walkers.walkers.IdNotDefinedChecker;
-import generation.walkers.walkers.IdRedefinedChecker;
-import generation.walkers.walkers.IdTableFiller;
-import generation.walkers.walkers.IdTableMaker;
-import generation.walkers.walkers.PositionEstimater;
-import generation.walkers.walkers.TypeMismatchChecker;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import parse.syntaxtree.SyntaxTree;
@@ -21,12 +9,10 @@ import parse.syntaxtree.SyntaxTree;
 public class WalkerRunner {
     private LinkedList<TreeWalker> walkerList;
     private ErrorHandler errh;
-    private IdTable idTable;
     private SyntaxTree tree;
 
-    public WalkerRunner(ErrorHandler errh, IdTable idTable, SyntaxTree tree) {
+    public WalkerRunner(ErrorHandler errh, SyntaxTree tree) {
 	this.errh = errh;
-	this.idTable = idTable;
 	this.tree = tree;
     }
 
@@ -36,9 +22,12 @@ public class WalkerRunner {
 
     public void run() {
 	for (TreeWalker walker : walkerList) {
-	    if (walker instanceof Int) {
-		if (errh.isPermitted(((Int) walker).getErrorTypes())) {
+	    if (walker instanceof Checker) {
+		if (errh.isPermitted(((Checker) walker).getErrorTypes())) {
 		    tree.accept(walker);
+		}else{
+		    errh.printErrors();
+		    throw new RuntimeException();
 		}
 	    }
 	    else {
