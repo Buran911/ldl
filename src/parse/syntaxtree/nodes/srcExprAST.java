@@ -50,19 +50,19 @@ public class srcExprAST extends NodeAST {
     }
 
     @Override
-    public Object clone() {
+    public srcExprAST clone() {
 	srcExprAST copy = new srcExprAST();
 	if (firstId != null) {
-	    copy.setFirstId((IdentifierAST) firstId.clone());
+	    copy.setFirstId(firstId.clone());
 	}
 	if (secondId != null) {
-	    copy.setSecondId((IdentifierAST) secondId.clone());
+	    copy.setSecondId(secondId.clone());
 	}
 	if (set != null) {
-	    copy.setSet((SetAST) set.clone());
+	    copy.setSet(set.clone());
 	}
 	if (literal != null) {
-	    copy.setLiteral((LiteralAST) literal.clone());
+	    copy.setLiteral(literal.clone());
 	}
 
 	return copy;

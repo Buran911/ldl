@@ -32,10 +32,10 @@ public class PathNameAST extends NodeAST {
     }
 
     @Override
-    public Object clone() {
+    public PathNameAST clone() {
 	PathNameAST copy = new PathNameAST();
-	copy.setContextName((SimpleNameAST) contextName.clone());
-	copy.setPredicateName((SimpleNameAST) predicateName.clone());
+	copy.setContextName(contextName.clone());
+	copy.setPredicateName(predicateName.clone());
 	
 	return copy;
     }

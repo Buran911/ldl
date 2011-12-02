@@ -3,13 +3,13 @@ package parse.errhandler;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
-import parse.util.PairSet;
 import parse.util.Source;
 import application.util.Halt;
 
@@ -17,6 +17,8 @@ import application.util.Halt;
 
 // TODO проверить на несовместимость ошибки, превышение криткаунта и
 // прочая
+//
+// Halt cемантических ошибкок в WalkerRunner 
 
 /**
  * Класс накапливает, содержит и обрабатывает ошибки парсинга и анализа
@@ -31,47 +33,45 @@ public final class ErrorHandler {
     private LinkedList<Error> errors;
     private Source src;
     private Logger logger = Logger.getLogger(ErrorHandler.class);
-    private static ProgramStates programState = ProgramStates.Deployed;
-    
-    private HashMap<ErrorType, LinkedList<ErrorType>> hm;
+    private ProgramState programState;
+
+    private HashMap<ErrorType, LinkedList<ErrorType>> compatibilityMap;
 
     {
 	errors = new LinkedList<Error>();
+	compatibilityMap = new HashMap<ErrorType, LinkedList<ErrorType>>();
 
-	hm = new HashMap<ErrorType, LinkedList<ErrorType>>();
-
-	fillHM();
-
+	fillCompatibilityMap();
     }
 
-    private void fillHM() {
-	LinkedList<ErrorType> IdentifierRedefenition = new LinkedList<ErrorType>();
-	IdentifierRedefenition.add(ErrorType.UncompatibleTypes);
-	IdentifierRedefenition.add(ErrorType.NotImplementedYet);
+    private void fillCompatibilityMap() {
+	LinkedList<ErrorType> identifierRedefenition = new LinkedList<ErrorType>();
+	identifierRedefenition.add(ErrorType.UncompatibleTypes);
+	identifierRedefenition.add(ErrorType.NotImplementedYet);
 
-	LinkedList<ErrorType> UncompatibleTypes = new LinkedList<ErrorType>();
-	UncompatibleTypes.add(ErrorType.IdentifierRedefenition);
-	UncompatibleTypes.add(ErrorType.IdentifierUndefined);
-	UncompatibleTypes.add(ErrorType.NotImplementedYet);
+	LinkedList<ErrorType> uncompatibleTypes = new LinkedList<ErrorType>();
+	uncompatibleTypes.add(ErrorType.IdentifierRedefenition);
+	uncompatibleTypes.add(ErrorType.IdentifierUndefined);
+	uncompatibleTypes.add(ErrorType.NotImplementedYet);
 
-	LinkedList<ErrorType> IdentifierUndefined = new LinkedList<ErrorType>();
-	IdentifierUndefined.add(ErrorType.UncompatibleTypes);
-	IdentifierUndefined.add(ErrorType.NotImplementedYet);
+	LinkedList<ErrorType> identifierUndefined = new LinkedList<ErrorType>();
+	identifierUndefined.add(ErrorType.UncompatibleTypes);
+	identifierUndefined.add(ErrorType.NotImplementedYet);
 
-	LinkedList<ErrorType> NotImplementedYet = new LinkedList<ErrorType>();
-	NotImplementedYet.add(ErrorType.IdentifierRedefenition);
-	NotImplementedYet.add(ErrorType.IdentifierUndefined);
-	NotImplementedYet.add(ErrorType.UncompatibleTypes);
-	NotImplementedYet.add(ErrorType.ParamCount);
+	LinkedList<ErrorType> notImplementedYet = new LinkedList<ErrorType>();
+	notImplementedYet.add(ErrorType.IdentifierRedefenition);
+	notImplementedYet.add(ErrorType.IdentifierUndefined);
+	notImplementedYet.add(ErrorType.UncompatibleTypes);
+	notImplementedYet.add(ErrorType.ParamCount);
 
-	LinkedList<ErrorType> ParamCount = new LinkedList<ErrorType>();
-	ParamCount.add(ErrorType.NotImplementedYet);
+	LinkedList<ErrorType> paramCount = new LinkedList<ErrorType>();
+	paramCount.add(ErrorType.NotImplementedYet);
 
-	hm.put(ErrorType.IdentifierRedefenition, IdentifierRedefenition);
-	hm.put(ErrorType.UncompatibleTypes, UncompatibleTypes);
-	hm.put(ErrorType.IdentifierUndefined, IdentifierUndefined);
-	hm.put(ErrorType.NotImplementedYet, NotImplementedYet);
-	hm.put(ErrorType.ParamCount, ParamCount);
+	compatibilityMap.put(ErrorType.IdentifierRedefenition, identifierRedefenition);
+	compatibilityMap.put(ErrorType.UncompatibleTypes, uncompatibleTypes);
+	compatibilityMap.put(ErrorType.IdentifierUndefined, identifierUndefined);
+	compatibilityMap.put(ErrorType.NotImplementedYet, notImplementedYet);
+	compatibilityMap.put(ErrorType.ParamCount, paramCount);
     }
 
     public ErrorHandler(Source src) {
@@ -79,23 +79,25 @@ public final class ErrorHandler {
     }
 
     public void addError(RuntimeError error) {
-	error.setRuntimeError();
-	errors.add(error);
 
-	printErrors();
-
-	throw new Halt();
     }
 
-    public void addError(ParseError error) {
-	if (error.getErrorClass() == ErrorClass.syntax) {
-	    logger.error("Syntax пыщ-пыщ");
-	}
-	else {
-	    setInfoAboutError(error);
-	    error.setParseError();
-
-	    errors.add(error);
+    public void addError(Error error) {
+	switch (error.getErrorClass()){
+	    case syntax:
+		error.setParseError();
+		errors.add(error);
+		break;
+	    case semantic:
+		setInfoAboutError((ParseError) error);
+		error.setParseError();
+		errors.add(error);
+		break;
+	    case runtime:
+		error.setRuntimeError();
+		errors.add(error);
+		printErrors();
+		throw new Halt();
 	}
     }
 
@@ -103,12 +105,10 @@ public final class ErrorHandler {
 	return errors.contains(error);
     }
 
-    public boolean isPermitted(LinkedList<ErrorType> errors) {
-
-	for (ErrorType error : errors) {
-
-	    for (Error err : this.errors) {
-		if (hasErrorCompatibility(error, err.getErrorType())) {
+    public boolean isPermitted(List<ErrorType> returnErrorTypes) {
+	for (ErrorType errorType : returnErrorTypes) {
+	    for (Error error : errors) {
+		if (hasErrorCompatibility(errorType, error.getErrorType())) {
 		    return false;
 		}
 	    }
@@ -122,13 +122,9 @@ public final class ErrorHandler {
 
     // Найти совместимость err1 и err2
     public boolean hasErrorCompatibility(ErrorType err1, ErrorType err2) {
-	Iterator<ErrorType> iterator = hm.get(err2).iterator();
-	while (iterator.hasNext()) {
-	    if (iterator.next() == err1) {
-		return true;
-	    }
-	}
-	return false;
+	List<ErrorType> errTypes = compatibilityMap.get(err2);
+	
+	return errTypes.contains(err1);
     }
 
     private void setInfoAboutError(ParseError error) {
@@ -142,19 +138,26 @@ public final class ErrorHandler {
 	error.setContext(context.trim());
     }
 
-    public static ProgramStates getProgramState() {
-        return programState;
+    public ProgramState getProgramState() {
+	return programState;
     }
 
-    public static void setProgramState(ProgramStates programState) {
-        ErrorHandler.programState = programState;
-        switch(programState){
-        case  SyntaxChecked: for() break;
-            
-        }
+    public void setProgramState(ProgramState programState) {
+	this.programState = programState;
+	switch (programState){
+	    case SyntaxChecked:
+		if (hasErrors()) {
+		    throw new Halt();
+		}
+		break;
+	    case SemanticChecked:
+		if (hasErrors()) {
+		    throw new Halt();
+		}
+		break;
+	}
     }
 
-    // TODO удалить этот метод и поправить где он есть
     public void printErrors() {
 	STGroup group = new STGroupFile("generation/templates/errors.stg");
 	ST st = group.getInstanceOf("errors");

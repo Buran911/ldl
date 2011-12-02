@@ -73,21 +73,21 @@ public class ContextAST extends NodeAST {
     }
     
     @Override
-    public Object clone() {
+    public ContextAST clone() {
 
 	ContextAST copy = new ContextAST();
-	copy.setContextName((SimpleNameAST) contextName.clone());
+	copy.setContextName(contextName.clone());
 	for (DescriptionAST description : descriptions) {
-	    copy.addDescription((DescriptionAST) description.clone());
+	    copy.addDescription(description.clone());
 	}
 	for (SourceAST source : sources) {
-	    copy.addSource((SourceAST) source.clone());
+	    copy.addSource(source.clone());
 	}
 	for (ConstraintAST constraint : constraints) {
-	    copy.addConstraint((ConstraintAST)constraint.clone());
+	    copy.addConstraint(constraint.clone());
 	}
 	for (EqClassAST eqClass : eqClasses) {
-	    copy.addEqClass((EqClassAST) eqClass.clone());
+	    copy.addEqClass(eqClass.clone());
 	}
 	return copy;
     }

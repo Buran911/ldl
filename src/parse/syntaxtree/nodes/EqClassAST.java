@@ -33,11 +33,11 @@ public class EqClassAST extends NodeAST {
     }
     
     @Override
-    public Object clone() {
+    public EqClassAST clone() {
 	EqClassAST copy = new EqClassAST();
 
 	for (ConstraintAST constraint : constraints) {
-	    copy.addConstraint((ConstraintAST) constraint.clone());
+	    copy.addConstraint(constraint.clone());
 	}
 	return copy;
     }

@@ -54,9 +54,9 @@ public class VariableAST extends ExpressionAST implements Positionable {
     @Override
     public VariableAST clone() {
 	VariableAST copy = new VariableAST();
-	copy.setIdentifier((IdentifierAST) identifier.clone());
+	copy.setIdentifier(identifier.clone());
 	if (id != null) {
-	    copy.id = (Identifier) id.clone();
+	    copy.id = id.clone();
 	}
 
 	copy.lineNo = (lineNo != null) ? lineNo : null;

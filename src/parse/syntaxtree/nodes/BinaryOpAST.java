@@ -41,11 +41,11 @@ public class BinaryOpAST extends BinaryAST {
     }
 
     @Override
-    public Object clone() {
+    public BinaryOpAST clone() {
 	BinaryOpAST copy = new BinaryOpAST();
-	copy.setBinary((BinaryAST) binary.clone());
-	copy.setSetOp((SetOpAST) setOp.clone());
-	copy.setBinaryExp((BinaryExpAST) binaryExp.clone());
+	copy.setBinary(binary.clone());
+	copy.setSetOp(setOp.clone());
+	copy.setBinaryExp(binaryExp.clone());
 
 	return copy;
     }

@@ -74,15 +74,15 @@ public class PredicateAST extends BinaryExpAST implements Positionable {
     public PredicateAST clone() {
 	PredicateAST copy = new PredicateAST();
 	if (attrCall != null) {
-	    copy.attrCall = (AttributeCallAST) attrCall.clone();
+	    copy.attrCall = attrCall.clone();
 	}
 	if (variable != null) {
 	    copy.variable = variable.clone();
 	}
-	copy.oprCall = (OperationCallAST) oprCall.clone();
+	copy.oprCall = oprCall.clone();
 	if (impl != null) {
 	    // FIXME impl должен ссылаться на объект своего дерева
-	    copy.impl = (PredicateImplAST) impl.clone();
+	    copy.impl = impl.clone();
 	}
 	copy.lineNo = (lineNo != null) ? lineNo : null;
 	copy.columnNo = (columnNo != null) ? columnNo : null;

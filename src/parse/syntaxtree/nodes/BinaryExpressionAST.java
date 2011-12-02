@@ -71,16 +71,16 @@ public class BinaryExpressionAST extends BinaryExpAST implements Positionable {
     }
 
     @Override
-    public Object clone() {
+    public BinaryExpressionAST clone() {
 	BinaryExpressionAST copy = new BinaryExpressionAST();
 
 	if ((firstExpression != null) && (secondExpression != null) && (relation != null)) {
-	    copy.setFirstExpression((ExpressionAST) firstExpression.clone());
-	    copy.setRelation((RelationAST) relation.clone());
-	    copy.setSecondExpression((ExpressionAST) secondExpression.clone());
+	    copy.setFirstExpression(firstExpression.clone());
+	    copy.setRelation(relation.clone());
+	    copy.setSecondExpression(secondExpression.clone());
 	}
 	if (bool != null) {
-	    copy.bool = (BooleanAST) bool.clone();
+	    copy.bool = bool.clone();
 	}
 	copy.lineNo = (lineNo != null) ? lineNo : null;
 	copy.columnNo = (columnNo != null) ? columnNo : null;

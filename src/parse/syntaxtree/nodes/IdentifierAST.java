@@ -42,7 +42,7 @@ public class IdentifierAST extends NodeAST implements Datable, Positionable {
     }
 
     @Override
-    public Object clone() {
+    public IdentifierAST clone() {
 	IdentifierAST copy = new IdentifierAST(new String(id), new Integer(lineNo), new Integer(columnNo));
 	return copy;
     }

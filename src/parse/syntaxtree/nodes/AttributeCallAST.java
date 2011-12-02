@@ -105,17 +105,17 @@ public class AttributeCallAST extends ExpressionAST implements Positionable {
     }
     
     @Override
-    public Object clone() {
+    public AttributeCallAST clone() {
 	AttributeCallAST copy = new AttributeCallAST();
 
 	if (attrCall != null) {
-	    copy.setAttrCall((AttributeCallAST) getAttrCall().clone());
+	    copy.setAttrCall(getAttrCall().clone());
 	}
 	copy.setVariable(getVariable().clone());
 	if (id != null) {
-	    copy.id = (Identifier) id.clone();
+	    copy.id = id.clone();
 	}
-	copy.setIdentifier((IdentifierAST) getIdentifier().clone());
+	copy.setIdentifier(getIdentifier().clone());
 	copy.lineNo = (lineNo != null) ? lineNo : null;
 	copy.columnNo = (columnNo != null) ? columnNo : null;
 

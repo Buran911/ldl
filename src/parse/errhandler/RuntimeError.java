@@ -1,51 +1,49 @@
 package parse.errhandler;
 
+import application.util.StackTrace;
 
 public class RuntimeError extends Error {
-    
-    private String stackTrace;
+    private Exception exception;
     private String info;
 
-    public RuntimeError(ErrorType errorType,String stackTrace,String info) {
+    public RuntimeError(ErrorType errorType, Exception exception, String info) {
 	super();
+	this.errorClass = ErrorType.getErrorClass(errorType);
 	this.errorType = errorType;
-	this.stackTrace = stackTrace;
-	this.info= info;
+	this.exception = exception;
+	this.info = info;
     }
 
     public ErrorType getType() {
-        return errorType;
+	return errorType;
     }
 
     public String getStackTrace() {
-        return stackTrace;
+	return StackTrace.getStackTrace(exception);
     }
 
     public String getInfo() {
-        return info;
+	return info;
     }
 
     public void setType(ErrorType errorType) {
-        this.errorType = errorType;
-    }
-
-    public void setStackTrace(String stackTrace) {
-        this.stackTrace = stackTrace;
+	this.errorType = errorType;
     }
 
     public void setInfo(String info) {
-        this.info = info;
+	this.info = info;
     }
 
+    @Override
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
+	result = prime * result + ((exception == null) ? 0 : exception.hashCode());
 	result = prime * result + ((info == null) ? 0 : info.hashCode());
-	result = prime * result + ((stackTrace == null) ? 0 : stackTrace.hashCode());
-	result = prime * result + ((errorType == null) ? 0 : errorType.hashCode());
 	return result;
     }
 
+    @Override
     public boolean equals(Object obj) {
 	if (this == obj)
 	    return true;
@@ -54,19 +52,17 @@ public class RuntimeError extends Error {
 	if (getClass() != obj.getClass())
 	    return false;
 	RuntimeError other = (RuntimeError) obj;
+	if (exception == null) {
+	    if (other.exception != null)
+		return false;
+	}
+	else if (!exception.equals(other.exception))
+	    return false;
 	if (info == null) {
 	    if (other.info != null)
 		return false;
 	}
 	else if (!info.equals(other.info))
-	    return false;
-	if (stackTrace == null) {
-	    if (other.stackTrace != null)
-		return false;
-	}
-	else if (!stackTrace.equals(other.stackTrace))
-	    return false;
-	if (errorType != other.errorType)
 	    return false;
 	return true;
     }

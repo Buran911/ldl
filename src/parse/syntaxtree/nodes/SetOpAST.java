@@ -39,7 +39,7 @@ public class SetOpAST extends NodeAST implements Datable, Positionable {
     }
 
     @Override
-    public Object clone() {
+    public SetOpAST clone() {
 	SetOpAST copy = new SetOpAST(operation, new Integer(lineNo), new Integer(columnNo));
 
 	return copy;

@@ -1,5 +1,6 @@
 package parse.syntaxtree.nodes;
 
 public abstract class BinaryExpAST extends BinaryAST {
-    public abstract Object clone();
+    @Override
+    public abstract BinaryExpAST clone();
 }

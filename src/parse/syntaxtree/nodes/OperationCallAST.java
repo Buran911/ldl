@@ -44,12 +44,12 @@ public class OperationCallAST extends NodeAST implements Positionable {
     }
 
     @Override
-    public Object clone() {
+    public OperationCallAST clone() {
 	OperationCallAST copy = new OperationCallAST();
 
-	copy.setIdentifier((IdentifierAST) identifier.clone());
+	copy.setIdentifier(identifier.clone());
 	if (parametres != null) {
-	    copy.parametres = (ParametresAST) parametres.clone();
+	    copy.parametres = parametres.clone();
 	}
 	copy.lineNo = (lineNo != null) ? lineNo : null;
 	copy.columnNo = (columnNo != null) ? columnNo : null;

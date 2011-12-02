@@ -81,15 +81,15 @@ public class PredicateImplAST extends NodeAST implements Positionable {
     }
 
     @Override
-    public Object clone() {
+    public PredicateImplAST clone() {
 	PredicateImplAST copy = new PredicateImplAST();
-	copy.pathName = (PathNameAST) pathName.clone();
-	copy.funcPart = (FunctionalPartAST) funcPart.clone();
+	copy.pathName = pathName.clone();
+	copy.funcPart = funcPart.clone();
 	if (formalParams != null) {
-	    copy.formalParams = (FormalParamsAST) formalParams.clone();
+	    copy.formalParams = formalParams.clone();
 	}
 	for (ConstraintAST constraint : constraints) {
-	    copy.addConstraint((ConstraintAST) constraint.clone());
+	    copy.addConstraint(constraint.clone());
 	}
 	copy.lineNo = (lineNo != null) ? lineNo : null;
 	copy.columnNo = (columnNo != null) ? columnNo : null;

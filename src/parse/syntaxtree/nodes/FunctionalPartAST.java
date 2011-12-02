@@ -32,11 +32,11 @@ public class FunctionalPartAST extends NodeAST {
     }
 
     @Override
-    public Object clone() {
+    public FunctionalPartAST clone() {
 	FunctionalPartAST copy = new FunctionalPartAST();
 	if ((group != null) && (priority != null)) {
-	    copy.setGroup((StringAST) group.clone());
-	    copy.setPriority((NumberAST) priority.clone());
+	    copy.setGroup(group.clone());
+	    copy.setPriority(priority.clone());
 	}
 	return copy;
     }

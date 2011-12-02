@@ -1,16 +1,17 @@
 package generation.walkers.walkers;
 
-import java.util.LinkedList;
-
 import generation.idtable.IdTable;
 import generation.idtable.Identifier;
 import generation.idtable.Predicate;
 import generation.walkers.TreeWalker;
 import generation.walkers.WalkerStrategy;
-import parse.errhandler.ErrorClass;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import parse.errhandler.Checker;
 import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
-import parse.errhandler.Checker;
 import parse.errhandler.ParseError;
 import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
@@ -242,9 +243,10 @@ public class IdRedefinedChecker extends TreeWalker implements Checker {
 
     }
 
-    public LinkedList<ErrorType> getErrorTypes() {
+    public List<ErrorType> getErrorTypes() {
 	LinkedList<ErrorType> errorType = new LinkedList<ErrorType>();
 	errorType.add(ErrorType.IdentifierRedefenition);
+	
 	return errorType;
     }
 }

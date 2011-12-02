@@ -49,13 +49,13 @@ public class ErrorHandlerContext {
     @Test
     public void test3() {
 	ErrorHandler errh = new ErrorHandler(new Source("testdata/compatibility/file.ldl"));
-	ParseError idUndefined = new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, null, null,ErrorType.IdentifierUndefined.getDescription());
+	ParseError idUndefined = new ParseError(ErrorType.IdentifierUndefined, null, null,ErrorType.IdentifierUndefined.getDescription());
 	idUndefined.setErrorPos(4);
 	idUndefined.setLineNo(4);
-	ParseError idRedefined = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null,ErrorType.IdentifierRedefenition.getDescription());
+	ParseError idRedefined = new ParseError(ErrorType.IdentifierRedefenition, null, null,ErrorType.IdentifierRedefenition.getDescription());
 	idRedefined.setErrorPos(2);
 	idRedefined.setLineNo(2);
-	ParseError typeMismatched = new ParseError(ErrorClass.semantic, ErrorType.UncompatibleTypes, null, null,ErrorType.UncompatibleTypes.getDescription());
+	ParseError typeMismatched = new ParseError(ErrorType.UncompatibleTypes, null, null,ErrorType.UncompatibleTypes.getDescription());
 	typeMismatched.setErrorPos(4);
 	typeMismatched.setLineNo(4);
 	errh.addError(idUndefined);

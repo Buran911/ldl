@@ -41,7 +41,7 @@ public class StringAST extends LiteralAST implements Datable, Positionable {
     }
 
     @Override
-    public Object clone() {
+    public StringAST clone() {
 	StringAST copy = new StringAST(new String(string), new Integer(lineNo), new Integer(columnNo));
 	
 	return copy;

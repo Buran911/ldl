@@ -12,7 +12,7 @@ public class ParametresAST extends NodeAST {
     }
 
     @Override
-    public Object clone() {
+    public ParametresAST clone() {
 	ParametresAST copy = new ParametresAST();
 	
 	return copy;

@@ -41,7 +41,7 @@ public class BooleanAST extends LiteralAST implements Datable, Positionable {
     }
 
     @Override
-    public Object clone() {
+    public BooleanAST clone() {
 	BooleanAST copy = new BooleanAST(new Boolean(bool), new Integer(lineNo), new Integer(columnNo));
 	return copy;
     }

@@ -8,7 +8,6 @@ import java.util.List;
 public class ConditionAST extends ConstraintAST {
     private BinaryAST condition;
     private List<ConstraintAST> constraints;
-    // XXX eqClasseses -> eqClasses , разобраться с названиями
     private List<ConstraintAST> eqClassesList;
 
     {
@@ -49,15 +48,15 @@ public class ConditionAST extends ConstraintAST {
     }
 
     @Override
-    public Object clone() {
+    public ConditionAST clone() {
 	ConditionAST copy = new ConditionAST();
-	copy.condition = (BinaryAST) condition.clone();
+	copy.condition = condition.clone();
 
 	for (ConstraintAST constraint : constraints) {
-	    copy.addConstraint((ConstraintAST) constraint.clone());
+	    copy.addConstraint(constraint.clone());
 	}
 	for (ConstraintAST eqClass : eqClassesList) {
-	    copy.addEqClasses((ConstraintAST) eqClass.clone());
+	    copy.addEqClasses(eqClass.clone());
 	}
 	return copy;
     }

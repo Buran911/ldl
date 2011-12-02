@@ -19,12 +19,14 @@ public class SyntaxTree implements Cloneable {
 	this.root = root;
     }
 
+    
+    
     public void accept(TreeWalker walker) {
 	root.accept(walker);
     }
 
     @Override
-    public Object clone() {
+    public SyntaxTree clone() {
 	NodeAST rootcopy = (NodeAST) root.clone();
 	return new SyntaxTree(rootcopy);
     }

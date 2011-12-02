@@ -6,6 +6,6 @@ public abstract class BinaryAST extends ConstraintAST {
     {
 	not = false;
     }
-
-    public abstract Object clone();
+    @Override
+    public abstract BinaryAST clone();
 }

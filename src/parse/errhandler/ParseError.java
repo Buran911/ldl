@@ -1,9 +1,5 @@
 package parse.errhandler;
 
-import org.apache.log4j.Logger;
-import org.stringtemplate.v4.ST;
-import org.stringtemplate.v4.STGroup;
-import org.stringtemplate.v4.STGroupFile;
 
 /**
  * Класс содержит общие данные об ошибке: класс, тип, локализацию, контекст,
@@ -12,7 +8,6 @@ import org.stringtemplate.v4.STGroupFile;
  * @author hindu
  * */
 public class ParseError extends Error {
-    private ErrorClass errorClass;
     private Integer lineNo;
     private Integer columnNo;
     private String errorLine;
@@ -22,8 +17,7 @@ public class ParseError extends Error {
     private Integer errorPos;
     private Integer contextPos;
     private String info;
-
-    private Logger logger = Logger.getLogger(ParseError.class);
+    
     public ParseError() {
 
     }
@@ -111,14 +105,6 @@ public class ParseError extends Error {
 	this.info = info;
     }
 
-    public ErrorClass getErrorClass() {
-        return errorClass;
-    }
-
-    public void setErrorClass(ErrorClass errorClass) {
-        this.errorClass = errorClass;
-    }
-
     public int hashCode() {
 	final int prime = 31;
 	int result = 1;
@@ -144,11 +130,5 @@ public class ParseError extends Error {
 	else if (!errorPos.equals(other.errorPos))
 	    return false;
 	return true;
-    }
-    
-    public void printError() {
-	STGroup group = new STGroupFile("generation/templates/errors.stg");
-	ST st = group.getInstanceOf("error");
-	logger.error(st.render());
     }
 }

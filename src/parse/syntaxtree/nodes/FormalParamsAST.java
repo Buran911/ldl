@@ -12,7 +12,7 @@ public class FormalParamsAST extends NodeAST {
     }
     
     @Override
-    public Object clone() {
+    public FormalParamsAST clone() {
 	FormalParamsAST copy = new FormalParamsAST();
 
 	return copy;

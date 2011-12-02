@@ -50,7 +50,7 @@ public class NoDefinitionTest {
     @Test
     public void srcBlockTest1() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 	setUp("-p testdata/semantictests/2nddef/property.xml -s testdata/semantictests/nodef/srcBlockTest1.ldl");
-	ParseError templateErr = new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, null, null);
+	ParseError templateErr = new ParseError(ErrorType.IdentifierUndefined, null, null);
 	templateErr.setErrorPos(3);
 
 	tree.accept(new IdTableMaker(new IdParsigStrategy(), idTable));
@@ -65,7 +65,7 @@ public class NoDefinitionTest {
     @Test
     public void VariableTest1() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 	setUp("-p testdata/semantictests/2nddef/property.xml -s testdata/semantictests/nodef/VariableTest1.ldl");
-	ParseError templateErr = new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, null, null);
+	ParseError templateErr = new ParseError(ErrorType.IdentifierUndefined, null, null);
 	templateErr.setErrorPos(2);
 
 	tree.accept(new IdTableMaker(new IdParsigStrategy(), idTable));
@@ -78,9 +78,9 @@ public class NoDefinitionTest {
     @Test
     public void OperationCallTest1() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 	setUp("-p testdata/semantictests/2nddef/property.xml -s testdata/semantictests/nodef/srcBlockTestgood.ldl testdata/semantictests/nodef/OperationCallTest1.ldl testdata/semantictests/nodef/one.ldl");
-	ParseError templateErr1 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, null, null);
-	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, null, null);
-	ParseError templateErr3 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierUndefined, null, null);
+	ParseError templateErr1 = new ParseError(ErrorType.IdentifierUndefined, null, null);
+	ParseError templateErr2 = new ParseError(ErrorType.IdentifierUndefined, null, null);
+	ParseError templateErr3 = new ParseError(ErrorType.IdentifierUndefined, null, null);
 	templateErr1.setErrorPos(4);
 	templateErr2.setErrorPos(8);
 	templateErr3.setErrorPos(12);

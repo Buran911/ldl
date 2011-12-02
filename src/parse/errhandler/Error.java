@@ -3,18 +3,13 @@ package parse.errhandler;
 public abstract class Error {
     private boolean isParseError;
     private boolean isRuntimeError;
+    protected ErrorClass errorClass;
     protected ErrorType errorType;
     
     {
 	isParseError = false;
 	isRuntimeError = false;
     }
-    
-    @Override
-    public abstract int hashCode();
-
-    @Override
-    public abstract boolean equals(Object obj);
 
     public boolean isParseError() {
         return isParseError;
@@ -36,7 +31,13 @@ public abstract class Error {
         return errorType;
     }
 
-    public void setErrorType(ErrorType errorType) {
-        this.errorType = errorType;
+    public ErrorClass getErrorClass() {
+        return errorClass;
     }
+
+    @Override
+    public abstract int hashCode();
+
+    @Override
+    public abstract boolean equals(Object obj);
 }

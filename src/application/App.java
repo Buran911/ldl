@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
 
 import parse.errhandler.ErrorHandler;
 import parse.errhandler.ErrorType;
-import parse.errhandler.ProgramStates;
+import parse.errhandler.ProgramState;
 import parse.errhandler.RuntimeError;
 import parse.errhandler.WalkerRunner;
 import parse.ldlsettingsparser.XMLParser;
@@ -104,24 +104,26 @@ public class App {
 	Parser parser = new Parser(src, errh);
 	logger.info("Парсинг исходных файлов.");
 	logger.info("Проверка синтаксических ошибок");
-	
+
 	parser.parse();
-	tree = new SyntaxTree(parser.getTree());
 	
-	ErrorHandler.setProgramState(ProgramStates.SyntaxChecked);
+	logger.trace(" program state : " + ProgramState.SyntaxChecked);
+	errh.setProgramState(ProgramState.SyntaxChecked);
+	
+	tree = new SyntaxTree(parser.getTree());
 
 	logger.info("Проверка семантических ошибок.");
 	checkSemantics();
-
-	// Семантические ошибки
+	
+	logger.trace(" program state : " + ProgramState.SemanticChecked);
+	errh.setProgramState(ProgramState.SemanticChecked);
     }
 
     // Проверяет семантическую правильность исходного кода, проверка идет по
     // копиям объектов
     private void checkSemantics() {
-	SyntaxTree treeSemantic = (SyntaxTree) tree.clone();
+	SyntaxTree treeSemantic = tree.clone();
 	IdTable idTable = new IdTable();
-
 	WalkerRunner runner = new WalkerRunner(errh, treeSemantic);
 
 	runner.add(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
@@ -164,12 +166,15 @@ public class App {
 	queryMaker = new QueryMaker(connection, engine.getQuery());
 	try {
 	    queryMaker.makeQuerys();
-
-	} catch (ClassNotFoundException e) {
-	    RuntimeError re = new RuntimeError(ErrorType.DataBaseDriverNotFound, StackTrace.getStackTrace(e), ErrorType.DataBaseDriverNotFound.getDescription());
+	}
+	catch (ClassNotFoundException e) {
+	    RuntimeError re = new RuntimeError(ErrorType.DataBaseDriverNotFound, e,
+		    ErrorType.DataBaseDriverNotFound.getDescription());
 	    errh.addError(re);
-	} catch (SQLException e) {
-	    RuntimeError re = new RuntimeError(ErrorType.SQLError, StackTrace.getStackTrace(e), ErrorType.SQLError.getDescription());
+	}
+	catch (SQLException e) {
+	    RuntimeError re = new RuntimeError(ErrorType.SQLError, e,
+		    ErrorType.SQLError.getDescription());
 	    errh.addError(re);
 	}
     }

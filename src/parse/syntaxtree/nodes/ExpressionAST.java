@@ -3,5 +3,6 @@ package parse.syntaxtree.nodes;
 import parse.syntaxtree.NodeAST;
 
 public abstract class ExpressionAST extends NodeAST {
-    public abstract Object clone();
+    @Override
+    public abstract ExpressionAST clone();
 }

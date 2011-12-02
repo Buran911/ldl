@@ -46,7 +46,7 @@ public class SecondDefinitionTest {
     @Test
     public void test1() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc.ldl");
-	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr2 = new ParseError(ErrorType.IdentifierRedefenition, null, null);
 	templateErr2.setErrorPos(2);
 
 	tree.accept(new PositionEstimater(new IdParsigStrategy()));
@@ -58,8 +58,8 @@ public class SecondDefinitionTest {
     @Test
     public void test2() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc1.ldl");
-	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
-	ParseError templateErr4 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr2 = new ParseError(ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr4 = new ParseError(ErrorType.IdentifierRedefenition, null, null);
 	templateErr2.setErrorPos(2);
 	templateErr4.setErrorPos(4);
 
@@ -75,7 +75,7 @@ public class SecondDefinitionTest {
     @Test
     public void test3() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc2.ldl");
-	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr2 = new ParseError(ErrorType.IdentifierRedefenition, null, null);
 	templateErr2.setErrorPos(2);
 	
 	tree.accept(new PositionEstimater(new IdParsigStrategy()));
@@ -89,8 +89,8 @@ public class SecondDefinitionTest {
     @Test
     public void test4() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/desc3.ldl");
-	ParseError templateErr2 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
-	ParseError templateErr3 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr2 = new ParseError(ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr3 = new ParseError(ErrorType.IdentifierRedefenition, null, null);
 	templateErr2.setErrorPos(2);
 	templateErr3.setErrorPos(3);
 	
@@ -105,7 +105,7 @@ public class SecondDefinitionTest {
     public void predtest1() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/pred.ldl");
 
-	ParseError templateErr4 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr4 = new ParseError(ErrorType.IdentifierRedefenition, null, null);
 	templateErr4.setErrorPos(4);
 	
 	tree.accept(new PositionEstimater(new IdParsigStrategy()));
@@ -120,8 +120,8 @@ public class SecondDefinitionTest {
     public void predtest2() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
 	setUp("-p testdata/semantictests/2nddef/property.xml " + "-s testdata/semantictests/2nddef/pred2.ldl");
 
-	ParseError templateErr4 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
-	ParseError templateErr8 = new ParseError(ErrorClass.semantic, ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr4 = new ParseError(ErrorType.IdentifierRedefenition, null, null);
+	ParseError templateErr8 = new ParseError(ErrorType.IdentifierRedefenition, null, null);
 
 	templateErr4.setErrorPos(4);
 	templateErr8.setErrorPos(8);

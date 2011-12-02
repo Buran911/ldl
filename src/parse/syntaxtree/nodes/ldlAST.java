@@ -44,13 +44,13 @@ public class ldlAST extends NodeAST {
     }
 
     @Override
-    public Object clone() {
+    public ldlAST clone() {
 	ldlAST copy = new ldlAST();
 	for (ContextAST context : contexts) {
-	    copy.addContext((ContextAST) context.clone());
+	    copy.addContext(context.clone());
 	}
 	for (PredicateImplAST predicateImpl : impls) {
-	    copy.addPredicateImpl((PredicateImplAST) predicateImpl.clone());
+	    copy.addPredicateImpl(predicateImpl.clone());
 	}
 	return copy;
     }

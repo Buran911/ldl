@@ -89,14 +89,14 @@ public class Identifier implements Cloneable {
     }
 
     @Override
-    public Object clone() {
+    public Identifier clone() {
 	Identifier copy = new Identifier();
 
 	copy.name = new String(name);
 	copy.namespace = new String(namespace);
 	copy.type = new String(type);
 	copy.srcType = srcType;
-	copy.srcData = (SourceData) srcData.clone();
+	copy.srcData = srcData.clone();
 	copy.visible = new Boolean(visible);
 	copy.index = new Integer(index);
 	copy.alias = new String(alias);

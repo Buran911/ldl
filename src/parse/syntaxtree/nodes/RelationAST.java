@@ -39,7 +39,7 @@ public class RelationAST extends NodeAST implements Datable, Positionable {
     }
 
     @Override
-    public Object clone() {
+    public RelationAST clone() {
 	RelationAST copy = new RelationAST(ratio, new Integer(lineNo), new Integer(columnNo));
 	
 	return copy;

@@ -30,10 +30,10 @@ public class SourceAST extends NodeAST {
     }
 
     @Override
-    public Object clone() {
+    public SourceAST clone() {
 	SourceAST copy = new SourceAST();
 	for (srcBlockAST srcBlock : srcBlocks) {
-	    copy.addSrcBlock((srcBlockAST) srcBlock.clone());
+	    copy.addSrcBlock(srcBlock.clone());
 	}
 	
 	return copy;

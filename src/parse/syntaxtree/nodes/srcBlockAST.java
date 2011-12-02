@@ -61,11 +61,11 @@ public class srcBlockAST extends NodeAST implements Positionable {
     }
     
     @Override
-    public Object clone() {
+    public srcBlockAST clone() {
 	srcBlockAST copy = new srcBlockAST();
-	copy.setIdentifier((IdentifierAST) identifier.clone());
+	copy.setIdentifier(identifier.clone());
 	for (srcExprAST srcExpr : srcExprs) {
-	    copy.addSrcExpr((srcExprAST) srcExpr.clone());
+	    copy.addSrcExpr(srcExpr.clone());
 	}
 
 	copy.lineNo = (lineNo != null) ? lineNo : null;

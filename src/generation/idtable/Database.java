@@ -26,7 +26,7 @@ public class Database extends SourceData {
     }
     
     @Override
-    public Object clone() {
+    public Database clone() {
 	Database copy = new Database();
 
 	copy.table = new String(table);

@@ -1,10 +1,10 @@
 package parse.errhandler;
 
-import java.util.LinkedList;
+import java.util.List;
+
 
 
 public interface Checker {
-    
-    public LinkedList<ErrorType> getErrorTypes();
+    public List<ErrorType> getErrorTypes();
     
 }

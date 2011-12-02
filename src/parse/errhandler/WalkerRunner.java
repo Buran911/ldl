@@ -5,6 +5,7 @@ import generation.walkers.TreeWalker;
 import java.util.LinkedList;
 
 import parse.syntaxtree.SyntaxTree;
+import application.util.Halt;
 
 public class WalkerRunner {
     private LinkedList<TreeWalker> walkerList;
@@ -26,8 +27,8 @@ public class WalkerRunner {
 		if (errh.isPermitted(((Checker) walker).getErrorTypes())) {
 		    tree.accept(walker);
 		}else{
-		    errh.printErrors();
-		    throw new RuntimeException();
+		    // TODO Сделать анализ имеет ли смысл запуск обычных walker'ов при наличи ошибок
+		//    throw new Halt();
 		}
 	    }
 	    else {

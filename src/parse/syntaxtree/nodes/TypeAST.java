@@ -42,7 +42,7 @@ public class TypeAST extends NodeAST implements Datable, Positionable {
     }
 
     @Override
-    public Object clone() {
+    public TypeAST clone() {
 	TypeAST copy = new TypeAST(new String(type), new Integer(lineNo), new Integer(columnNo));
 	
 	return copy;
