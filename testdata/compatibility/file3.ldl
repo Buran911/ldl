@@ -1,0 +1,6 @@
+context Payer{
+	inn instanceof String;
+	inn instanceof String;
+	bankru instanceof Payer;
+	bankru.isKO();
+}

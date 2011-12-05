@@ -35,7 +35,6 @@ import parse.syntaxtree.SyntaxTree;
 import parse.util.Source;
 import application.util.CmdLineParser;
 import application.util.Halt;
-import application.util.StackTrace;
 import application.util.YamlWriter;
 
 /**
@@ -107,7 +106,7 @@ public class App {
 
 	parser.parse();
 	
-	logger.trace(" program state : " + ProgramState.SyntaxChecked);
+	logger.debug("program state : " + ProgramState.SyntaxChecked);
 	errh.setProgramState(ProgramState.SyntaxChecked);
 	
 	tree = new SyntaxTree(parser.getTree());
@@ -115,7 +114,7 @@ public class App {
 	logger.info("Проверка семантических ошибок.");
 	checkSemantics();
 	
-	logger.trace(" program state : " + ProgramState.SemanticChecked);
+	logger.debug("program state : " + ProgramState.SemanticChecked);
 	errh.setProgramState(ProgramState.SemanticChecked);
     }
 
@@ -126,13 +125,13 @@ public class App {
 	IdTable idTable = new IdTable();
 	WalkerRunner runner = new WalkerRunner(errh, treeSemantic);
 
-	runner.add(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
 	runner.add(new PositionEstimater(new IdParsigStrategy()));
+	runner.add(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
 	runner.add(new IdRedefinedChecker(new IdParsigStrategy(), errh));
 	runner.add(new IdTableMaker(new IdParsigStrategy(), idTable));
 	runner.add(new IdTableFiller(new IdParsigStrategy(), idTable));
-	runner.add(new IdConvertor(new IdParsigStrategy(), idTable));
 	runner.add(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
+	runner.add(new IdConvertor(new IdParsigStrategy(), idTable));
 	runner.add(new TypeMismatchChecker(new IdParsigStrategy(), errh));
 
 	runner.run();

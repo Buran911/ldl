@@ -15,8 +15,7 @@ import application.util.Halt;
 
 // TODO Научить работать хэндлер
 
-// TODO проверить на несовместимость ошибки, превышение криткаунта и
-// прочая
+// TODO превышение криткаунта и прочая
 //
 // Halt cемантических ошибкок в WalkerRunner 
 
@@ -83,7 +82,8 @@ public final class ErrorHandler {
     }
 
     public void addError(Error error) {
-	switch (error.getErrorClass()){
+	switch (error.getErrorClass())
+	    {
 	    case syntax:
 		error.setParseError();
 		errors.add(error);
@@ -98,7 +98,7 @@ public final class ErrorHandler {
 		errors.add(error);
 		printErrors();
 		throw new Halt();
-	}
+	    }
     }
 
     public boolean hasError(Error error) {
@@ -121,9 +121,11 @@ public final class ErrorHandler {
     }
 
     // Найти совместимость err1 и err2
+    // Совместимость ошибок это когда одна ошибка не является следствием другой
+    // ошибки и может быть обнаружены независимо
     public boolean hasErrorCompatibility(ErrorType err1, ErrorType err2) {
 	List<ErrorType> errTypes = compatibilityMap.get(err2);
-	
+
 	return errTypes.contains(err1);
     }
 
@@ -144,7 +146,8 @@ public final class ErrorHandler {
 
     public void setProgramState(ProgramState programState) {
 	this.programState = programState;
-	switch (programState){
+	switch (programState)
+	    {
 	    case SyntaxChecked:
 		if (hasErrors()) {
 		    throw new Halt();
@@ -155,7 +158,7 @@ public final class ErrorHandler {
 		    throw new Halt();
 		}
 		break;
-	}
+	    }
     }
 
     public void printErrors() {

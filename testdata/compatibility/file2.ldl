@@ -1,4 +1,5 @@
 context Payer{
-	--inn instanceof String;
-	inn > 0;
+	inn instanceof String;
+	binn instanceof String;
+	inn = binn;
 }

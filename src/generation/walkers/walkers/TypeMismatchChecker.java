@@ -40,8 +40,11 @@ import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 
 /**
- * Волкер ищет несоотвествия типов. TODO проверить FormalParamsAST TODO
- * проверить ParametresAST TODO проверить ElementsAST TODO определить системные
+ * Волкер ищет несоотвествия типов. 
+ * TODO проверить FormalParamsAST
+ * TODO проверить ParametresAST 
+ * TODO проверить ElementsAST 
+ * TODO определить системные
  * типы
  * 
  * @author exellent
