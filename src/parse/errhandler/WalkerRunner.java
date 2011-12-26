@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import org.apache.log4j.Logger;
 
 import parse.syntaxtree.SyntaxTree;
-import application.App;
 import application.util.Halt;
 
 public class WalkerRunner {
