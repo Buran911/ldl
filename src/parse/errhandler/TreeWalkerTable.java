@@ -13,14 +13,20 @@ import generation.walkers.walkers.TypeMismatchChecker;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TreeWalkerTable {
-    public final static LinkedList<Cell> TREETABLE;// Таблица где все
-						   // зависимости
-						   // walker'ов (одна для всех)
-    public List<Cell> table; // Список walker'ов , уоторые будут использоватьстя
-			     // в программе
-    private LinkedList<Cell> unreachableCells;
+import antlr.collections.impl.LList;
 
+//TODO Сделать запуск walker'ов исходя из списка возможных для запуска и возможность вычеркивать волкеров из списка возможных
+
+public class TreeWalkerTable {
+    public final static List<Cell> TREETABLE;// Таблица где все
+					     // зависимости
+					     // walker'ов (одна для всех)
+    public static List<Cell> table; // Список walker'ов , которые будут
+				    // использоватьстя
+				    // в программе
+    private List<Cell> unreachableCells;
+
+    static List<TreeWalker> realWalkers;
     static {
 	TREETABLE = new LinkedList<Cell>();
 
@@ -44,11 +50,15 @@ public class TreeWalkerTable {
 
 	LinkedList<Class<? extends TreeWalker>> itf = new LinkedList<Class<? extends TreeWalker>>();
 	itf.add(IdNotDefinedChecker.class);
-	TREETABLE.add(new Cell(IdTableFiller.class, itf, new LinkedList<ErrorType>()));
+	LinkedList<ErrorType> itfe = new LinkedList<ErrorType>();
+	itfe.add(ErrorType.IdentifierUndefined);
+	TREETABLE.add(new Cell(IdTableFiller.class, itf, itfe));
 
 	LinkedList<Class<? extends TreeWalker>> id = new LinkedList<Class<? extends TreeWalker>>();
 	id.add(IdNotDefinedChecker.class);
-	TREETABLE.add(new Cell(IdConvertor.class, id, new LinkedList<ErrorType>()));
+	LinkedList<ErrorType> ide = new LinkedList<ErrorType>();
+	ide.add(ErrorType.IdentifierUndefined);
+	TREETABLE.add(new Cell(IdConvertor.class, id, ide));
 
 	LinkedList<Class<? extends TreeWalker>> tmc = new LinkedList<Class<? extends TreeWalker>>();
 	tmc.add(IdTableFiller.class);
@@ -64,30 +74,44 @@ public class TreeWalkerTable {
 	table = new LinkedList<Cell>();
 
 	unreachableCells = new LinkedList<Cell>();
+
+	realWalkers = new LinkedList<TreeWalker>();
     }
 
     private TreeWalkerTable() {
     }
 
-    private List<TreeWalker> cleanWalkers(List<TreeWalker> walkers) {
+    public static List<Class<? extends TreeWalker>> getListOfPossibleWalkers(List<TreeWalker> walkers) {
+	TreeWalkerTable treeWalkerTable = new TreeWalkerTable();
+	List<Class<? extends TreeWalker>> returnList = new LinkedList<Class<? extends TreeWalker>>();
 
-	List<TreeWalker> walkersTemporary = new LinkedList<TreeWalker>();
+	treeWalkerTable.deleteUnusedWalkers(walkers);
+	treeWalkerTable.deleteUnreachableWalkers();
 
+	for (TreeWalker tw : treeWalkerTable.getCleanListOfWalkers(walkers)) {
+	    returnList.add(tw.getClass());
+	}
+
+	return returnList;
+    }
+
+    private List<TreeWalker> getCleanListOfWalkers(List<TreeWalker> walkers) {
 	for (TreeWalker walker : walkers)
 	    for (Cell cell : table)
 		if (walker.getClass() == cell.getWalker())
-		    walkersTemporary.add(walker);
-	walkers = walkersTemporary;
-	return walkersTemporary;
+		    realWalkers.add(walker);
+	walkers = realWalkers;
+	return realWalkers;
     }
 
     public static List<TreeWalker> getCleanTreeWalkerList(List<TreeWalker> walkers) {
 	TreeWalkerTable twt = new TreeWalkerTable();
 	twt.deleteUnusedWalkers(walkers);
 	twt.deleteUnreachableWalkers();
-	return twt.cleanWalkers(walkers);
+	return twt.getCleanListOfWalkers(walkers);
     }
-    public static List<Cell> getCleanTable(List<TreeWalker> walkers){
+
+    public static List<Cell> getCleanTable(List<TreeWalker> walkers) {
 	TreeWalkerTable twt = new TreeWalkerTable();
 	twt.deleteUnusedWalkers(walkers);
 	twt.deleteUnreachableWalkers();
@@ -111,7 +135,7 @@ public class TreeWalkerTable {
 
     // TODO сделать работу типов по стандартным методам
     /** Получение Cell из таблицы зная только Class */
-    private Cell getCellByClass(Class<? extends TreeWalker> classe, List<Cell> table) {
+    private static Cell getCellByClass(Class<? extends TreeWalker> classe, List<Cell> table) {
 	for (Cell cell : table)
 	    if (cell.getWalker() == classe)
 		return cell;
@@ -133,6 +157,37 @@ public class TreeWalkerTable {
 		    return_flag = false;
 	    return return_flag;
 	}
+    }
+
+    public static boolean removeByError(ErrorType errorType) {
+	boolean result = false;
+	// 1.Найти элемент по ошибке
+	// Необходимые ингридиенты : ошибка , список walker'ов которые реально
+	// запускаются
+	// Необходимо найти все классы , на которые влияет ошибка
+	//
+	List<Cell> tempTable = new LinkedList<Cell>();
+	List<TreeWalker> tempWalkers = new LinkedList<TreeWalker>();
+	
+	
+	// static List<TreeWalker> realWalkers;
+	for (TreeWalker temp : realWalkers) {
+
+	    Cell cell = new Cell();
+	    cell = getCellByClass(temp.getClass(), table);
+
+	    if (!cell.getErrors().contains(errorType)) {
+		tempTable.add(cell);
+		tempWalkers.add(temp);
+		result = true;
+	    }
+	    else {
+		System.out.println(cell.getWalker() + " deleted");
+	    }
+	}
+	table = tempTable;
+	realWalkers = tempWalkers;
+	return result;
     }
 
     // Вроде работает верно
