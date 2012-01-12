@@ -31,12 +31,13 @@ public class TreeWalkerTableTest {
 	walkers.add(new IdTableFiller(new IdParsigStrategy(), null));
 	walkers.add(new IdNotDefinedChecker(new IdParsigStrategy(), null, null));
 	walkers.add(new TypeMismatchChecker(new IdParsigStrategy(), null));
-	walkers.add(new IdConvertor(new IdParsigStrategy(), null));
+//	walkers.add(new IdConvertor(new IdParsigStrategy(), null));
 	walkers.add(new IdRedefinedChecker(new IdParsigStrategy(), null));
 	
 	@SuppressWarnings("unused")
 	List<Class<? extends TreeWalker>> LS = TreeWalkerTable.getListOfPossibleWalkers(walkers);
-	TreeWalkerTable.removeByError(ErrorType.IdentifierUndefined);
+//	TreeWalkerTable.removeByError(ErrorType.IdentifierUndefined);
+//	TreeWalkerTable.removeByError(ErrorType.IdentifierRedefenition);
 	System.out.println("Ende");
 	
     }

@@ -10,16 +10,17 @@ public class Cell {
     private LinkedList<Class<? extends TreeWalker>> preprocesses;
     private LinkedList<ErrorType> errorTypes;
 
-    public Cell(Class<? extends TreeWalker> walker, LinkedList<Class<? extends TreeWalker>> preprocess, LinkedList<ErrorType> errorTypes) {
-	this.walker = walker;
-	this.preprocesses = preprocess;
-	this.errorTypes = errorTypes;
+    {
+	preprocesses = new LinkedList<Class<? extends TreeWalker>>();
+	errorTypes = new LinkedList<ErrorType>();
     }
 
     public Cell() {
-	walker = null;
-	preprocesses = null;
-	errorTypes = null;
+	this.walker = null;
+    }
+
+    public Cell(Class<? extends TreeWalker> walker) {
+	this.walker = walker;
     }
 
     public Class<? extends TreeWalker> getWalker() {
@@ -44,5 +45,15 @@ public class Cell {
 
     public void setErrors(LinkedList<ErrorType> errorTypes) {
 	this.errorTypes = errorTypes;
+    }
+
+    public Cell addPre(Class<? extends TreeWalker> classe) {
+	preprocesses.add(classe);
+	return this;
+    }
+
+    public Cell addErr(ErrorType errorType) {
+	errorTypes.add(errorType);
+	return this;
     }
 }

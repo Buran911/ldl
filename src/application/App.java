@@ -57,8 +57,7 @@ public class App {
 
     public App(String[] args) {
 	this.args = args;
-    }
-
+    }    
     // считывание и подготовка исходных файлов и считывание и парсинг
     // настроечного файла
     public void readFiles() {
@@ -135,6 +134,7 @@ public class App {
 	runner.add(new TypeMismatchChecker(new IdParsigStrategy(), errh));
 
 	runner.run();
+	errh.printErrors();
     }
 
     // Предобработка AST и генерация по нему запросов.

@@ -18,8 +18,8 @@ public class Application {
 	    app.readFiles();
 	    app.parseAndCheckErrors();
 	    app.generateEQ();
-	    app.makeQuery();
-	    app.writeYAML();
+//	    app.makeQuery();
+//	    app.writeYAML();
 	    logger.info("Работа приложения завершена корректно. Результаты в папке out.");
 	} catch (Halt halt) {
 	    logger.error("Ошибка выполнения приложения. Stack trace в логе.");

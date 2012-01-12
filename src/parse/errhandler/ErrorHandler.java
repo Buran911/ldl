@@ -1,7 +1,5 @@
 package parse.errhandler;
 
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -33,44 +31,18 @@ public final class ErrorHandler {
     private Source src;
     private Logger logger = Logger.getLogger(ErrorHandler.class);
     private ProgramState programState;
-
-    private HashMap<ErrorType, LinkedList<ErrorType>> compatibilityMap;
+    
+    public List<ErrorType> getErrors(){
+	List<ErrorType> returnList = new LinkedList<ErrorType>();
+	for(Error error:errors){
+	    if(error.isParseError() && (error.getErrorClass() == ErrorClass.semantic))
+	    returnList.add(error.getErrorType());
+	}
+	return returnList;
+    }
 
     {
 	errors = new LinkedList<Error>();
-	compatibilityMap = new HashMap<ErrorType, LinkedList<ErrorType>>();
-
-	fillCompatibilityMap();
-    }
-
-    private void fillCompatibilityMap() {
-	LinkedList<ErrorType> identifierRedefenition = new LinkedList<ErrorType>();
-	identifierRedefenition.add(ErrorType.UncompatibleTypes);
-	identifierRedefenition.add(ErrorType.NotImplementedYet);
-
-	LinkedList<ErrorType> uncompatibleTypes = new LinkedList<ErrorType>();
-	uncompatibleTypes.add(ErrorType.IdentifierRedefenition);
-	uncompatibleTypes.add(ErrorType.IdentifierUndefined);
-	uncompatibleTypes.add(ErrorType.NotImplementedYet);
-
-	LinkedList<ErrorType> identifierUndefined = new LinkedList<ErrorType>();
-	identifierUndefined.add(ErrorType.UncompatibleTypes);
-	identifierUndefined.add(ErrorType.NotImplementedYet);
-
-	LinkedList<ErrorType> notImplementedYet = new LinkedList<ErrorType>();
-	notImplementedYet.add(ErrorType.IdentifierRedefenition);
-	notImplementedYet.add(ErrorType.IdentifierUndefined);
-	notImplementedYet.add(ErrorType.UncompatibleTypes);
-	notImplementedYet.add(ErrorType.ParamCount);
-
-	LinkedList<ErrorType> paramCount = new LinkedList<ErrorType>();
-	paramCount.add(ErrorType.NotImplementedYet);
-
-	compatibilityMap.put(ErrorType.IdentifierRedefenition, identifierRedefenition);
-	compatibilityMap.put(ErrorType.UncompatibleTypes, uncompatibleTypes);
-	compatibilityMap.put(ErrorType.IdentifierUndefined, identifierUndefined);
-	compatibilityMap.put(ErrorType.NotImplementedYet, notImplementedYet);
-	compatibilityMap.put(ErrorType.ParamCount, paramCount);
     }
 
     public ErrorHandler(Source src) {
@@ -105,17 +77,6 @@ public final class ErrorHandler {
 	return errors.contains(error);
     }
 
-    public boolean isPermitted(List<ErrorType> returnErrorTypes) {
-	for (ErrorType errorType : returnErrorTypes) {
-	    for (Error error : errors) {
-		if (hasErrorCompatibility(errorType, error.getErrorType())) {
-		    return false;
-		}
-	    }
-	}
-	return true;
-    }
-
     public boolean hasErrors() {
 	return errors.size() > 0 ? true : false;
     }
@@ -123,11 +84,6 @@ public final class ErrorHandler {
     // Найти совместимость err1 и err2
     // Совместимость ошибок это когда одна ошибка не является следствием другой
     // ошибки и может быть обнаружены независимо
-    public boolean hasErrorCompatibility(ErrorType err1, ErrorType err2) {
-	List<ErrorType> errTypes = compatibilityMap.get(err2);
-
-	return errTypes.contains(err1);
-    }
 
     private void setInfoAboutError(ParseError error) {
 	String errorLine = src.getLine(error.getLineNo());
@@ -149,14 +105,12 @@ public final class ErrorHandler {
 	switch (programState)
 	    {
 	    case SyntaxChecked:
-		if (hasErrors()) {
+		if (hasErrors()) 
 		    throw new Halt();
-		}
 		break;
 	    case SemanticChecked:
-		if (hasErrors()) {
+		if (hasErrors()) 
 		    throw new Halt();
-		}
 		break;
 	    }
     }

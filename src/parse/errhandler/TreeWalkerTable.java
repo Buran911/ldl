@@ -8,12 +8,12 @@ import generation.walkers.walkers.IdRedefinedChecker;
 import generation.walkers.walkers.IdTableFiller;
 import generation.walkers.walkers.IdTableMaker;
 import generation.walkers.walkers.PositionEstimater;
+import generation.walkers.walkers.TemplateEqClassesFiller;
+import generation.walkers.walkers.TemplateTypeFiller;
 import generation.walkers.walkers.TypeMismatchChecker;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import antlr.collections.impl.LList;
 
 //TODO Сделать запуск walker'ов исходя из списка возможных для запуска и возможность вычеркивать волкеров из списка возможных
 
@@ -27,54 +27,41 @@ public class TreeWalkerTable {
     private List<Cell> unreachableCells;
 
     static List<TreeWalker> realWalkers;
+
+    public static List<TreeWalker> getRealWalkers() {
+	return realWalkers;
+    }
+
+    public static void setRealWalkers(List<TreeWalker> realWalkers) {
+	TreeWalkerTable.realWalkers = realWalkers;
+    }
+
+    public static boolean tableContains(Class<? extends TreeWalker> classe) {
+	for (Cell cell : table)
+	    if (cell.getWalker() == classe)
+		return true;
+	return false;
+    }
+
     static {
 	TREETABLE = new LinkedList<Cell>();
 
-	TREETABLE.add(new Cell(PositionEstimater.class, null, new LinkedList<ErrorType>()));
-
-	LinkedList<Class<? extends TreeWalker>> fic = new LinkedList<Class<? extends TreeWalker>>();
-	fic.add(PositionEstimater.class);
-	TREETABLE.add(new Cell(FunctionalImplementedChecker.class, fic, new LinkedList<ErrorType>()));
-
-	LinkedList<Class<? extends TreeWalker>> tm = new LinkedList<Class<? extends TreeWalker>>();
-	tm.add(PositionEstimater.class);
-	TREETABLE.add(new Cell(IdTableMaker.class, tm, new LinkedList<ErrorType>()));
-
-	LinkedList<Class<? extends TreeWalker>> irc = new LinkedList<Class<? extends TreeWalker>>();
-	irc.add(PositionEstimater.class);
-	TREETABLE.add(new Cell(IdRedefinedChecker.class, irc, new LinkedList<ErrorType>()));
-
-	LinkedList<Class<? extends TreeWalker>> indc = new LinkedList<Class<? extends TreeWalker>>();
-	indc.add(IdTableMaker.class);
-	TREETABLE.add(new Cell(IdNotDefinedChecker.class, indc, new LinkedList<ErrorType>()));
-
-	LinkedList<Class<? extends TreeWalker>> itf = new LinkedList<Class<? extends TreeWalker>>();
-	itf.add(IdNotDefinedChecker.class);
-	LinkedList<ErrorType> itfe = new LinkedList<ErrorType>();
-	itfe.add(ErrorType.IdentifierUndefined);
-	TREETABLE.add(new Cell(IdTableFiller.class, itf, itfe));
-
-	LinkedList<Class<? extends TreeWalker>> id = new LinkedList<Class<? extends TreeWalker>>();
-	id.add(IdNotDefinedChecker.class);
-	LinkedList<ErrorType> ide = new LinkedList<ErrorType>();
-	ide.add(ErrorType.IdentifierUndefined);
-	TREETABLE.add(new Cell(IdConvertor.class, id, ide));
-
-	LinkedList<Class<? extends TreeWalker>> tmc = new LinkedList<Class<? extends TreeWalker>>();
-	tmc.add(IdTableFiller.class);
-	tmc.add(IdConvertor.class);
-	tmc.add(IdRedefinedChecker.class);
-	LinkedList<ErrorType> tmce = new LinkedList<ErrorType>();
-	tmce.add(ErrorType.IdentifierRedefenition);
-	tmce.add(ErrorType.IdentifierUndefined);
-	TREETABLE.add(new Cell(TypeMismatchChecker.class, tmc, tmce));
+	TREETABLE.add(new Cell(PositionEstimater.class));
+	TREETABLE.add(new Cell(FunctionalImplementedChecker.class).addPre(PositionEstimater.class));
+	TREETABLE.add(new Cell(IdTableMaker.class).addPre(PositionEstimater.class));
+	TREETABLE.add(new Cell(IdRedefinedChecker.class).addPre(PositionEstimater.class));
+	TREETABLE.add(new Cell(IdNotDefinedChecker.class).addPre(IdTableMaker.class));
+	TREETABLE.add(new Cell(IdTableFiller.class).addPre(IdNotDefinedChecker.class).addErr(ErrorType.IdentifierUndefined));
+	TREETABLE.add(new Cell(IdConvertor.class).addPre(IdNotDefinedChecker.class).addErr(ErrorType.IdentifierUndefined));
+	TREETABLE.add(new Cell(TypeMismatchChecker.class).addPre(IdTableFiller.class).addPre(IdConvertor.class).addPre(IdRedefinedChecker.class)
+		.addErr(ErrorType.IdentifierRedefenition).addErr(ErrorType.IdentifierUndefined));
+	TREETABLE.add(new Cell(TemplateEqClassesFiller.class).addPre(TypeMismatchChecker.class).addErr(ErrorType.IdentifierRedefenition).addErr(ErrorType.IdentifierUndefined));
+	TREETABLE.add(new Cell(TemplateTypeFiller.class).addPre(TypeMismatchChecker.class).addErr(ErrorType.IdentifierRedefenition).addErr(ErrorType.IdentifierUndefined));
     }
 
     {
 	table = new LinkedList<Cell>();
-
 	unreachableCells = new LinkedList<Cell>();
-
 	realWalkers = new LinkedList<TreeWalker>();
     }
 
@@ -84,14 +71,10 @@ public class TreeWalkerTable {
     public static List<Class<? extends TreeWalker>> getListOfPossibleWalkers(List<TreeWalker> walkers) {
 	TreeWalkerTable treeWalkerTable = new TreeWalkerTable();
 	List<Class<? extends TreeWalker>> returnList = new LinkedList<Class<? extends TreeWalker>>();
-
 	treeWalkerTable.deleteUnusedWalkers(walkers);
 	treeWalkerTable.deleteUnreachableWalkers();
-
-	for (TreeWalker tw : treeWalkerTable.getCleanListOfWalkers(walkers)) {
+	for (TreeWalker tw : treeWalkerTable.getCleanListOfWalkers(walkers)) 
 	    returnList.add(tw.getClass());
-	}
-
 	return returnList;
     }
 
@@ -102,20 +85,6 @@ public class TreeWalkerTable {
 		    realWalkers.add(walker);
 	walkers = realWalkers;
 	return realWalkers;
-    }
-
-    public static List<TreeWalker> getCleanTreeWalkerList(List<TreeWalker> walkers) {
-	TreeWalkerTable twt = new TreeWalkerTable();
-	twt.deleteUnusedWalkers(walkers);
-	twt.deleteUnreachableWalkers();
-	return twt.getCleanListOfWalkers(walkers);
-    }
-
-    public static List<Cell> getCleanTable(List<TreeWalker> walkers) {
-	TreeWalkerTable twt = new TreeWalkerTable();
-	twt.deleteUnusedWalkers(walkers);
-	twt.deleteUnreachableWalkers();
-	return twt.table;
     }
 
     private void deleteUnusedWalkers(List<TreeWalker> walkers) {
@@ -161,28 +130,15 @@ public class TreeWalkerTable {
 
     public static boolean removeByError(ErrorType errorType) {
 	boolean result = false;
-	// 1.Найти элемент по ошибке
-	// Необходимые ингридиенты : ошибка , список walker'ов которые реально
-	// запускаются
-	// Необходимо найти все классы , на которые влияет ошибка
-	//
 	List<Cell> tempTable = new LinkedList<Cell>();
 	List<TreeWalker> tempWalkers = new LinkedList<TreeWalker>();
-	
-	
-	// static List<TreeWalker> realWalkers;
 	for (TreeWalker temp : realWalkers) {
-
 	    Cell cell = new Cell();
 	    cell = getCellByClass(temp.getClass(), table);
-
 	    if (!cell.getErrors().contains(errorType)) {
 		tempTable.add(cell);
 		tempWalkers.add(temp);
 		result = true;
-	    }
-	    else {
-		System.out.println(cell.getWalker() + " deleted");
 	    }
 	}
 	table = tempTable;
@@ -196,11 +152,9 @@ public class TreeWalkerTable {
      * возвращает -1
      */
     private static int indexOf(Class<? extends TreeWalker> cl) {
-	for (int i = 0; i < TREETABLE.size(); i++) {
-	    if (TREETABLE.get(i).getWalker() == cl) {
+	for (int i = 0; i < TREETABLE.size(); i++) 
+	    if (TREETABLE.get(i).getWalker() == cl) 
 		return i;
-	    }
-	}
 	return -1;
     }
 }
