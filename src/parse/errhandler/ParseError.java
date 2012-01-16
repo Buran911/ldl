@@ -1,6 +1,5 @@
 package parse.errhandler;
 
-
 /**
  * Класс содержит общие данные об ошибке: класс, тип, локализацию, контекст,
  * комментарии по возможному решению
@@ -17,9 +16,9 @@ public class ParseError extends Error {
     private Integer errorPos;
     private Integer contextPos;
     private String info;
-    
-    public ParseError() {
 
+    public ParseError() {
+	super();
     }
 
     public ParseError(ErrorType errorType, Integer lineNo, Integer columnNo) {
@@ -72,7 +71,7 @@ public class ParseError extends Error {
     public void setContext(String context) {
 	this.context = context;
     }
-    
+
     public String getFileName() {
 	return fileName;
     }
@@ -130,5 +129,23 @@ public class ParseError extends Error {
 	else if (!errorPos.equals(other.errorPos))
 	    return false;
 	return true;
+    }
+
+    public ParseError clone(){
+	ParseError pE = new ParseError();
+	
+	pE.lineNo = lineNo;
+	pE.columnNo = columnNo;
+	pE.errorLine = errorLine;
+	pE.context = context;
+	pE.fileName = fileName;
+	pE.errorPos = errorPos;
+	pE.contextPos = contextPos;
+	pE.info = info;
+	
+	pE.errorClass = ErrorType.getErrorClass(errorType);
+	pE.errorType = errorType;
+	
+	return pE;
     }
 }

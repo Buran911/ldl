@@ -17,7 +17,7 @@ public class Application {
 	try {
 	    app.readFiles();
 	    app.parseAndCheckErrors();
-	    app.generateEQ();
+//	    app.generateEQ();
 //	    app.makeQuery();
 //	    app.writeYAML();
 	    logger.info("Работа приложения завершена корректно. Результаты в папке out.");

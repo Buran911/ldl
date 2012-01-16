@@ -124,6 +124,7 @@ public class App {
 	IdTable idTable = new IdTable();
 	WalkerRunner runner = new WalkerRunner(errh, treeSemantic);
 
+	runner.add(new TypeMismatchChecker(new IdParsigStrategy(), errh));
 	runner.add(new PositionEstimater(new IdParsigStrategy()));
 	runner.add(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
 	runner.add(new IdRedefinedChecker(new IdParsigStrategy(), errh));
@@ -131,7 +132,7 @@ public class App {
 	runner.add(new IdTableFiller(new IdParsigStrategy(), idTable));
 	runner.add(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
 	runner.add(new IdConvertor(new IdParsigStrategy(), idTable));
-	runner.add(new TypeMismatchChecker(new IdParsigStrategy(), errh));
+
 
 	runner.run();
 	errh.printErrors();

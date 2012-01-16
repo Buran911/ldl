@@ -1,6 +1,6 @@
 package parse.errhandler;
 
-public abstract class Error {
+public abstract class Error implements Cloneable {
     private boolean isParseError;
     private boolean isRuntimeError;
     protected ErrorClass errorClass;
@@ -40,4 +40,7 @@ public abstract class Error {
 
     @Override
     public abstract boolean equals(Object obj);
+    
+    @Override
+    public abstract Error clone();
 }

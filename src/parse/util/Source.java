@@ -13,7 +13,7 @@ import java.util.List;
  * 
  * @author hindu
  * */
-public class Source {
+public class Source implements Cloneable {
     private ArrayList<LDLfile> files = new ArrayList<LDLfile>();
 
     public Source(String... arg) {
@@ -34,7 +34,7 @@ public class Source {
 
     public String getProgram() {
 	String program = "";
-	for(LDLfile file : files ){
+	for (LDLfile file : files) {
 	    program += file.getFileData();
 	}
 	return program;
@@ -48,25 +48,25 @@ public class Source {
 
     public Integer getLineNo(Integer globalLineNo) {
 	LDLfile file = getFile(globalLineNo);
-	
+
 	return file.getLineNo(globalLineNo);
     }
 
     public String getLineContext(Integer globalLineNo) {
 	LDLfile file = getFile(globalLineNo);
-	
+
 	return file.getLineContext(globalLineNo);
     }
 
     public Integer getLineContextNo(Integer globalLineNo) {
 	LDLfile file = getFile(globalLineNo);
-	
+
 	return file.getLineContextNo(globalLineNo);
     }
 
     public String getFileName(Integer globalLineNo) {
 	LDLfile file = getFile(globalLineNo);
-	
+
 	return file.getFileName();
     }
 
@@ -90,5 +90,12 @@ public class Source {
 	    file.setBeginIndex(beginIndex);
 	    file.setEndIndex(endIndex);
 	}
+    }
+
+    public Source clone() {
+	Source src = new Source();
+	src.files = files;
+
+	return src;
     }
 }

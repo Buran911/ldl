@@ -15,33 +15,13 @@ import generation.walkers.walkers.TypeMismatchChecker;
 import java.util.LinkedList;
 import java.util.List;
 
-//TODO Сделать запуск walker'ов исходя из списка возможных для запуска и возможность вычеркивать волкеров из списка возможных
-
 public class TreeWalkerTable {
     public final static List<Cell> TREETABLE;// Таблица где все
 					     // зависимости
 					     // walker'ов (одна для всех)
-    public static List<Cell> table; // Список walker'ов , которые будут
-				    // использоватьстя
-				    // в программе
-    private List<Cell> unreachableCells;
+    List<Cell> table;
 
-    static List<TreeWalker> realWalkers;
-
-    public static List<TreeWalker> getRealWalkers() {
-	return realWalkers;
-    }
-
-    public static void setRealWalkers(List<TreeWalker> realWalkers) {
-	TreeWalkerTable.realWalkers = realWalkers;
-    }
-
-    public static boolean tableContains(Class<? extends TreeWalker> classe) {
-	for (Cell cell : table)
-	    if (cell.getWalker() == classe)
-		return true;
-	return false;
-    }
+    List<TreeWalker> walkers;
 
     static {
 	TREETABLE = new LinkedList<Cell>();
@@ -61,33 +41,37 @@ public class TreeWalkerTable {
 
     {
 	table = new LinkedList<Cell>();
-	unreachableCells = new LinkedList<Cell>();
-	realWalkers = new LinkedList<TreeWalker>();
     }
 
-    private TreeWalkerTable() {
+    private TreeWalkerTable(List<TreeWalker> walkers) {
+	this.walkers = walkers;
     }
 
-    public static List<Class<? extends TreeWalker>> getListOfPossibleWalkers(List<TreeWalker> walkers) {
-	TreeWalkerTable treeWalkerTable = new TreeWalkerTable();
-	List<Class<? extends TreeWalker>> returnList = new LinkedList<Class<? extends TreeWalker>>();
-	treeWalkerTable.deleteUnusedWalkers(walkers);
-	treeWalkerTable.deleteUnreachableWalkers();
-	for (TreeWalker tw : treeWalkerTable.getCleanListOfWalkers(walkers)) 
-	    returnList.add(tw.getClass());
-	return returnList;
+    public static TreeWalkerTable getInstance(List<TreeWalker> walkers) {
+	TreeWalkerTable twt = new TreeWalkerTable(walkers);
+	twt.deleteUnusedWalkers();
+	twt.deleteUnreachableWalkers();
+	twt.sortList();
+
+	return twt;
     }
 
-    private List<TreeWalker> getCleanListOfWalkers(List<TreeWalker> walkers) {
-	for (TreeWalker walker : walkers)
-	    for (Cell cell : table)
-		if (walker.getClass() == cell.getWalker())
-		    realWalkers.add(walker);
-	walkers = realWalkers;
-	return realWalkers;
+    private void sortList() {
+	List<Cell> tempTable = new LinkedList<Cell>();
+	for (Cell cell : TREETABLE)
+	    if (table.contains(cell))
+		tempTable.add(cell);
+	table = tempTable;
     }
 
-    private void deleteUnusedWalkers(List<TreeWalker> walkers) {
+    public boolean tableContains(Class<? extends TreeWalker> classe) {
+	for (Cell cell : TREETABLE)
+	    if (cell.getWalker() == classe)
+		return true;
+	return false;
+    }
+
+    private void deleteUnusedWalkers() {
 	for (TreeWalker walker : walkers) {
 	    int position = indexOf(walker.getClass());
 	    table.add(TREETABLE.get(position));
@@ -95,6 +79,8 @@ public class TreeWalkerTable {
     }
 
     private void deleteUnreachableWalkers() {
+	List<Cell> unreachableCells;
+	unreachableCells = new LinkedList<Cell>();
 	for (Cell cell : table)
 	    if (!isAbleToPerform(cell, table))
 		unreachableCells.add(cell);
@@ -104,7 +90,7 @@ public class TreeWalkerTable {
 
     // TODO сделать работу типов по стандартным методам
     /** Получение Cell из таблицы зная только Class */
-    private static Cell getCellByClass(Class<? extends TreeWalker> classe, List<Cell> table) {
+    private Cell getCellByClass(Class<? extends TreeWalker> classe, List<Cell> table) {
 	for (Cell cell : table)
 	    if (cell.getWalker() == classe)
 		return cell;
@@ -128,11 +114,13 @@ public class TreeWalkerTable {
 	}
     }
 
-    public static boolean removeByError(ErrorType errorType) {
+    
+    
+    public boolean removeByError(ErrorType errorType) {
 	boolean result = false;
 	List<Cell> tempTable = new LinkedList<Cell>();
 	List<TreeWalker> tempWalkers = new LinkedList<TreeWalker>();
-	for (TreeWalker temp : realWalkers) {
+	for (TreeWalker temp : walkers) {
 	    Cell cell = new Cell();
 	    cell = getCellByClass(temp.getClass(), table);
 	    if (!cell.getErrors().contains(errorType)) {
@@ -142,7 +130,7 @@ public class TreeWalkerTable {
 	    }
 	}
 	table = tempTable;
-	realWalkers = tempWalkers;
+	walkers = tempWalkers;
 	return result;
     }
 
@@ -152,9 +140,13 @@ public class TreeWalkerTable {
      * возвращает -1
      */
     private static int indexOf(Class<? extends TreeWalker> cl) {
-	for (int i = 0; i < TREETABLE.size(); i++) 
-	    if (TREETABLE.get(i).getWalker() == cl) 
+	for (int i = 0; i < TREETABLE.size(); i++)
+	    if (TREETABLE.get(i).getWalker() == cl)
 		return i;
 	return -1;
+    }
+
+    public void setWalkers(List<TreeWalker> walkers) {
+        this.walkers = walkers;
     }
 }

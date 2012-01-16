@@ -26,17 +26,17 @@ import application.util.Halt;
  * 
  * @author hindu
  * */
-public final class ErrorHandler {
+public final class ErrorHandler implements Cloneable {
     private LinkedList<Error> errors;
     private Source src;
     private Logger logger = Logger.getLogger(ErrorHandler.class);
     private ProgramState programState;
-    
-    public List<ErrorType> getErrors(){
+
+    public List<ErrorType> getErrors() {
 	List<ErrorType> returnList = new LinkedList<ErrorType>();
-	for(Error error:errors){
-	    if(error.isParseError() && (error.getErrorClass() == ErrorClass.semantic))
-	    returnList.add(error.getErrorType());
+	for (Error error : errors) {
+	    if (error.isParseError() && (error.getErrorClass() == ErrorClass.semantic))
+		returnList.add(error.getErrorType());
 	}
 	return returnList;
     }
@@ -105,11 +105,11 @@ public final class ErrorHandler {
 	switch (programState)
 	    {
 	    case SyntaxChecked:
-		if (hasErrors()) 
+		if (hasErrors())
 		    throw new Halt();
 		break;
 	    case SemanticChecked:
-		if (hasErrors()) 
+		if (hasErrors())
 		    throw new Halt();
 		break;
 	    }
@@ -120,5 +120,45 @@ public final class ErrorHandler {
 	ST st = group.getInstanceOf("errors");
 	st.add("errs", errors);
 	logger.error(st.render());
+    }
+
+    @Override
+    public int hashCode() {
+	final int prime = 31;
+	int result = 1;
+	result = prime * result + ((errors == null) ? 0 : errors.hashCode());
+	return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+	if (this == obj)
+	    return true;
+	if (obj == null)
+	    return false;
+	if (getClass() != obj.getClass())
+	    return false;
+	ErrorHandler other = (ErrorHandler) obj;
+	if (errors == null) {
+	    if (other.errors != null)
+		return false;
+	}
+	else if (!errors.equals(other.errors))
+	    return false;
+	return true;
+    }
+
+    @Override
+    public ErrorHandler clone() {
+	ErrorHandler eH = new ErrorHandler(null);
+
+	eH.errors = new LinkedList<Error>();
+	for(Error error:errors){
+	eH.errors.add(error);
+	}
+	eH.programState = programState;
+	eH.src = src.clone();
+
+	return eH;
     }
 }

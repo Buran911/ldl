@@ -6,6 +6,10 @@ public class RuntimeError extends Error {
     private Exception exception;
     private String info;
 
+    public RuntimeError() {
+	super();
+    }
+
     public RuntimeError(ErrorType errorType, Exception exception, String info) {
 	super();
 	this.errorClass = ErrorType.getErrorClass(errorType);
@@ -67,4 +71,13 @@ public class RuntimeError extends Error {
 	return true;
     }
 
+    public RuntimeError clone() {
+	RuntimeError rE = new RuntimeError();
+	rE.errorClass = ErrorType.getErrorClass(errorType);
+	rE.errorType = errorType;
+	rE.exception = exception;
+	rE.info = info;
+
+	return rE;
+    }
 }
