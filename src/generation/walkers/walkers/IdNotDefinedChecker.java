@@ -253,12 +253,4 @@ public class IdNotDefinedChecker extends TreeWalker implements Checker{
 		    var.getColumnNo(), "Идентификатор " + id.getName() + " не определен"));
 	}
     }
-
-    @Override
-    public List<ErrorType> getErrorTypes() {
-	LinkedList<ErrorType> errorType = new LinkedList<ErrorType>();
-	errorType.add(ErrorType.IdentifierUndefined);
-	
-	return errorType;
-    }
 }

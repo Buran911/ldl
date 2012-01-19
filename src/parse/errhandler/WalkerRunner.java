@@ -24,70 +24,29 @@ public class WalkerRunner {
     }
 
     public void run() {
-
-	List<TreeWalker> tempList = new LinkedList<TreeWalker>();
-	for (TreeWalker tw : walkerList)
-	    tempList.add(tw);
-
 	TreeWalkerTable twt = TreeWalkerTable.getInstance(walkerList);
-	int i = 0;
-	Cell cell = new Cell();
 	ErrorHandler errh2 = errh.clone();
-	while (i < twt.table.size()) {
-	    cell = twt.table.get(i);
-	    System.out.println("cell - " + cell.getWalker().getSimpleName());
-	    twt.table.remove(0);
-	    for (TreeWalker tw : walkerList) {
-		System.out.println("tw - " + tw.getClass().getSimpleName());
-		if (cell.getWalker() == tw.getClass()) {
-
+	for (Cell cell : twt.getTable()) {
+	    if (cell.isPassed())
+		break;
+	    for (TreeWalker tw : walkerList)
+		if ((cell.getWalker() == tw.getClass()) && !cell.isPassed()) {
+		    System.out.println(tw.getClass().getSimpleName() + " начинает работать");
 		    tree.accept(tw);
-		    tempList.remove(tw);
-		    twt.setWalkers(tempList);
-		    
-		    if (!errh2.equals(errh)) {
+		    System.out.println(tw.getClass().getSimpleName() + " отработал");
+		    cell.setPassed(true);
+		    if (!errh2.equals(errh)){
+			System.out.println("Найдена ошибка");
 			for (ErrorType et : errh.getErrors())
 			    twt.removeByError(et);
-			errh2 = errh.clone();
 		    }
+		    errh2 = errh.clone();
 		    break;
 		}
-	    }
-	    walkerList = tempList;
+
 	}
-	// boolean success = false;
-	//
-	// while (!success) {
-	// for (Cell cell : twt.table) {
-	// for (TreeWalker tw : walkerList) {
-	// if (cell.getWalker() == tw.getClass()) {
-	// tree.accept(tw);
-	// }
-	// }
-	// }
-	// }
-
-	// while (iter.hasNext()) {
-	// Cell cell = iter.next();
-	// System.out.println("--- " + cell.getWalker().getSimpleName());
-	// for (TreeWalker tw : walkerList) {
-	// System.out.println("	 --- " + tw.getClass().getSimpleName());
-	// if (cell.getWalker() == tw.getClass()) {
-	// System.out.println(tw.getClass().getSimpleName() + " work");
-	// tree.accept(tw);
-	// if (!errh.equals(errh2)) {
-	// for (ErrorType et : errh.getErrors()) {
-	// twt.removeByError(et);
-	// iter = twt.table.iterator();
-	// }
-	// errh2 = errh.clone();
-	// }
-	// break;
-	// }
-	// }
-	// }
+	System.out.println();
     }
-
     public void add(TreeWalker walker) {
 	walkerList.add(walker);
     }

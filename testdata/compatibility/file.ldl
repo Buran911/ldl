@@ -1,6 +1,10 @@
 context Payer{
-	inn instanceof String;
-	inn instanceof String;
---	binn instanceof Integer;
+	inn instanceof Integer;
+--	inn instanceof String;
+	binn instanceof Integer;
+	constr();
+}
+
+Payer::constr(){
 	inn = binn;
 }

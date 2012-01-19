@@ -16,10 +16,10 @@ public class Application {
 	App app = new App(args);
 	try {
 	    app.readFiles();
-	    app.parseAndCheckErrors();
-//	    app.generateEQ();
-//	    app.makeQuery();
-//	    app.writeYAML();
+//	    app.parseAndCheckErrors();
+	    app.generateEQ();
+	    app.makeQuery();
+	    app.writeYAML();
 	    logger.info("Работа приложения завершена корректно. Результаты в папке out.");
 	} catch (Halt halt) {
 	    logger.error("Ошибка выполнения приложения. Stack trace в логе.");

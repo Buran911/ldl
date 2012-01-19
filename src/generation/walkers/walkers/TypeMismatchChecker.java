@@ -277,11 +277,4 @@ public class TypeMismatchChecker extends TreeWalker implements Checker {
 	// Empty
 
     }
-
-    public List<ErrorType> getErrorTypes() {
-	LinkedList<ErrorType> errorType = new LinkedList<ErrorType>();
-	errorType.add(ErrorType.UncompatibleTypes);
-	
-	return errorType;
-    }
 }

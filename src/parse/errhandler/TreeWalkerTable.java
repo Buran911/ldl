@@ -16,27 +16,30 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TreeWalkerTable {
-    public final static List<Cell> TREETABLE;// “аблица где все
-					     // зависимости
-					     // walker'ов (одна дл€ всех)
-    List<Cell> table;
+    public static final List<Cell> TREETABLE;// “аблица где все
+				       // зависимости
+				       // walker'ов (одна дл€ всех)
+    private List<Cell> table;
 
-    List<TreeWalker> walkers;
+    private final List<TreeWalker> walkers;
+
+    boolean errorCheck = false;
 
     static {
 	TREETABLE = new LinkedList<Cell>();
 
-	TREETABLE.add(new Cell(PositionEstimater.class));
-	TREETABLE.add(new Cell(FunctionalImplementedChecker.class).addPre(PositionEstimater.class));
-	TREETABLE.add(new Cell(IdTableMaker.class).addPre(PositionEstimater.class));
-	TREETABLE.add(new Cell(IdRedefinedChecker.class).addPre(PositionEstimater.class));
-	TREETABLE.add(new Cell(IdNotDefinedChecker.class).addPre(IdTableMaker.class));
-	TREETABLE.add(new Cell(IdTableFiller.class).addPre(IdNotDefinedChecker.class).addErr(ErrorType.IdentifierUndefined));
-	TREETABLE.add(new Cell(IdConvertor.class).addPre(IdNotDefinedChecker.class).addErr(ErrorType.IdentifierUndefined));
+	TREETABLE.add(new Cell(PositionEstimater.class).addPost(FunctionalImplementedChecker.class).addPost(IdTableMaker.class).addPost(IdRedefinedChecker.class));
+	TREETABLE.add(new Cell(FunctionalImplementedChecker.class).addPre(PositionEstimater.class).setChecker(true));
+	TREETABLE.add(new Cell(IdTableMaker.class).addPre(PositionEstimater.class).addPost(IdNotDefinedChecker.class));
+	TREETABLE.add(new Cell(IdRedefinedChecker.class).addPre(PositionEstimater.class).setChecker(true));
+	TREETABLE.add(new Cell(IdNotDefinedChecker.class).addPre(IdTableMaker.class).addPost(IdConvertor.class).addPost(IdTableFiller.class).setChecker(true));
+	TREETABLE.add(new Cell(IdTableFiller.class).addPre(IdNotDefinedChecker.class).addPost(TypeMismatchChecker.class).addErr(ErrorType.IdentifierUndefined));
+	TREETABLE.add(new Cell(IdConvertor.class).addPre(IdNotDefinedChecker.class).addPost(TemplateEqClassesFiller.class).addErr(ErrorType.IdentifierUndefined));
 	TREETABLE.add(new Cell(TypeMismatchChecker.class).addPre(IdTableFiller.class).addPre(IdConvertor.class).addPre(IdRedefinedChecker.class)
-		.addErr(ErrorType.IdentifierRedefenition).addErr(ErrorType.IdentifierUndefined));
-	TREETABLE.add(new Cell(TemplateEqClassesFiller.class).addPre(TypeMismatchChecker.class).addErr(ErrorType.IdentifierRedefenition).addErr(ErrorType.IdentifierUndefined));
-	TREETABLE.add(new Cell(TemplateTypeFiller.class).addPre(TypeMismatchChecker.class).addErr(ErrorType.IdentifierRedefenition).addErr(ErrorType.IdentifierUndefined));
+		.addErr(ErrorType.IdentifierRedefenition).addErr(ErrorType.IdentifierUndefined).setChecker(true));
+	TREETABLE.add(new Cell(TemplateTypeFiller.class).addPost(TemplateEqClassesFiller.class));
+	TREETABLE.add(new Cell(TemplateEqClassesFiller.class).addPre(TemplateTypeFiller.class).addPre(IdConvertor.class));
+
     }
 
     {
@@ -49,8 +52,58 @@ public class TreeWalkerTable {
 
     public static TreeWalkerTable getInstance(List<TreeWalker> walkers) {
 	TreeWalkerTable twt = new TreeWalkerTable(walkers);
-	twt.deleteUnusedWalkers();
-	twt.deleteUnreachableWalkers();
+	for (TreeWalker walker : walkers) {
+	    System.out.println(" -- " + walker.getClass().getSimpleName());
+	    if (walker instanceof Checker) {
+		twt.errorCheck = true;
+		break;
+	    }
+	}
+
+	if (twt.errorCheck) {
+	    twt.deleteUnusedWalkers();
+	    twt.deleteUnreachableWalkers();
+	}
+	else {
+	    List<Cell> tempTable = new LinkedList<Cell>();
+	    for(Cell cell : TREETABLE){
+		twt.table.add(cell.clone());
+	    }
+	    for (Cell cell : twt.table) {
+		System.out.println("cell = " + cell.getWalker().getSimpleName());
+		if (cell.isChecker()) {
+		    //pre
+		    for (Class<? extends TreeWalker> classe : cell.getPreproc()) {
+			System.out.println("classe = " + classe.getSimpleName());
+			Cell precell = twt.getCellByClass(classe, twt.table);
+			precell.remPost();
+			for (Class<? extends TreeWalker> postclass : cell.getPostproc()) {
+			    System.out.println("postclass = " + postclass.getSimpleName());
+			    precell.addPost(postclass);
+			}
+		    }
+		    
+		    //post
+		    for (Class<? extends TreeWalker> classe : cell.getPostproc()) {
+			System.out.println("classe = " + classe.getSimpleName());
+			Cell postcell = twt.getCellByClass(classe, twt.table);
+
+			postcell.remPre();
+			for (Class<? extends TreeWalker> preclass : cell.getPreproc()) {
+			    System.out.println("postclass = " + preclass.getSimpleName());
+			    postcell.addPre(preclass);
+			}
+			
+			
+		    }
+		    
+		    
+		}else{
+		    tempTable.add(cell);
+		}
+	    }
+	    System.out.println("ende");
+	}
 	twt.sortList();
 
 	return twt;
@@ -101,8 +154,8 @@ public class TreeWalkerTable {
     private boolean isAbleToPerform(Cell cell, List<Cell> table) {
 	if (cell == null)
 	    return false;
-	List<Class<? extends TreeWalker>> predecessors = new LinkedList<Class<? extends TreeWalker>>();
-	predecessors = cell.getPreprocesses();
+	List<Class<? extends TreeWalker>> predecessors = cell.getPreproc();
+
 	if (predecessors == null)
 	    return true;
 	else {
@@ -114,23 +167,23 @@ public class TreeWalkerTable {
 	}
     }
 
-    
-    
     public boolean removeByError(ErrorType errorType) {
 	boolean result = false;
-	List<Cell> tempTable = new LinkedList<Cell>();
-	List<TreeWalker> tempWalkers = new LinkedList<TreeWalker>();
+
 	for (TreeWalker temp : walkers) {
+
 	    Cell cell = new Cell();
+
 	    cell = getCellByClass(temp.getClass(), table);
-	    if (!cell.getErrors().contains(errorType)) {
-		tempTable.add(cell);
-		tempWalkers.add(temp);
+
+	    if (cell.getErrors().contains(errorType)) {
+
+		cell.setPassed(true);
+
 		result = true;
+
 	    }
 	}
-	table = tempTable;
-	walkers = tempWalkers;
 	return result;
     }
 
@@ -146,7 +199,7 @@ public class TreeWalkerTable {
 	return -1;
     }
 
-    public void setWalkers(List<TreeWalker> walkers) {
-        this.walkers = walkers;
+    public List<Cell> getTable() {
+	return table;
     }
 }
