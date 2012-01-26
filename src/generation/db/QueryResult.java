@@ -3,6 +3,8 @@ package generation.db;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * Класс содержит результат запроса к БД.
@@ -35,5 +37,14 @@ public class QueryResult {
 
     public HashMap<String, List<String>> getQueryResult() {
 	return queryResult;
+    }
+    
+    public Properties getProperties(){
+	Properties property = new Properties();
+	for(Map.Entry<String, List<String>> entry : queryResult.entrySet()){
+	    property.put(entry.getKey(), entry.getValue().get(0));
+	}
+	
+	return property;
     }
 }

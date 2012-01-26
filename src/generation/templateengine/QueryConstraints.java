@@ -16,12 +16,10 @@ public class QueryConstraints {
     private EqualityClass constPart;
     private List<EqualityClass> eqClasses;
     private Iterator<EqualityClass> itEqClass;
-    private boolean fistRun;
 
     {
 	eqClasses = new LinkedList<EqualityClass>();
 	itEqClass = eqClasses.iterator();
-	fistRun = true;
     }
 
     public EqualityClass getConstPart() {
@@ -83,13 +81,11 @@ public class QueryConstraints {
     }
 
     public boolean hasNext() {
-	if (fistRun) {
-	    fistRun = false;
-
-	    return true;
-	}
-
 	return itEqClass.hasNext();
+    }
+    
+    public boolean hasConstConstraints() {
+	return constPart.getConstraints().size() > 0;
     }
 
 }

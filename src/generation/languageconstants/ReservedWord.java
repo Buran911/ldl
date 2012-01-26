@@ -8,7 +8,10 @@ public enum ReservedWord {
     type("_type"),
     column("_column"),
     table("_table"),
-    visible("_visible");
+    visible("_visible"),
+    main("_main"),
+    params("_params"),
+    code("_code");
 
     private final String reservedWord;
 

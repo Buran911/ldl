@@ -31,8 +31,12 @@ import parse.parser.Parser;
 import parse.syntaxtree.SyntaxTree;
 import parse.util.Source;
 import application.util.CmdLineParser;
+import application.util.FilterRunner;
 import application.util.Halt;
+import application.util.PyFunctionRunner;
 import application.util.StackTrace;
+import application.util.ValueFilter;
+import application.util.VisibleFilter;
 import application.util.YamlWriter;
 
 /**
@@ -177,11 +181,25 @@ public class App {
 	}
 
     }
+    
+    // Фильтрация результатов, применение функций
+    public void postProcess() {
+	logger.info("Фильтрация результатов и постобработка.");
+	FilterRunner filterRunner = new FilterRunner(queryMaker.getQueryResults());
+	
+	filterRunner.addFilter( new VisibleFilter(table));
+	filterRunner.addFilter( new ValueFilter(policy));
+	
+	filterRunner.run();
+	
+	PyFunctionRunner pyRunner = new PyFunctionRunner(table, queryMaker.getQueryResults());
+	pyRunner.run();
+    }
 
     // запись результатов в yaml файлы
     public void writeYAML() {
 	logger.info("Запись YAML.");
-	YamlWriter yw = new YamlWriter(queryMaker.getQueryResults(), policy, table);
+	YamlWriter yw = new YamlWriter(queryMaker.getQueryResults());
 	yw.writeYAMLs();
     }
 

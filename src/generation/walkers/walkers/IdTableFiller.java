@@ -33,6 +33,7 @@ import parse.syntaxtree.nodes.srcExprAST;
 import generation.idtable.Database;
 import generation.idtable.IdTable;
 import generation.idtable.Identifier;
+import generation.idtable.PyFunction;
 import generation.languageconstants.ReservedWord;
 import generation.languageconstants.Type;
 import generation.walkers.TreeWalker;
@@ -40,6 +41,7 @@ import generation.walkers.WalkerStrategy;
 
 /**
  * Волкер заполняет информацию об источниках идентификаторов.
+ * 
  * @author hindu
  * */
 public class IdTableFiller extends TreeWalker {
@@ -201,21 +203,38 @@ public class IdTableFiller extends TreeWalker {
 
 	// заполняем данные об источнике
 	switch (id.getSrcType()) {
-    	case db:
-    	    Database db = new Database();
+    	    case db:
+    		Database db = new Database();
     
-    	    for (srcExprAST exp : block.getSrcExprs()) {
-    		if (exp.getFirstId().getId().contentEquals(ReservedWord.table.word())) {
-    		    db.setTable(((StringAST) exp.getLiteral()).getString());
+    		for (srcExprAST exp : block.getSrcExprs()) {
+    		    if (exp.getFirstId().getId().contentEquals(ReservedWord.table.word())) {
+    			db.setTable(((StringAST) exp.getLiteral()).getString());
+    		    }
+    
+    		    if (exp.getFirstId().getId().contentEquals(ReservedWord.column.word())) {
+    			db.setColumn(((StringAST) exp.getLiteral()).getString());
+    		    }
     		}
     
-    		if (exp.getFirstId().getId().contentEquals(ReservedWord.column.word())) {
-    		    db.setColumn(((StringAST) exp.getLiteral()).getString());
+    		id.setSrcData(db);
+    	    break;
+    	    
+    	    case function:
+    		PyFunction function = new PyFunction();
+    		
+    		for (srcExprAST exp : block.getSrcExprs()) {
+    		    if (exp.getFirstId().getId().contentEquals(ReservedWord.main.word())) {
+    			function.setMain(((StringAST) exp.getLiteral()).getString());
+		    }
+    		    if (exp.getFirstId().getId().contentEquals(ReservedWord.params.word())) {
+			function.setParams(((StringAST) exp.getLiteral()).getString());
+		    }
+    		    if (exp.getFirstId().getId().contentEquals(ReservedWord.code.word())) {
+			function.setCode(((StringAST) exp.getLiteral()).getString());
+		    }
     		}
-    	    }
-    
-    	    id.setSrcData(db);
-    
+    		
+    		id.setSrcData(function);
     	    break;
 	}
 
@@ -254,8 +273,7 @@ public class IdTableFiller extends TreeWalker {
 
     private srcExprAST findReservedWord(ReservedWord word, Iterator<srcExprAST> itExpr) {
 	srcExprAST expr = null;
-	while (itExpr.hasNext()
-		&& !((expr = itExpr.next()).getFirstId().getId().contentEquals(word.word())))
+	while (itExpr.hasNext() && !((expr = itExpr.next()).getFirstId().getId().contentEquals(word.word())))
 	    ;
 
 	if (expr.getFirstId().getId().contentEquals(word.word())) {
