@@ -47,4 +47,8 @@ public class QueryResult {
 	
 	return property;
     }
+    
+    public boolean isEmpty(){
+	return queryResult.isEmpty();
+    }
 }

@@ -13,9 +13,12 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.apache.log4j.Logger;
+
 public class PyFunctionRunner {
     private IdTable table;
     private List<QueryResult> queryResults;
+    private Logger logger = Logger.getLogger(PyFunctionRunner.class);
 
 
     public PyFunctionRunner(IdTable table, List<QueryResult> queryResults) {
@@ -28,11 +31,13 @@ public class PyFunctionRunner {
 	for(Identifier id : table.getIds()){
 	    if(id.getSrcType() == function){
 		for(QueryResult queryResult : queryResults){
-		    generation.idtable.PyFunction function = (generation.idtable.PyFunction)id.getSrcData();
-		    queryResult.addResult(id.getAlias(),
-			    evaluate(function.getMain(),
-				    function.getCode(),
-				    getParams(getParamsNames(function.getParams()), queryResult)));
+		    if(!queryResult.isEmpty()){
+			generation.idtable.PyFunction function = (generation.idtable.PyFunction)id.getSrcData();
+		    	queryResult.addResult(id.getAlias(),
+    			    evaluate(function.getMain(),
+    				    function.getCode(),
+    				    getParams(getParamsNames(function.getParams()), queryResult)));
+		    }
 		}
 	    }
 	}
@@ -46,9 +51,13 @@ public class PyFunctionRunner {
 	    Invocable invokeEngine = (Invocable) engine;
 	    result = invokeEngine.invokeFunction(main, params);
 	} catch (ScriptException e) {
-	    e.printStackTrace();
+	    logger.error("Ошибка с выполнением скрипта.");
+	    logger.trace( StackTrace.getStackTrace(e));
+	    throw new Halt();
 	} catch (NoSuchMethodException e) {
-	    e.printStackTrace();
+	    logger.error("Не найдена вызываемая функция в скрипте.");
+	    logger.trace( StackTrace.getStackTrace(e));
+	    throw new Halt();
 	}
 	
 	return result.toString();
