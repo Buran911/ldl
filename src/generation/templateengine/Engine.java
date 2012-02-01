@@ -33,6 +33,24 @@ public class Engine {
 
     public void generate() {
 	String selFrom = generateSelectFrom();
+	// FIXME коряво
+	if(!queryConstraints.hasNext()){   
+	    if(queryConstraints.hasConstConstraints()){
+		String where = generateWhere();
+    	    
+		String q = selFrom + where;
+		while(q.contains("\r\n\r\n")){
+		    q = q.replaceAll("\r\n\r\n", "\r\n");
+		}
+		
+		logger.trace("Query:\n" +q);
+		query.add(q);
+	    }
+	    else{
+		logger.trace("Query:\n" +selFrom);
+		query.add(selFrom);
+	    }
+	}
 	while (queryConstraints.hasNext()) {
 	    String where = generateWhere();
 

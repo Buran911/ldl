@@ -9,5 +9,6 @@
 	<classpathentry kind="lib" path="lib/ojdbc14.jar"/>
 	<classpathentry kind="lib" path="lib/sqlitejdbc-v056.jar"/>
 	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="lib/jython.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

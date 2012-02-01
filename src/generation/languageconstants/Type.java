@@ -7,5 +7,6 @@ package generation.languageconstants;
 public enum Type {
     db,
     set,
-    own
+    own,
+    function
 }

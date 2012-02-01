@@ -23,11 +23,6 @@
 		<layout class="org.apache.log4j.PatternLayout"> 
 			<param name="ConversionPattern" value="%m%n"/> 
 		</layout> 
-		<filter class="org.apache.log4j.varia.LevelRangeFilter">
-			<param name="LevelMax" value="trace"/>
-			<param name="LevelMin" value="trace"/>
-			<param name="AcceptOnMatch" value="true"/>
-		</filter>
 	</appender> 
 
 	<!-- -Dstdout=trace in JVM arg runs trace -->

@@ -19,6 +19,7 @@ public class Application {
 	    app.parseAndCheckErrors();
 	    app.generateEQ();
 	    app.makeQuery();
+	    app.postProcess();
 	    app.writeYAML();
 	    logger.info("Работа приложения завершена корректно. Результаты в папке out.");
 	} catch (Halt halt) {

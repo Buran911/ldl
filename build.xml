@@ -84,6 +84,9 @@
     		excludes="testcases/**, testcode/**" target="1.6" source="1.6"/>
     	
     	<!-- создание jar -->
+    	<copy todir="${build.classes}" verbose="Yes" overwrite="yes" >
+    		<fileset file="${src}/log4j.xml"/>
+    	</copy>
         <jar destfile="${releaseDir}/${jarFile}" basedir="${build.classes}">
         	<manifest>
         		<attribute name="Built-Time" value="${release date}"/>
@@ -97,7 +100,7 @@
     	<!-- копирование либ -->
     	<mkdir dir="${releaseDir}/lib"/>
     	<copy todir="${releaseDir}/lib" verbose="Yes" overwrite="yes" >
-    		<fileset dir="${lib}" includes="**/*.jar" excludes="junit.jar"/>
+    		<fileset dir="${lib}" includes="**/*.jar" excludes="junit.jar, cashe*"/>
     	</copy>
     	
     	<!-- копирование шаблонов -->

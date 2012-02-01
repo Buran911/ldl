@@ -6,3 +6,6 @@ generation/project
 .*
 testdata/test.ldl
 build
+log
+out
+lib/cachedir
