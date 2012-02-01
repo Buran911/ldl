@@ -1,7 +1,7 @@
 package application.util;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  * Класс фомирует Stack Trace ошибки и позволяет получить его в виде строки.
@@ -10,11 +10,9 @@ import java.io.PrintStream;
  * */
 public class StackTrace {
     public static String getStackTrace(Exception e) {
-	ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	PrintStream ps = new PrintStream(baos);
-	e.printStackTrace(ps);
-	ps.close();
+	StringWriter out = new StringWriter();
+	e.printStackTrace(new PrintWriter(out));
 	
-	return baos.toString();
+	return out.toString();
     }
 }
