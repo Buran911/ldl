@@ -40,7 +40,9 @@ import application.util.VisibleFilter;
 import application.util.YamlWriter;
 
 /**
- * Класс интегрирует модули приложения и инкапсулирует всю работу приложения на верхнем уровне.
+ * Класс интегрирует модули приложения и инкапсулирует всю работу приложения на
+ * верхнем уровне.
+ * 
  * @author hindu
  * */
 public class App {
@@ -54,12 +56,14 @@ public class App {
     private QueryMaker queryMaker;
     private IdTable table;
     private Logger logger = Logger.getLogger(App.class);
+    private String pythonDir;
 
     public App(String[] args) {
 	this.args = args;
     }
 
-    // считывание и подготовка исходных файлов и считывание и парсинг настроечного файла
+    // считывание и подготовка исходных файлов и считывание и парсинг
+    // настроечного файла
     public void readFiles() {
 	logger.info("Парсинг параметров командной строки.");
 	CmdLineParser cmdLineParser = new CmdLineParser(args);
@@ -68,27 +72,27 @@ public class App {
 	    logger.error("Не могу считать параметры командной строки");
 	    throw new Halt();
 	}
+	pythonDir = cmdLineParser.getPythonDir();
 	XMLParser parser = new XMLParser(cmdLineParser.getPropertyFile());
 	logger.info("Парсинг настроечного файла.");
-	logger.trace("property file:"+ cmdLineParser.getPropertyFile());
+	logger.trace("property file:" + cmdLineParser.getPropertyFile());
 	parser.parse();
-	
-	
+
 	logger.trace("connection string: " + parser.getConnectionString());
 	logger.trace("user: " + parser.getUser());
 	logger.trace("password: " + parser.getPassword());
 	logger.trace("policy: " + parser.getPolicy());
-	
+
 	connection = new DbConectionData();
 	connection.setConnectionString(parser.getConnectionString());
 	connection.setUser(parser.getUser());
 	connection.setPassword(parser.getPassword());
-	
-	if(parser.getPolicy() == null){
+
+	if (parser.getPolicy() == null) {
 	    // default policy
 	    policy = Policy.first;
 	}
-	else{
+	else {
 	    policy = Policy.valueOf(parser.getPolicy());
 	}
 	logger.trace("source file names: " + cmdLineParser.getLdlFiles());
@@ -103,7 +107,6 @@ public class App {
 	Parser parser = new Parser(src, errh);
 	logger.info("Парсинг исходных файлов.");
 	parser.parse();
-	
 
 	// Синтаксические ошибки
 	logger.info("Проверка синтаксических ошибок");
@@ -116,7 +119,7 @@ public class App {
 
 	logger.info("Проверка семантических ошибок.");
 	checkSemantics();
-	
+
 	// Семантические ошибки
 	if (errh.hasErrors()) {
 	    errh.printErrors();
@@ -124,28 +127,29 @@ public class App {
 	}
     }
 
-    // Проверяет семантическую правильность исходного кода, проверка идет по копиям объектов 
+    // Проверяет семантическую правильность исходного кода, проверка идет по
+    // копиям объектов
     private void checkSemantics() {
 
 	// TODO Сделать копию дерева
-	SyntaxTree treeSemantic = (SyntaxTree)tree.clone();
+	SyntaxTree treeSemantic = (SyntaxTree) tree.clone();
 	IdTable idTable = new IdTable();
-	
-	treeSemantic.accept( new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
+
+	treeSemantic.accept(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
 	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
 
 	treeSemantic.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
 
 	treeSemantic.accept(new IdTableMaker(new IdParsigStrategy(), idTable));
-	treeSemantic.accept(new IdTableFiller(new IdParsigStrategy(), idTable));
+	treeSemantic.accept(new IdTableFiller(new IdParsigStrategy(), idTable, pythonDir));
 	treeSemantic.accept(new IdConvertor(new IdParsigStrategy(), idTable));
 
 	treeSemantic.accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
 	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
 
     }
-    
-    // Предобработка AST и генерация по нему запросов. 
+
+    // Предобработка AST и генерация по нему запросов.
     public void generateEQ() {
 	logger.info("Обработка АСТ.");
 	table = new IdTable();
@@ -153,16 +157,15 @@ public class App {
 
 	tree.accept(new IdTableMaker(new IdParsigStrategy(), table));
 	tree.accept(new PositionEstimater(new IdParsigStrategy()));
-	tree.accept(new IdTableFiller(new IdParsigStrategy(), table));
+	tree.accept(new IdTableFiller(new IdParsigStrategy(), table,pythonDir));
 	tree.accept(new TemplateTypeFiller());
 	tree.accept(new IdConvertor(new IdParsigStrategy(), table));
-	tree.accept(new TemplateEqClassesFiller( qConstraints));
+	tree.accept(new TemplateEqClassesFiller(qConstraints));
 
 	engine = new Engine(new QueryData(table), qConstraints);
 	logger.info("Генерация запроса(-ов).");
 	engine.generate();
     }
-
 
     // Соединение с БД, запросы и обработка результата.
     public void makeQuery() {
@@ -172,26 +175,26 @@ public class App {
 	    queryMaker.makeQuerys();
 	} catch (ClassNotFoundException e) {
 	    logger.error("Не найден драйвер БД.");
-	    logger.trace( StackTrace.getStackTrace(e));
+	    logger.trace(StackTrace.getStackTrace(e));
 	    throw new Halt();
 	} catch (SQLException e) {
 	    logger.error("Ошибка в SQL запросе.");
-	    logger.trace( StackTrace.getStackTrace(e));
+	    logger.trace(StackTrace.getStackTrace(e));
 	    throw new Halt();
 	}
 
     }
-    
+
     // Фильтрация результатов, применение функций
     public void postProcess() {
 	logger.info("Фильтрация результатов и постобработка.");
 	FilterRunner filterRunner = new FilterRunner(queryMaker.getQueryResults());
-	
-	filterRunner.addFilter( new VisibleFilter(table));
-	filterRunner.addFilter( new ValueFilter(policy));
-	
+
+	filterRunner.addFilter(new VisibleFilter(table));
+	filterRunner.addFilter(new ValueFilter(policy));
+
 	filterRunner.run();
-	
+
 	PyFunctionRunner pyRunner = new PyFunctionRunner(table, queryMaker.getQueryResults());
 	pyRunner.run();
     }
