@@ -276,8 +276,8 @@ public class TopDownWalkingStrategy extends WalkerStrategy {
 
 	expr.getFirstId().accept(walker);
 
-	if (expr.getSecondId() != null) {
-	    expr.getSecondId().accept(walker);
+	for (IdentifierAST id : expr.getSecondIds()) {
+	    id.accept(walker);
 	}
 
 	if (expr.getSet() != null) {

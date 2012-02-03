@@ -1,5 +1,15 @@
 package generation.walkers.walkers;
 
+import generation.idtable.Database;
+import generation.idtable.IdTable;
+import generation.idtable.Identifier;
+import generation.idtable.PyFunction;
+import generation.languageconstants.ReservedWord;
+import generation.languageconstants.Type;
+import generation.walkers.TreeWalker;
+import generation.walkers.WalkerStrategy;
+
+import java.io.FileNotFoundException;
 import java.util.Iterator;
 
 import parse.syntaxtree.nodes.AttributeCallAST;
@@ -30,14 +40,8 @@ import parse.syntaxtree.nodes.VariableAST;
 import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
-import generation.idtable.Database;
-import generation.idtable.IdTable;
-import generation.idtable.Identifier;
-import generation.idtable.PyFunction;
-import generation.languageconstants.ReservedWord;
-import generation.languageconstants.Type;
-import generation.walkers.TreeWalker;
-import generation.walkers.WalkerStrategy;
+import parse.util.FileReader;
+import application.util.Halt;
 
 /**
  * ¬олкер заполн€ет информацию об источниках идентификаторов.
@@ -47,10 +51,12 @@ import generation.walkers.WalkerStrategy;
 public class IdTableFiller extends TreeWalker {
     private IdTable table;
     private String contextName;
+    private String pythonDir;
 
-    public IdTableFiller(WalkerStrategy strategy, IdTable table) {
+    public IdTableFiller(WalkerStrategy strategy, IdTable table, String pythonDir) {
 	super(strategy);
 	this.table = table;
+	this.pythonDir = pythonDir;
     }
 
     @Override
@@ -203,39 +209,51 @@ public class IdTableFiller extends TreeWalker {
 
 	// заполн€ем данные об источнике
 	switch (id.getSrcType()) {
-    	    case db:
-    		Database db = new Database();
-    
-    		for (srcExprAST exp : block.getSrcExprs()) {
-    		    if (exp.getFirstId().getId().contentEquals(ReservedWord.table.word())) {
-    			db.setTable(((StringAST) exp.getLiteral()).getString());
-    		    }
-    
-    		    if (exp.getFirstId().getId().contentEquals(ReservedWord.column.word())) {
-    			db.setColumn(((StringAST) exp.getLiteral()).getString());
-    		    }
-    		}
-    
-    		id.setSrcData(db);
-    	    break;
-    	    
-    	    case function:
-    		PyFunction function = new PyFunction();
-    		
-    		for (srcExprAST exp : block.getSrcExprs()) {
-    		    if (exp.getFirstId().getId().contentEquals(ReservedWord.main.word())) {
-    			function.setMain(((StringAST) exp.getLiteral()).getString());
+	case db:
+	    Database db = new Database();
+
+	    for (srcExprAST exp : block.getSrcExprs()) {
+		if (exp.getFirstId().getId().contentEquals(ReservedWord.table.word())) {
+		    db.setTable(((StringAST) exp.getLiteral()).getString());
+		}
+
+		if (exp.getFirstId().getId().contentEquals(ReservedWord.column.word())) {
+		    db.setColumn(((StringAST) exp.getLiteral()).getString());
+		}
+	    }
+
+	    id.setSrcData(db);
+	    break;
+
+	case function:
+	    PyFunction function = new PyFunction();
+
+	    for (srcExprAST exp : block.getSrcExprs()) {
+		if (exp.getFirstId().getId().contentEquals(ReservedWord.main.word())) {
+		    function.setMain(((StringAST) exp.getLiteral()).getString());
+		}
+		if (exp.getFirstId().getId().contentEquals(ReservedWord.params.word())) {
+		    for (IdentifierAST iden : exp.getSecondIds()) {
+			String ali = table.getId(iden.getId(), contextName).getAlias();
+			function.addParam(ali);
 		    }
-    		    if (exp.getFirstId().getId().contentEquals(ReservedWord.params.word())) {
-			function.setParams(((StringAST) exp.getLiteral()).getString());
+		}
+		if (exp.getFirstId().getId().contentEquals(ReservedWord.code.word())) {
+		    function.setCode(((StringAST) exp.getLiteral()).getString());
+		}
+		if (exp.getFirstId().getId().contentEquals(ReservedWord.codepath.word())) {
+		    try {
+			String path = getPath(((StringAST) exp.getLiteral()).getString());
+			String content = FileReader.readFile(path);
+			function.setCode(content);
+		    } catch (FileNotFoundException e) {
+			throw new Halt();
 		    }
-    		    if (exp.getFirstId().getId().contentEquals(ReservedWord.code.word())) {
-			function.setCode(((StringAST) exp.getLiteral()).getString());
-		    }
-    		}
-    		
-    		id.setSrcData(function);
-    	    break;
+		}
+	    }
+
+	    id.setSrcData(function);
+	    break;
 	}
 
 	// устанавливаем параметр _visible
@@ -280,7 +298,20 @@ public class IdTableFiller extends TreeWalker {
 
 	    return expr;
 	}
-
 	return null;
+    }
+
+    private String getPath(String codepath) {
+	String path;
+	if (pythonDir == null) {
+	    path = codepath;
+	}
+	else {
+	    if (!pythonDir.endsWith("/")) {
+		pythonDir += "/";
+	    }
+	    path = pythonDir + codepath;
+	}
+	return path;
     }
 }

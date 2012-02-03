@@ -1,13 +1,8 @@
 package parse.util;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.stringtemplate.v4.compiler.CodeGenerator.includeExpr_return;
 
 import application.util.StackTrace;
 
@@ -103,29 +98,9 @@ public class LDLfile {
     }
 
     private void readContent() throws FileNotFoundException {
-	String content = "";
-	BufferedReader in = null;
-
-	try {
-	    try {
-		in = new BufferedReader(new FileReader(new File(path)));
-		String line;
-		while ((line = in.readLine()) != null) {
-		    if (line.matches("[ \\t]+")) {
-			line = "";
-		    }
-		    content += line + "\n";
-		}
-	    } finally {
-		in.close();
-	    }
-
-	} catch (IOException e) {
-	    // FIXME тут поидее падать надобно.
-	    logger.error("Невозможно считать файл:" + path);
-	    logger.trace(StackTrace.getStackTrace(e));
-	}
-
+	String content = FileReader.readFile(path);
+	content = content.replaceFirst("^[ \\t]+\n", "\n");
+	content = content.replaceAll("\n[ \\t]+\n", "\n\n");
 	programLines = content.split("\n");
 	lineCount = programLines.length;
     }

@@ -11,7 +11,8 @@ public enum ReservedWord {
     visible("_visible"),
     main("_main"),
     params("_params"),
-    code("_code");
+    code("_code"),
+    codepath("_codepath");
 
     private final String reservedWord;
 

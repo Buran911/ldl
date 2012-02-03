@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 /**
  * Класс для парсинга параметров командной строки вида
  * "<program_name> -p <property_file_name.xml> -s <file1.ldl ... fileN.ldl>"
+ * 
  * @author exellent
  */
 public class CmdLineParser {
@@ -28,22 +29,25 @@ public class CmdLineParser {
     private String args[];
 
     @SuppressWarnings("static-access")
-    private Option property = OptionBuilder.withArgName("propertyFileName.xml").hasArgs(1)
-	    .isRequired().withDescription("файл, содержащий настройки Модуля ОКЭ ОПД").create("p");
+    private Option property = OptionBuilder.withArgName("propertyFileName.xml").hasArgs(1).isRequired().withDescription("файл, содержащий настройки Модуля ОКЭ ОПД").create("p");
 
     @SuppressWarnings("static-access")
-    private Option files = OptionBuilder.hasArgs().isRequired()
-	    .withArgName("file1.ldl file2.ldl ... fileN.ldl")
+    private Option files = OptionBuilder.hasArgs().isRequired().withArgName("file1.ldl file2.ldl ... fileN.ldl")
 	    .withDescription("файлы, содержащие формальное описание тестовых наборов").create("s");
+
+    @SuppressWarnings("static-access")
+    private Option pyDir = OptionBuilder.hasArgs(1).withDescription("Путь к директории с файлами python").create("py");
 
     private String propertyFile;
     private List<String> ldlFiles = new ArrayList<String>();
+    private String pythonDir;
 
     public CmdLineParser(String args[]) {
 	this.args = args;
 
 	options.addOption(files);
 	options.addOption(property);
+	options.addOption(pyDir);
     }
 
     /** Функция разбора строки */
@@ -69,6 +73,8 @@ public class CmdLineParser {
 		}
 	    }
 
+	    pythonDir = cmd.getOptionValue("py");
+
 	} catch (ParseException exp) {
 	    logger.error(exp.getMessage());
 	    this.help();
@@ -79,7 +85,7 @@ public class CmdLineParser {
 	return true;
     }
 
-    // Возврат iterator'а на список файлов ldl 
+    // Возврат iterator'а на список файлов ldl
     public Iterator<String> getFileListIterator() {
 	return ldlFiles.iterator();
     }
@@ -88,14 +94,17 @@ public class CmdLineParser {
 	return ldlFiles;
     }
 
-    // Возврат файла xml 
+    // Возврат файла xml
     public String getPropertyFile() {
 	return propertyFile;
     }
 
+    public String getPythonDir() {
+	return pythonDir;
+    }
+
     private void help() {
-	formatter.printHelp("<program_name> -p <property_file_name.xml> -s <file1.ldl ... fileN.ldl>",
-		"Модуль описания классов эквивалентности обобщенных платежных документов", options,
-		null);
+	formatter.printHelp("<program_name> -p <property_file_name.xml> -s <file1.ldl ... fileN.ldl>", "Модуль описания классов эквивалентности обобщенных платежных документов",
+		options, null);
     }
 }

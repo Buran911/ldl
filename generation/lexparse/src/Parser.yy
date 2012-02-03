@@ -119,6 +119,7 @@
 %type <obj> Number
 %type <obj> LString
 %type <obj> Identifier
+%type <obj> Identifiers
 %type <obj> Type
 %type <obj> PathName
 %type <obj> SimpleName
@@ -294,11 +295,11 @@ srcExprs : srcExpr srcExprs{
 	(( srcExprs ) $2).setParent( (srcExprs)$$ ); 
 }  
 
-srcExpr : Identifier "=" Identifier ";"{ 
+srcExpr : Identifier "=" Identifiers ";"{ 
 	tree.saveNode( new srcExpr() ); 
 	$$ = tree.getLast(); 
 	(( Identifier ) $1).setParent( (srcExpr)$$ ); 
-	(( Identifier ) $3).setParent( (srcExpr)$$ ); 
+	(( Identifiers ) $3).setParent( (srcExpr)$$ ); 
 }  
 srcExpr : Identifier "=" Set ";"{ 
 	tree.saveNode( new srcExpr() ); 
@@ -327,6 +328,19 @@ srcExpr : Identifier "=" Bool ";"{
 	(( Identifier ) $1).setParent( (srcExpr)$$ ); 
 	(( Bool ) $3).setParent( (srcExpr)$$ ); 
 }
+
+Identifiers : Identifier{
+	tree.saveNode( new Identifiers() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (Identifiers)$$ ); 
+}
+
+Identifiers : Identifier "," Identifiers{
+	tree.saveNode( new Identifiers() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (Identifiers)$$ ); 
+	(( Identifiers ) $3).setParent( (Identifiers)$$ ); 
+} 
 
 Set : "{" Elements "}"{ 
 	tree.saveNode( new Set() ); 
