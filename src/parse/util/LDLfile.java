@@ -1,8 +1,7 @@
 package parse.util;
 
-import java.io.BufferedReader;
 import java.io.FileNotFoundException;
-import parse.util.FileReader;
+
 import org.apache.log4j.Logger;
 
 import application.util.StackTrace;

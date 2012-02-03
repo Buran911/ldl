@@ -1,0 +1,38 @@
+context BankRu{
+	bic1 instanceof String;
+	bic2 instanceof String;
+	state instanceof String;
+	
+	--cbic1();
+	--cbic2();
+	
+	source{
+		state:{
+			_type = function;
+			_main = 'check';
+			--FIXME, not string
+			_params = bic1, bic2;
+			_codepath = 'func.py';
+		}
+		
+		bic1:{
+			_type = db;
+			_table = 'bankru';
+			_column = 'bic';
+		}
+		
+		bic2:{
+			_type = db;
+			_table = 'bankru';
+			_column = 'bic'; 
+		}
+	}
+}
+
+BankRu::cbic1(){
+	bic1 = '040577122' || bic1 = '049466331';
+}
+BankRu::cbic2(){
+	bic2 = '040577122' || bic2 = '046354903';
+}
+

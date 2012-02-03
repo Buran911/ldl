@@ -105,8 +105,10 @@ public class App {
     // парсинг исходных файлов и проверка синтаксических и семантических ошибок
     public void parseAndCheckErrors() {
 	Parser parser = new Parser(src, errh);
+//	parser.setDebugModeOn();
 	logger.info("Парсинг исходных файлов.");
 	parser.parse();
+//	parser.getTree().printTree();
 
 	// Синтаксические ошибки
 	logger.info("Проверка синтаксических ошибок");

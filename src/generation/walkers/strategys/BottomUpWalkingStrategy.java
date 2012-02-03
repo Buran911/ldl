@@ -33,8 +33,9 @@ import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 
-/** 
+/**
  * Стратегия обхода дерева. Сначала обходится вершина, последними - листья.
+ * 
  * @author hindu
  * */
 public class BottomUpWalkingStrategy extends WalkerStrategy {
@@ -283,10 +284,10 @@ public class BottomUpWalkingStrategy extends WalkerStrategy {
     public void accept(TreeWalker walker, srcExprAST expr) {
 	expr.getFirstId().accept(walker);
 
-	if (expr.getSecondId() != null) {
-	    expr.getSecondId().accept(walker);
+	for (IdentifierAST id : expr.getSecondIds()) {
+	    id.accept(walker);
 	}
-
+	
 	if (expr.getSet() != null) {
 	    expr.getSet().accept(walker);
 	}

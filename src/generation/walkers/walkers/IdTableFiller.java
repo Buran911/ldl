@@ -9,12 +9,8 @@ import generation.languageconstants.Type;
 import generation.walkers.TreeWalker;
 import generation.walkers.WalkerStrategy;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Iterator;
-import parse.util.FileReader;
 
 import parse.syntaxtree.nodes.AttributeCallAST;
 import parse.syntaxtree.nodes.BinaryExpressionAST;
@@ -44,6 +40,7 @@ import parse.syntaxtree.nodes.VariableAST;
 import parse.syntaxtree.nodes.ldlAST;
 import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
+import parse.util.FileReader;
 import application.util.Halt;
 
 /**
@@ -236,7 +233,10 @@ public class IdTableFiller extends TreeWalker {
 		    function.setMain(((StringAST) exp.getLiteral()).getString());
 		}
 		if (exp.getFirstId().getId().contentEquals(ReservedWord.params.word())) {
-		    function.setParams(((StringAST) exp.getLiteral()).getString());
+		    for (IdentifierAST iden : exp.getSecondIds()) {
+			String ali = table.getId(iden.getId(), contextName).getAlias();
+			function.addParam(ali);
+		    }
 		}
 		if (exp.getFirstId().getId().contentEquals(ReservedWord.code.word())) {
 		    function.setCode(((StringAST) exp.getLiteral()).getString());
@@ -249,7 +249,6 @@ public class IdTableFiller extends TreeWalker {
 		    } catch (FileNotFoundException e) {
 			throw new Halt();
 		    }
-		   
 		}
 	    }
 

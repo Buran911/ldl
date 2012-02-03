@@ -1,20 +1,25 @@
 package parse.syntaxtree.nodes;
 
 import generation.walkers.TreeWalker;
+
+import java.util.LinkedList;
+import java.util.List;
+
 import parse.syntaxtree.NodeAST;
+import application.util.Halt;
 
 public class srcExprAST extends NodeAST {
     private IdentifierAST firstId;
-    private IdentifierAST secondId;
+    private List<IdentifierAST> secondIds;
     private SetAST set;
     private LiteralAST literal;
 
-    public void setFirstId(IdentifierAST firstId) {
-	this.firstId = firstId;
+    {
+	secondIds = new LinkedList<IdentifierAST>();
     }
 
-    public void setSecondId(IdentifierAST secondId) {
-	this.secondId = secondId;
+    public void setFirstId(IdentifierAST firstId) {
+	this.firstId = firstId;
     }
 
     public void setSet(SetAST set) {
@@ -29,10 +34,6 @@ public class srcExprAST extends NodeAST {
 
     public IdentifierAST getFirstId() {
 	return firstId;
-    }
-
-    public IdentifierAST getSecondId() {
-	return secondId;
     }
 
     public SetAST getSet() {
@@ -55,8 +56,10 @@ public class srcExprAST extends NodeAST {
 	if (firstId != null) {
 	    copy.setFirstId((IdentifierAST) firstId.clone());
 	}
-	if (secondId != null) {
-	    copy.setSecondId((IdentifierAST) secondId.clone());
+	if (secondIds != null) {
+	    for (IdentifierAST identifierAST : secondIds) {
+		copy.addSecondId((IdentifierAST) identifierAST.clone());
+	    }
 	}
 	if (set != null) {
 	    copy.setSet((SetAST) set.clone());
@@ -66,5 +69,21 @@ public class srcExprAST extends NodeAST {
 	}
 
 	return copy;
+    }
+
+    public List<IdentifierAST> getSecondIds() {
+	return secondIds;
+    }
+
+    public IdentifierAST getSecondId() {
+	if (secondIds.size() > 1){
+	    //TODO Придумать название
+	    throw new Halt();
+	}
+	return secondIds.get(0);
+    }
+
+    public void addSecondId(IdentifierAST secondId) {
+	this.secondIds.add(secondId);
     }
 }
