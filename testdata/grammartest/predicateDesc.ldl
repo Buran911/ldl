@@ -1,4 +1,4 @@
-BIC::isRKC<'bic', 1>(){
+BIC::isRKC<'bic',1>(){
 	ubr > 50;
 	triple = '000';	
 }

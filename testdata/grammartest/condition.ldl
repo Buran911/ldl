@@ -19,9 +19,7 @@ context Payment{
 		} 
 	}
 	
-	if payee.bic.isKO() && payer.bic.isKO(){
-		!Payee_equals_payer();
-	}	
+	payee.bic.isKO() && payer.bic.isKO();
 	
 	if payee.bic.region = payer.bic.region{
 		!GRKC_equal();

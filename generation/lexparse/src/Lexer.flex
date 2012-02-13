@@ -43,6 +43,8 @@ import parse.errhandler.*;
 %}
 
 context = "context"
+extends = "extends"
+when = "when"
 instanceOf = "instanceof"
 map = "map"
 exists = "exists"

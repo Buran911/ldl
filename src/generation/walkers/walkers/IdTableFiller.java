@@ -4,6 +4,7 @@ import generation.idtable.Database;
 import generation.idtable.IdTable;
 import generation.idtable.Identifier;
 import generation.idtable.PyFunction;
+import generation.idtable.Set;
 import generation.languageconstants.ReservedWord;
 import generation.languageconstants.Type;
 import generation.walkers.TreeWalker;
@@ -23,6 +24,7 @@ import parse.syntaxtree.nodes.EqClassAST;
 import parse.syntaxtree.nodes.FormalParamsAST;
 import parse.syntaxtree.nodes.FunctionalPartAST;
 import parse.syntaxtree.nodes.IdentifierAST;
+import parse.syntaxtree.nodes.LiteralAST;
 import parse.syntaxtree.nodes.NumberAST;
 import parse.syntaxtree.nodes.OperationCallAST;
 import parse.syntaxtree.nodes.ParametresAST;
@@ -254,6 +256,20 @@ public class IdTableFiller extends TreeWalker {
 
 	    id.setSrcData(function);
 	    break;
+
+	case set:
+	    Set set = new Set();
+	    set.setName(id.getName());
+	    set.setAlias(id.getAlias());
+	    for (srcExprAST exp : block.getSrcExprs()) {
+		if (exp.getFirstId().getId().contentEquals(ReservedWord.value.word())) {
+		    for (LiteralAST li : exp.getSet().getElements()) {
+			set.addElements(li);	
+		    }
+		}
+	    }
+
+	    id.setSrcData(set);
 	}
 
 	// устанавливаем параметр _visible

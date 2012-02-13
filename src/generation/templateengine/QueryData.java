@@ -3,6 +3,7 @@ package generation.templateengine;
 import generation.idtable.Database;
 import generation.idtable.IdTable;
 import generation.idtable.Identifier;
+import generation.idtable.Set;
 import generation.languageconstants.Type;
 
 import java.util.LinkedList;
@@ -10,15 +11,18 @@ import java.util.List;
 
 /**
  * Класс содержит в себе информацию для генерации Select From части запроса
+ * 
  * @author hindu
  */
 
 public class QueryData {
     private IdTable table;
     private List<SelectFrom> data;
+    private List<Set> set;
 
     {
 	data = new LinkedList<SelectFrom>();
+	set = new LinkedList<Set>();
     }
 
     public QueryData(IdTable table) {
@@ -37,7 +41,14 @@ public class QueryData {
 	    if (id.getSrcType() == Type.db) {
 		addSelFrom(id);
 	    }
+	    else if (id.getSrcType() == Type.set) {
+		addSet(id);
+	    }
 	}
+    }
+
+    private void addSet(Identifier id) {
+	set.add((Set) id.getSrcData());
     }
 
     private void addSelFrom(Identifier id) {
@@ -61,4 +72,11 @@ public class QueryData {
 	}
     }
 
+    public List<Set> getSet() {
+        return set;
+    }
+
+    public void setSet(List<Set> set) {
+        this.set = set;
+    }
 }

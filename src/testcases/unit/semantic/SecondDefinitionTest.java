@@ -1,6 +1,5 @@
 package testcases.unit.semantic;
 
-import generation.idtable.IdTable;
 import generation.walkers.strategys.IdParsigStrategy;
 import generation.walkers.walkers.IdRedefinedChecker;
 import generation.walkers.walkers.PositionEstimater;

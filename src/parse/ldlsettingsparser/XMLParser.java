@@ -4,9 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.SchemaFactory;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -16,9 +20,11 @@ import org.xml.sax.SAXException;
 
 import application.util.Halt;
 import application.util.StackTrace;
+
 /**
- * Этот класс парсит настроечный файл(создается DOM) и
- * предоставляет доступ к его полям и аттрибутам.
+ * Этот класс парсит настроечный файл(создается DOM) и предоставляет доступ к
+ * его полям и аттрибутам.
+ * 
  * @author hindu
  * */
 public class XMLParser {
@@ -35,20 +41,21 @@ public class XMLParser {
 	File settings = new File(pathToFile);
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder docBuilder = null;
-
+	
 	try {
 	    docBuilder = factory.newDocumentBuilder();
 	} catch (ParserConfigurationException e) {
 	    logger.error("Серьёзная ошибка в настройках XML парсера.");
-	    logger.trace( StackTrace.getStackTrace(e));
+	    logger.trace(StackTrace.getStackTrace(e));
 	    throw new Halt();
 	}
 
 	try {
 	    doc = docBuilder.parse(settings);
+	    SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(new StreamSource(new File("xsd/ldl-project.xsd"))).newValidator().validate(new DOMSource(doc));
 	} catch (SAXException e) {
 	    logger.error("SAX ошибка в XML парсере.");
-	    logger.trace( StackTrace.getStackTrace(e));
+	    logger.trace(StackTrace.getStackTrace(e));
 	    throw new Halt();
 	} catch (IOException e) {
 	    System.err.println("I/O ошибка в XML парсере.");

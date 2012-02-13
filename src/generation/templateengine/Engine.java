@@ -9,7 +9,9 @@ import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
 /**
- * Шаблонизатор. Класс генерирует запросы по исходным данным: SyntaxTree, EqualityClass и SelectFrom.
+ * Шаблонизатор. Класс генерирует запросы по исходным данным: SyntaxTree,
+ * EqualityClass и SelectFrom.
+ * 
  * @author hindu
  * */
 public class Engine {
@@ -33,21 +35,24 @@ public class Engine {
 
     public void generate() {
 	String selFrom = generateSelectFrom();
+	if(queryData.getSet().size() != 0)
+	    selFrom += generateJoinExpression();
 	// FIXME коряво
-	if(!queryConstraints.hasNext()){   
-	    if(queryConstraints.hasConstConstraints()){
+
+	if (!queryConstraints.hasNext()) {
+	    if (queryConstraints.hasConstConstraints()) {
 		String where = generateWhere();
-    	    
+
 		String q = selFrom + where;
-		while(q.contains("\r\n\r\n")){
+		while (q.contains("\r\n\r\n")) {
 		    q = q.replaceAll("\r\n\r\n", "\r\n");
 		}
-		
-		logger.trace("Query:\n" +q);
+
+		logger.trace("Query:\n" + q);
 		query.add(q);
 	    }
-	    else{
-		logger.trace("Query:\n" +selFrom);
+	    else {
+		logger.trace("Query:\n" + selFrom);
 		query.add(selFrom);
 	    }
 	}
@@ -55,14 +60,13 @@ public class Engine {
 	    String where = generateWhere();
 
 	    String q = selFrom + where;
-	    while(q.contains("\r\n\r\n")){
+	    while (q.contains("\r\n\r\n")) {
 		q = q.replaceAll("\r\n\r\n", "\r\n");
 	    }
-	    
-	    logger.trace("Query:\n" +q);
+
+	    logger.trace("Query:\n" + q);
 	    query.add(q);
 	}
-
     }
 
     private String generateSelectFrom() {
@@ -85,4 +89,13 @@ public class Engine {
 	return result;
     }
 
+    private String generateJoinExpression() {
+	STGroup group = new STGroupFile("generation/templates/query.stg");
+	ST st = group.getInstanceOf("set");
+
+	st.add("elems", queryData.getSet());
+	String result = st.render();
+
+	return result;
+    }
 }

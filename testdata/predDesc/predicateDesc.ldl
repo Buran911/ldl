@@ -1,0 +1,16 @@
+context BIC{
+	bic instanceof Integer;
+	source{
+		bic:{
+			_type = db;
+			_table = 'bankru';
+			_column = 'bic'; 
+		}
+	}
+	isRKC();
+}
+
+
+BIC::isRKC<'bic'>(){
+	bic > 044618904;
+}

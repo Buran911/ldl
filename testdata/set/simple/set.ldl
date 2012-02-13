@@ -1,0 +1,22 @@
+context BankRu{
+	bic1 instanceof String;
+	bic2 instanceof String;
+	bic3 instanceof Integer;
+	bic2 > '042104945';
+	bic3 > 2;
+	source{
+		bic1:{
+			_type = set;
+			_value = {'a','b','c'};
+		}
+		bic2:{
+			_type = db;
+			_table = 'bankru';
+			_column = 'bic'; 
+		}
+		bic3:{
+			_type = set;
+			_value = {1,2,3};
+		}
+	}
+}

@@ -7,7 +7,6 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupFile;
 
-import parse.util.PairSet;
 import parse.util.Source;
 
 // TODO Научить работать хэндлер
@@ -22,17 +21,11 @@ import parse.util.Source;
  * */
 public class ErrorHandler {
     private LinkedList<ParseError> errors;
-    private final int errCritCount; // количество ошибок, после которого
-				    // дальнейшие проверки нецелесообразны
-    private PairSet incompatibleErrors; // набор несовместимых друг с другом
-					// ошибок
     private Source src;
     private Logger logger = Logger.getLogger(ErrorHandler.class);
 
     {
 	errors = new LinkedList<ParseError>();
-	errCritCount = 15;
-	incompatibleErrors = new PairSet();
     }
 
     public ErrorHandler(Source src) {

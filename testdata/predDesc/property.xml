@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ldl-project>
+	<db connectionString = "jdbc:oracle:thin:@192.168.1.152:1521:opd"
+		user = "system"
+		password = "qwerty"
+		returnPolicy = "last"/>
+	<generation>
+		<function_groups>
+			<group>bis</group>
+		</function_groups>
+		<priority volume = "4" type = "upper"/>
+	</generation>	
+</ldl-project>

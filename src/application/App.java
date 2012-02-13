@@ -7,10 +7,10 @@ import generation.idtable.IdTable;
 import generation.templateengine.Engine;
 import generation.templateengine.QueryConstraints;
 import generation.templateengine.QueryData;
-import generation.util.DeepCopy;
 import generation.walkers.strategys.BottomUpWalkingStrategy;
 import generation.walkers.strategys.IdParsigStrategy;
 import generation.walkers.walkers.FunctionalImplementedChecker;
+import generation.walkers.walkers.GroupFilter;
 import generation.walkers.walkers.IdConvertor;
 import generation.walkers.walkers.IdNotDefinedChecker;
 import generation.walkers.walkers.IdRedefinedChecker;
@@ -22,6 +22,7 @@ import generation.walkers.walkers.TemplateTypeFiller;
 import generation.walkers.walkers.TypeMismatchChecker;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -57,6 +58,7 @@ public class App {
     private IdTable table;
     private Logger logger = Logger.getLogger(App.class);
     private String pythonDir;
+    private List<String> funcGroups;
 
     public App(String[] args) {
 	this.args = args;
@@ -77,7 +79,7 @@ public class App {
 	logger.info("Парсинг настроечного файла.");
 	logger.trace("property file:" + cmdLineParser.getPropertyFile());
 	parser.parse();
-
+	funcGroups = parser.getFunctionGroups();
 	logger.trace("connection string: " + parser.getConnectionString());
 	logger.trace("user: " + parser.getUser());
 	logger.trace("password: " + parser.getPassword());
@@ -105,10 +107,8 @@ public class App {
     // парсинг исходных файлов и проверка синтаксических и семантических ошибок
     public void parseAndCheckErrors() {
 	Parser parser = new Parser(src, errh);
-//	parser.setDebugModeOn();
 	logger.info("Парсинг исходных файлов.");
 	parser.parse();
-//	parser.getTree().printTree();
 
 	// Синтаксические ошибки
 	logger.info("Проверка синтаксических ошибок");
@@ -145,10 +145,9 @@ public class App {
 	treeSemantic.accept(new IdTableMaker(new IdParsigStrategy(), idTable));
 	treeSemantic.accept(new IdTableFiller(new IdParsigStrategy(), idTable, pythonDir));
 	treeSemantic.accept(new IdConvertor(new IdParsigStrategy(), idTable));
-
+	treeSemantic.accept(new GroupFilter(new IdParsigStrategy(),funcGroups));
 	treeSemantic.accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
 	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
-
     }
 
     // Предобработка AST и генерация по нему запросов.
@@ -159,7 +158,7 @@ public class App {
 
 	tree.accept(new IdTableMaker(new IdParsigStrategy(), table));
 	tree.accept(new PositionEstimater(new IdParsigStrategy()));
-	tree.accept(new IdTableFiller(new IdParsigStrategy(), table,pythonDir));
+	tree.accept(new IdTableFiller(new IdParsigStrategy(), table, pythonDir));
 	tree.accept(new TemplateTypeFiller());
 	tree.accept(new IdConvertor(new IdParsigStrategy(), table));
 	tree.accept(new TemplateEqClassesFiller(qConstraints));

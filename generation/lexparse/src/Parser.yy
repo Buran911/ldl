@@ -351,7 +351,7 @@ Set : "{" Elements "}"{
 Elements : Element{ 
 	tree.saveNode( new Elements() ); 
 	$$ = tree.getLast(); 
-	(( Elements ) $1).setParent( (Element)$$ ); 
+	(( Element ) $1).setParent( (Elements)$$ ); 
 }  
 Elements : Element "," Elements{ 
 	tree.saveNode( new Elements() ); 
@@ -593,12 +593,25 @@ FunctionalPart : {
 	tree.saveNode( new FunctionalPart() ); 
 	$$ = tree.getLast(); 
 }  
+
+FunctionalPart : "<" LString ">"{ 
+	tree.saveNode( new FunctionalPart() ); 
+	$$ = tree.getLast(); 
+	(( LString ) $2).setParent( (FunctionalPart)$$ ); 
+}
+
+FunctionalPart : "<" Number ">"{ 
+	tree.saveNode( new FunctionalPart() ); 
+	$$ = tree.getLast(); 
+	(( Number ) $2).setParent( (FunctionalPart)$$ ); 
+}   
+
 FunctionalPart : "<" LString "," Number ">"{ 
 	tree.saveNode( new FunctionalPart() ); 
 	$$ = tree.getLast(); 
 	(( LString ) $2).setParent( (FunctionalPart)$$ ); 
 	(( Number ) $4).setParent( (FunctionalPart)$$ ); 
-}  
+}   
 
 FormalParams : { 
 	tree.saveNode( new FormalParams() ); 

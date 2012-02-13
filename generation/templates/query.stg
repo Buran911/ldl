@@ -1,0 +1,19 @@
+set(elems) ::= <<
+	<head(first(elems))><if(rest(elems))><set(rest(elems))><endif>
+>>
+
+head(elems) ::= <<
+	join(select <print_val(first(elems.elements))>as <elems.alias> <if(rest(elems.elements))><print_unions(rest(elems.elements))>
+	<endif>
+>>
+
+print_unions(elems)::= <<
+<print_union(first(elems))><if(rest(elems))><print_unions(rest(elems))>)<endif>
+>>
+
+print_union(elem)::=<<union select <print_val(elem)>
+>>
+
+print_val(elem) ::= <<
+<if(elem.string)>'<elem.data>' <else><elem.data> <endif>
+>>

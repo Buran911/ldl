@@ -11,8 +11,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
-
 /**
  * Класс пребразует выходные данные генератора в ОПД в формате yaml, фильтруя ненужное.
  * Выходные данные формируются с помощью габлонов StringTemplate.
@@ -21,7 +19,6 @@ import org.apache.log4j.Logger;
 public class YamlWriter {
     private List<QueryResult> queryResults;
     private String dir = "out/";
-    private Logger logger = Logger.getLogger(YamlWriter.class);
 
     public YamlWriter(List<QueryResult> queryResults) {
 	super();

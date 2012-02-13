@@ -5,30 +5,30 @@ SELECT * FROM (<select(elem)>)
 >>
 
 select(elem) ::=<<
-SELECT	<select_list(elem.data)>
+SELECT <select_list(elem.data)>
 FROM <from_list(elem.data)>
 >>
 
 select_list(elem) ::= <<
-<table(first(elem))><if(rest(elem))>, <select_list(rest(elem))><endif>  
+<table(first(elem))><if(rest(elem))>, <select_list(rest(elem))><endif>
 >>
 
 table(elem) ::=<<
-	<column_list(elem.columns, elem.table)>
+<column_list(elem.columns, elem.table)>
 >>
 
 column_list(elem, table) ::= <<
 
-<table>.<column(first(elem))><if(rest(elem))>, < column_list(rest(elem), table)><endif>  
+<table>.<column(first(elem))><if(rest(elem))>, < column_list(rest(elem), table)><endif>
 >>
 column(elem) ::=<<
-	<elem.name> AS <elem.alias>
+<elem.name> AS <elem.alias>
 >>
 
 from_list(elem)::= <<
-<table_name(first(elem))><if(rest(elem))>, <from_list(rest(elem))><endif>  
+<table_name(first(elem))><if(rest(elem))>, <from_list(rest(elem))><endif>
 >>
 
 table_name(elem) ::=<<
-	<elem.table>
+<elem.table>
 >>
