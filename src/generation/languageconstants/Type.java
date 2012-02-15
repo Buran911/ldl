@@ -8,5 +8,6 @@ public enum Type {
     db,
     set,
     own,
-    function
+    function,
+    dategenerator
 }

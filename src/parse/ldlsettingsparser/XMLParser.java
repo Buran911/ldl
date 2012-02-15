@@ -41,7 +41,7 @@ public class XMLParser {
 	File settings = new File(pathToFile);
 	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 	DocumentBuilder docBuilder = null;
-	
+
 	try {
 	    docBuilder = factory.newDocumentBuilder();
 	} catch (ParserConfigurationException e) {
@@ -81,7 +81,7 @@ public class XMLParser {
     }
 
     public String getConnectionString() {
-	return getAttribute(rootElem, "db", "connectionString");
+	return getAttribute(rootElem, "database", "connectionString");
     }
 
     public String getPriority() {
@@ -95,19 +95,19 @@ public class XMLParser {
     }
 
     public String getPolicy() {
-	return getAttribute(rootElem, "db", "returnPolicy");
+	return getAttribute(rootElem, "database", "returnPolicy");
     }
 
     public String getUser() {
-	return getAttribute(rootElem, "db", "user");
+	return getAttribute(rootElem, "database", "user");
     }
 
     public String getPassword() {
-	return getAttribute(rootElem, "db", "password");
+	return getAttribute(rootElem, "database", "password");
     }
 
+    @SuppressWarnings("unused")
     private String getTextValue(Element elem, String tag) {
-
 	return getValue(elem, tag, 0);
     }
 

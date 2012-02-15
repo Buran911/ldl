@@ -13,7 +13,13 @@ public enum ReservedWord {
     params("_params"),
     code("_code"),
     codepath("_codepath"),
-    value("_value");
+    value("_value"),
+    
+    generationtype("_generationType"),
+    startdate("_startDate"),
+    enddate("_endDate"),
+    step("_step"),
+    messure("_messure");
 
     private final String reservedWord;
 

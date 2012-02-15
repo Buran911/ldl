@@ -3,7 +3,7 @@ context BankRu{
 	bic2 instanceof String;
 	bic3 instanceof Integer;
 	bic2 > '042104945';
-	bic3 > 2;
+	bic3 >= 2;
 	source{
 		bic1:{
 			_type = set;

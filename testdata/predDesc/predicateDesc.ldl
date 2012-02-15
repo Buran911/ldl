@@ -11,6 +11,6 @@ context BIC{
 }
 
 
-BIC::isRKC<'bic'>(){
+BIC::isRKC<'bic',4>(){
 	bic > 044618904;
 }

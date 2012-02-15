@@ -1,16 +1,20 @@
 package generation.walkers.walkers;
 
+import generation.idtable.DataGenerator;
 import generation.idtable.Database;
 import generation.idtable.IdTable;
 import generation.idtable.Identifier;
 import generation.idtable.PyFunction;
 import generation.idtable.Set;
+import generation.languageconstants.Behaviour;
+import generation.languageconstants.Messure;
 import generation.languageconstants.ReservedWord;
 import generation.languageconstants.Type;
 import generation.walkers.TreeWalker;
 import generation.walkers.WalkerStrategy;
 
 import java.io.FileNotFoundException;
+import java.util.Calendar;
 import java.util.Iterator;
 
 import parse.syntaxtree.nodes.AttributeCallAST;
@@ -210,75 +214,123 @@ public class IdTableFiller extends TreeWalker {
 	}
 
 	// заполняем данные об источнике
-	switch (id.getSrcType()) {
-	case db:
-	    Database db = new Database();
+	switch (id.getSrcType())
+	    {
+	    case db:
+		Database db = new Database();
 
-	    for (srcExprAST exp : block.getSrcExprs()) {
-		if (exp.getFirstId().getId().contentEquals(ReservedWord.table.word())) {
-		    db.setTable(((StringAST) exp.getLiteral()).getString());
-		}
+		for (srcExprAST exp : block.getSrcExprs()) {
+		    if (exp.getFirstId().getId().contentEquals(ReservedWord.table.word())) {
+			db.setTable(((StringAST) exp.getLiteral()).getString());
+		    }
 
-		if (exp.getFirstId().getId().contentEquals(ReservedWord.column.word())) {
-		    db.setColumn(((StringAST) exp.getLiteral()).getString());
-		}
-	    }
-
-	    id.setSrcData(db);
-	    break;
-
-	case function:
-	    PyFunction function = new PyFunction();
-
-	    for (srcExprAST exp : block.getSrcExprs()) {
-		if (exp.getFirstId().getId().contentEquals(ReservedWord.main.word())) {
-		    function.setMain(((StringAST) exp.getLiteral()).getString());
-		}
-		if (exp.getFirstId().getId().contentEquals(ReservedWord.params.word())) {
-		    for (IdentifierAST iden : exp.getSecondIds()) {
-			String ali = table.getId(iden.getId(), contextName).getAlias();
-			function.addParam(ali);
+		    if (exp.getFirstId().getId().contentEquals(ReservedWord.column.word())) {
+			db.setColumn(((StringAST) exp.getLiteral()).getString());
 		    }
 		}
-		if (exp.getFirstId().getId().contentEquals(ReservedWord.code.word())) {
-		    function.setCode(((StringAST) exp.getLiteral()).getString());
-		}
-		if (exp.getFirstId().getId().contentEquals(ReservedWord.codepath.word())) {
-		    try {
-			String path = getPath(((StringAST) exp.getLiteral()).getString());
-			String content = FileReader.readFile(path);
-			function.setCode(content);
-		    } catch (FileNotFoundException e) {
-			throw new Halt();
+
+		id.setSrcData(db);
+		break;
+
+	    case function:
+		PyFunction function = new PyFunction();
+
+		for (srcExprAST exp : block.getSrcExprs()) {
+		    if (exp.getFirstId().getId().contentEquals(ReservedWord.main.word())) {
+			function.setMain(((StringAST) exp.getLiteral()).getString());
+		    }
+		    if (exp.getFirstId().getId().contentEquals(ReservedWord.params.word())) {
+			for (IdentifierAST iden : exp.getSecondIds()) {
+			    String ali = table.getId(iden.getId(), contextName).getAlias();
+			    function.addParam(ali);
+			}
+		    }
+		    if (exp.getFirstId().getId().contentEquals(ReservedWord.code.word())) {
+			function.setCode(((StringAST) exp.getLiteral()).getString());
+		    }
+		    if (exp.getFirstId().getId().contentEquals(ReservedWord.codepath.word())) {
+			try {
+			    String path = getPath(((StringAST) exp.getLiteral()).getString());
+			    String content = FileReader.readFile(path);
+			    function.setCode(content);
+			}
+			catch (FileNotFoundException e) {
+			    throw new Halt();
+			}
 		    }
 		}
-	    }
 
-	    id.setSrcData(function);
-	    break;
+		id.setSrcData(function);
+		break;
 
-	case set:
-	    Set set = new Set();
-	    set.setName(id.getName());
-	    set.setAlias(id.getAlias());
-	    for (srcExprAST exp : block.getSrcExprs()) {
-		if (exp.getFirstId().getId().contentEquals(ReservedWord.value.word())) {
-		    for (LiteralAST li : exp.getSet().getElements()) {
-			set.addElements(li);	
+	    case set:
+		Set set = new Set();
+		set.setName(id.getName());
+		set.setAlias(id.getAlias());
+		for (srcExprAST exp : block.getSrcExprs()) {
+		    if (exp.getFirstId().getId().contentEquals(ReservedWord.value.word())) {
+			for (LiteralAST li : exp.getSet().getElements()) {
+			    set.addElements(li);
+			}
 		    }
 		}
+
+		id.setSrcData(set);
+	    case dategenerator:
+		DataGenerator dataGenerator = new DataGenerator();
+
+		for (srcExprAST exp : block.getSrcExprs()) {
+		    if (exp.getFirstId().getId().contentEquals(ReservedWord.startdate.word())) {
+			String[] array = ((StringAST) exp.getLiteral()).getString().split("/");
+			Calendar date = Calendar.getInstance();
+			date.clear();
+			date.set(Calendar.YEAR, Integer.parseInt(array[2]));
+			date.set(Calendar.MONTH, Integer.parseInt(array[1]) - 1);
+			date.set(Calendar.DATE, Integer.parseInt(array[0]));
+			dataGenerator.setStartData(date);
+		    }
+		    else if (exp.getFirstId().getId().contentEquals(ReservedWord.enddate.word())) {
+			String[] array = ((StringAST) exp.getLiteral()).getString().split("/");
+			Calendar date = Calendar.getInstance();
+			date.clear();
+			date.set(Calendar.YEAR, Integer.parseInt(array[2]));
+			date.set(Calendar.MONTH, Integer.parseInt(array[1]) - 1);
+			date.set(Calendar.DATE, Integer.parseInt(array[0]));
+			dataGenerator.setEndData(date);
+		    }
+		    else if (exp.getFirstId().getId().contentEquals(ReservedWord.generationtype.word())) {
+			String generationtype = exp.getSecondId().getId();
+			if (generationtype.equals("sequence")) {
+			    dataGenerator.setBehaviour(Behaviour.sequence);
+			}
+			else if (generationtype.equals("random")) {
+			    dataGenerator.setBehaviour(Behaviour.random);
+			}
+		    }
+		    else if (exp.getFirstId().getId().contentEquals(ReservedWord.step.word())) {
+			Double step = ((NumberAST) exp.getLiteral()).getNumber();
+			dataGenerator.setStep(step);
+		    }else if (exp.getFirstId().getId().contentEquals(ReservedWord.messure.word())) {
+			String messure = ((StringAST) exp.getLiteral()).getData();
+			if (messure.equals("day")) {
+			    dataGenerator.setMessure(Messure.day);
+			}
+			else if (messure.equals("month")) {
+			    dataGenerator.setMessure(Messure.month);
+			}
+			else if (messure.equals("year")) {
+			    dataGenerator.setMessure(Messure.year);
+			}
+		    }
+		}
+		id.setSrcData(dataGenerator);
 	    }
-
-	    id.setSrcData(set);
-	}
-
 	// устанавливаем параметр _visible
 	expr = findReservedWord(ReservedWord.visible, block.getSrcExprs().iterator());
 
 	if (expr != null) {
 	    id.setVisible(((BooleanAST) expr.getLiteral()).getBool());
 	}
-
     }
 
     @Override

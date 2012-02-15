@@ -74,6 +74,7 @@ public class App {
 	    logger.error("Не могу считать параметры командной строки");
 	    throw new Halt();
 	}
+
 	pythonDir = cmdLineParser.getPythonDir();
 	XMLParser parser = new XMLParser(cmdLineParser.getPropertyFile());
 	logger.info("Парсинг настроечного файла.");
@@ -101,15 +102,15 @@ public class App {
 
 	src = new Source(cmdLineParser.getLdlFiles());
 	errh = new ErrorHandler(src);
-
     }
 
     // парсинг исходных файлов и проверка синтаксических и семантических ошибок
     public void parseAndCheckErrors() {
 	Parser parser = new Parser(src, errh);
 	logger.info("Парсинг исходных файлов.");
+	parser.setDebugModeOn();
 	parser.parse();
-
+	 parser.getTree().printTree();
 	// Синтаксические ошибки
 	logger.info("Проверка синтаксических ошибок");
 	if (errh.hasErrors()) {
@@ -139,13 +140,11 @@ public class App {
 
 	treeSemantic.accept(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
 	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
-
 	treeSemantic.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
-
 	treeSemantic.accept(new IdTableMaker(new IdParsigStrategy(), idTable));
 	treeSemantic.accept(new IdTableFiller(new IdParsigStrategy(), idTable, pythonDir));
 	treeSemantic.accept(new IdConvertor(new IdParsigStrategy(), idTable));
-	treeSemantic.accept(new GroupFilter(new IdParsigStrategy(),funcGroups));
+	treeSemantic.accept(new GroupFilter(new IdParsigStrategy(), funcGroups));
 	treeSemantic.accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
 	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
     }
@@ -174,11 +173,13 @@ public class App {
 	queryMaker = new QueryMaker(connection, engine.getQuery());
 	try {
 	    queryMaker.makeQuerys();
-	} catch (ClassNotFoundException e) {
+	}
+	catch (ClassNotFoundException e) {
 	    logger.error("Не найден драйвер БД.");
 	    logger.trace(StackTrace.getStackTrace(e));
 	    throw new Halt();
-	} catch (SQLException e) {
+	}
+	catch (SQLException e) {
 	    logger.error("Ошибка в SQL запросе.");
 	    logger.trace(StackTrace.getStackTrace(e));
 	    throw new Halt();

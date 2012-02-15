@@ -1,0 +1,19 @@
+context BankRu{
+	bic1 instanceof String;
+	bic2 instanceof String;
+	source{
+		bic1:{
+			_type = dategenerator;
+			_generationType = sequence;
+			_startDate = '10/10/2010';
+			_step = 2;
+			_messure = 'day';
+		}
+		bic2:{
+			_type = dategenerator;
+			_generationType = random;
+			_startDate = '10/10/2010';
+			_endDate = '10/11/2010';
+		}
+	}
+}

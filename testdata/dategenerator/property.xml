@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ldl-project>
-	<database connectionString = "jdbc:sqlite:testdata\set\new.db"
+	<database connectionString = "jdbc:sqlite:testdata\dategenerator\new.db"
+		user="" password=""
 		returnPolicy = "random"/>
 </ldl-project>
