@@ -18,7 +18,7 @@ import application.util.StackTrace;
  * @author Hindu
  * */
 
-public class LDLfile {
+public class LDLfile implements Cloneable{
     private String path; // Физический путь на ldl файл
     private String[] programLines; // программа построчно
     private int lineCount; // Количество строк в файле
@@ -138,5 +138,15 @@ public class LDLfile {
 	}
 
 	return pos;
+    }
+    @Override
+    public LDLfile clone(){
+	LDLfile file = new LDLfile(new String(path));
+	    file.path = new String(path.toString());
+	    file.programLines = programLines.clone();
+	    file.lineCount = new Integer(lineCount);
+	    file.beginIndex = new Integer(beginIndex);
+	    file.endIndex = new Integer(endIndex);
+	return file;
     }
 }

@@ -94,8 +94,11 @@ public class Source implements Cloneable {
 
     public Source clone() {
 	Source src = new Source();
-	src.files = files;
-
+	ArrayList<LDLfile> fls = new ArrayList<LDLfile>();
+	for (LDLfile file : files) {
+	    fls.add(file.clone());
+	}
+	src.files = fls;
 	return src;
     }
 }

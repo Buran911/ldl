@@ -32,7 +32,7 @@ public final class ErrorHandler implements Cloneable {
     private Logger logger = Logger.getLogger(ErrorHandler.class);
     private ProgramState programState;
 
-    public List<ErrorType> getErrors() {
+    public List<ErrorType> getSemanticErrors() {
 	List<ErrorType> returnList = new LinkedList<ErrorType>();
 	for (Error error : errors) {
 	    if (error.isParseError() && (error.getErrorClass() == ErrorClass.semantic))
@@ -153,12 +153,25 @@ public final class ErrorHandler implements Cloneable {
 	ErrorHandler eH = new ErrorHandler(null);
 
 	eH.errors = new LinkedList<Error>();
-	for(Error error:errors){
-	eH.errors.add(error);
+	for (Error error : errors) {
+	    eH.errors.add(error.clone());
 	}
 	eH.programState = programState;
 	eH.src = src.clone();
 
 	return eH;
+    }
+
+    // TODO Можно ли как-нибудь сделать стандартным путём ???
+    public List<ErrorType> difference(ErrorHandler errorHaldler) {
+//	er1.difference(er2) , er1 > er2
+	List<ErrorType> er1 = getSemanticErrors();
+	List<ErrorType> er2 = errorHaldler.getSemanticErrors();
+	List<ErrorType> returnList = new LinkedList<ErrorType>();
+	
+	for (ErrorType et : er1)
+	    if (!er2.contains(et))
+		returnList.add(et);
+	return returnList;
     }
 }

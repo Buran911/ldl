@@ -131,9 +131,9 @@ public class ParseError extends Error {
 	return true;
     }
 
-    public ParseError clone(){
+    public ParseError clone() {
 	ParseError pE = new ParseError();
-	
+
 	pE.lineNo = lineNo;
 	pE.columnNo = columnNo;
 	pE.errorLine = errorLine;
@@ -142,10 +142,15 @@ public class ParseError extends Error {
 	pE.errorPos = errorPos;
 	pE.contextPos = contextPos;
 	pE.info = info;
-	
+
 	pE.errorClass = ErrorType.getErrorClass(errorType);
 	pE.errorType = errorType;
-	
+
+	if (this.isParseError())
+	    pE.setParseError();
+	else
+	    pE.setRuntimeError();
+
 	return pE;
     }
 }

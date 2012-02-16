@@ -16,7 +16,7 @@ public class Application {
 	App app = new App(args);
 	try {
 	    app.readFiles();
-//	    app.parseAndCheckErrors();
+	    app.parseAndCheckErrors();
 	    app.generateEQ();
 	    app.makeQuery();
 	    app.writeYAML();

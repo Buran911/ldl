@@ -57,7 +57,8 @@ public class App {
 
     public App(String[] args) {
 	this.args = args;
-    }    
+    }
+
     // считывание и подготовка исходных файлов и считывание и парсинг
     // настроечного файла
     public void readFiles() {
@@ -91,10 +92,8 @@ public class App {
 	    policy = Policy.valueOf(parser.getPolicy());
 	}
 	logger.trace("source file names: " + cmdLineParser.getLdlFiles());
-
 	src = new Source(cmdLineParser.getLdlFiles());
 	errh = new ErrorHandler(src);
-
     }
 
     // парсинг исходных файлов и проверка синтаксических и семантических ошибок
@@ -104,15 +103,15 @@ public class App {
 	logger.info("ѕроверка синтаксических ошибок");
 
 	parser.parse();
-	
+
 	logger.debug("program state : " + ProgramState.SyntaxChecked);
 	errh.setProgramState(ProgramState.SyntaxChecked);
-	
+
 	tree = new SyntaxTree(parser.getTree());
 
 	logger.info("ѕроверка семантических ошибок.");
 	checkSemantics();
-	
+
 	logger.debug("program state : " + ProgramState.SemanticChecked);
 	errh.setProgramState(ProgramState.SemanticChecked);
     }
@@ -133,9 +132,7 @@ public class App {
 	runner.add(new IdConvertor(new IdParsigStrategy(), idTable));
 	runner.add(new PositionEstimater(new IdParsigStrategy()));
 
-
 	runner.run();
-	errh.printErrors();
     }
 
     // ѕредобработка AST и генераци€ по нему запросов.
@@ -168,14 +165,10 @@ public class App {
 	    queryMaker.makeQuerys();
 	}
 	catch (ClassNotFoundException e) {
-	    RuntimeError re = new RuntimeError(ErrorType.DataBaseDriverNotFound, e,
-		    ErrorType.DataBaseDriverNotFound.getDescription());
-	    errh.addError(re);
+	    errh.addError(new RuntimeError(ErrorType.DataBaseDriverNotFound, e, ErrorType.DataBaseDriverNotFound.getDescription()));
 	}
 	catch (SQLException e) {
-	    RuntimeError re = new RuntimeError(ErrorType.SQLError, e,
-		    ErrorType.SQLError.getDescription());
-	    errh.addError(re);
+	    errh.addError(new RuntimeError(ErrorType.SQLError, e, ErrorType.SQLError.getDescription()));
 	}
     }
 
