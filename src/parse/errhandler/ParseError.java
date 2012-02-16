@@ -10,8 +10,7 @@ public class ParseError extends Error {
     private Integer lineNo;
     private Integer columnNo;
     private String errorLine;
-    private String context;// контекст ошибки, на данный момент - строчка перед
-    // ней
+    private String context;// контекст ошибки - строчка перед ней
     private String fileName;
     private Integer errorPos;
     private Integer contextPos;
@@ -132,25 +131,25 @@ public class ParseError extends Error {
     }
 
     public ParseError clone() {
-	ParseError pE = new ParseError();
+	ParseError parseError = new ParseError();
 
-	pE.lineNo = lineNo;
-	pE.columnNo = columnNo;
-	pE.errorLine = errorLine;
-	pE.context = context;
-	pE.fileName = fileName;
-	pE.errorPos = errorPos;
-	pE.contextPos = contextPos;
-	pE.info = info;
+	parseError.lineNo = lineNo;
+	parseError.columnNo = columnNo;
+	parseError.errorLine = errorLine;
+	parseError.context = context;
+	parseError.fileName = fileName;
+	parseError.errorPos = errorPos;
+	parseError.contextPos = contextPos;
+	parseError.info = info;
 
-	pE.errorClass = ErrorType.getErrorClass(errorType);
-	pE.errorType = errorType;
+	parseError.errorClass = ErrorType.getErrorClass(errorType);
+	parseError.errorType = errorType;
 
 	if (this.isParseError())
-	    pE.setParseError();
+	    parseError.setParseError();
 	else
-	    pE.setRuntimeError();
+	    parseError.setRuntimeError();
 
-	return pE;
+	return parseError;
     }
 }

@@ -49,9 +49,9 @@ public final class ErrorHandler implements Cloneable {
 	this.src = src;
     }
 
-    public void addError(RuntimeError error) {
-
-    }
+//    public void addError(RuntimeError error) {
+//
+//    }
 
     public void addError(Error error) {
 	switch (error.getErrorClass())
@@ -82,7 +82,7 @@ public final class ErrorHandler implements Cloneable {
     }
 
     // Найти совместимость err1 и err2
-    // Совместимость ошибок это когда одна ошибка не является следствием другой
+    // Совместимость ошибок - одна ошибка не является следствием другой
     // ошибки и может быть обнаружены независимо
 
     private void setInfoAboutError(ParseError error) {
@@ -150,25 +150,23 @@ public final class ErrorHandler implements Cloneable {
 
     @Override
     public ErrorHandler clone() {
-	ErrorHandler eH = new ErrorHandler(null);
+	ErrorHandler errorHandler = new ErrorHandler(null);
 
-	eH.errors = new LinkedList<Error>();
-	for (Error error : errors) {
-	    eH.errors.add(error.clone());
-	}
-	eH.programState = programState;
-	eH.src = src.clone();
+	errorHandler.errors = new LinkedList<Error>();
+	for (Error error : errors) 
+	    errorHandler.errors.add(error.clone());
+	errorHandler.programState = programState;
+	errorHandler.src = src.clone();
 
-	return eH;
+	return errorHandler;
     }
 
-    // TODO Можно ли как-нибудь сделать стандартным путём ???
     public List<ErrorType> difference(ErrorHandler errorHaldler) {
-//	er1.difference(er2) , er1 > er2
+	// er1.difference(er2) , er1 > er2
 	List<ErrorType> er1 = getSemanticErrors();
 	List<ErrorType> er2 = errorHaldler.getSemanticErrors();
 	List<ErrorType> returnList = new LinkedList<ErrorType>();
-	
+
 	for (ErrorType et : er1)
 	    if (!er2.contains(et))
 		returnList.add(et);

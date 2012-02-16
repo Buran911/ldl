@@ -125,7 +125,7 @@ error = .
 { xor } { return xor; }
 
 { badidentifier } { 
-	errHandler.addError( new ParseError( ErrorClass.syntax, ErrorType.InvalidIdentifier,
+	errHandler.addError( new ParseError( ErrorType.InvalidIdentifier,
 		  getCurrentLineNo(), getCurrentColumnNo(), "Идентификатор должен начинаться с буквы или знака подчеркивания."));
 }
 
@@ -148,13 +148,13 @@ error = .
 { whitespace } { }
 
 { errorQuote } { 
-	errHandler.addError( new ParseError(  ErrorClass.syntax, ErrorType.Quote,
+	errHandler.addError( new ParseError( ErrorType.Quote,
 		getCurrentLineNo(), getCurrentColumnNo(),"Возможно поставлена лишняя кавычка."));
 }
 	
 
 { error } { 
-	errHandler.addError( new ParseError(  ErrorClass.syntax, ErrorType.UnknownToken, 
+	errHandler.addError( new ParseError( ErrorType.UnknownToken, 
 		getCurrentLineNo(), getCurrentColumnNo(),
 		"Неизвестный токен: " + getCurrentToken() +  "."));
 }

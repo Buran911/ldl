@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+/** ячейка , содержаща€ ссылку на walker'а и всю необходимую информацию о нем */
 public class Cell {
     private TreeWalker treeWalker;
     private Class<? extends TreeWalker> walkerClass;
@@ -97,6 +98,7 @@ public class Cell {
 	this.treeWalker = treeWalker;
     }
 
+    // ”даление €чейки и св€зей (delete relations)
     public void disappearDR() {
 	for (Cell cell : precellList) {
 	    cell.remPost(this);
@@ -112,6 +114,7 @@ public class Cell {
 	available = false;
     }
 
+    // ”даление только €чейки (св€зи перестраиваютс€)
     public void disappear() {
 	if (precellList.size() == 0) {
 	    for (Cell postcell : postcellList) {
@@ -144,7 +147,7 @@ public class Cell {
 	errorTypes = null;
 	available = false;
     }
-
+    
     public void delSubTree(Cell cellParam) {
 	if (cellParam.postcellList != null)
 	    for (Cell cell : cellParam.postcellList) {

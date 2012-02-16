@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.junit.Test;
 
 import parse.errhandler.Cell;
@@ -47,6 +48,7 @@ import testcases.unit.semantic.TreeWalkerTableTestClasses.testcell8;
 import testcases.unit.semantic.TreeWalkerTableTestClasses.testcell9;
 
 public class TreeWalkerTableTest {
+    private Logger logger = Logger.getLogger(TreeWalkerTableTest.class);
 
     @SuppressWarnings("unused")
     @Test
@@ -57,7 +59,7 @@ public class TreeWalkerTableTest {
 	ErrorHandler er2 = er1.clone();
 	er1.addError(new ParseError(ErrorType.UncompatibleTypes, 2, 2, "Тру-ту-ту"));
 	List<ErrorType> listError = er1.difference(er2);
-	System.out.println("ende");
+	logger.debug("ende");
     }
 
     @Test
@@ -94,10 +96,14 @@ public class TreeWalkerTableTest {
 	walkers.add(new IdConvertor(new IdParsigStrategy(), null));
 	walkers.add(new TemplateEqClassesFiller(new QueryConstraints()));
 
-	// TreeWalkerTable twt = new TreeWalkerTable(walkersChecker, TREETABLE);
-	TreeWalkerTable twt = new TreeWalkerTable(walkers, TREETABLE);
+	TreeWalkerTable twt = new TreeWalkerTable(walkersChecker, TREETABLE);
+	// TreeWalkerTable twt = new TreeWalkerTable(walkers, TREETABLE);
+	for (Cell cell : twt.getStartElements()) {
+
+	}
+
 	twt.removeByError(ErrorType.IdentifierRedefenition);
-	System.out.println("Ende");
+	logger.debug("Ende");
     }
 
     @SuppressWarnings("unused")
@@ -151,15 +157,15 @@ public class TreeWalkerTableTest {
 	    twt.cellList.get(classe).printPersUndPos();
 	}
 	twt.cellList.get(testcell10.class).disappear();
-	for (Class<? extends TreeWalker> classe : twt.cellList.keySet()) 
+	for (Class<? extends TreeWalker> classe : twt.cellList.keySet())
 	    twt.cellList.get(classe).printPersUndPos();
-	
+
 	twt.cellList.get(testcell11.class).disappear();
 
 	for (Class<? extends TreeWalker> classe : twt.cellList.keySet()) {
 	    twt.cellList.get(classe).printPersUndPos();
 	}
-	System.out.println("Ende");
+	logger.debug("Ende");
     }
 
     @SuppressWarnings("unused")
@@ -218,7 +224,7 @@ public class TreeWalkerTableTest {
 	for (Class<? extends TreeWalker> classe : twt.cellList.keySet())
 	    twt.cellList.get(classe).printPersUndPos();
 
-	System.out.println("Ende");
+	logger.debug("Ende");
     }
 
     @SuppressWarnings("unused")
@@ -313,6 +319,34 @@ public class TreeWalkerTableTest {
 	for (Class<? extends TreeWalker> classe : twt.cellList.keySet()) {
 	    twt.cellList.get(classe).printPersUndPos();
 	}
-	System.out.println("Ende");
+	logger.debug("Ende");
+    }
+
+    @SuppressWarnings("unused")
+    @Test
+    public void транзитивность() {
+	Map<Class<? extends TreeWalker>, Row> classList = new HashMap<Class<? extends TreeWalker>, Row>();
+	classList.put(testcell1.class, new Row());
+	classList.put(testcell2.class, new Row().Checker());
+	classList.put(testcell3.class, new Row().addPre(testcell1.class).addPre(testcell2.class));
+	classList.put(testcell4.class, new Row().addPre(testcell1.class).addPre(testcell2.class).Checker());
+	classList.put(testcell5.class, new Row().addPre(testcell3.class).addPre(testcell4.class));
+	classList.put(testcell6.class, new Row().addPre(testcell3.class).addPre(testcell4.class).Checker());
+	classList.put(testcell7.class, new Row().addPre(testcell5.class).addPre(testcell6.class));
+	classList.put(testcell8.class, new Row().addPre(testcell5.class).addPre(testcell6.class).Checker());
+
+	List<TreeWalker> walkers = new LinkedList<TreeWalker>();
+	walkers.add(new testcell1());
+	walkers.add(new testcell2());
+	walkers.add(new testcell3());
+	walkers.add(new testcell4());
+	walkers.add(new testcell5());
+	walkers.add(new testcell6());
+	walkers.add(new testcell7());
+	walkers.add(new testcell8());
+
+	TreeWalkerTable twt = new TreeWalkerTable(walkers, classList);
+
+	System.out.println("о");
     }
 }

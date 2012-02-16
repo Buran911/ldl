@@ -5,8 +5,11 @@ import generation.walkers.TreeWalker;
 import java.util.LinkedList;
 import java.util.List;
 
+/** Строка записи в идеальную таблицу */
 public class Row {
+    // Список ячеек(walker'ов) от которых зависит выполнение данного walker'а
     private List<Class<? extends TreeWalker>> dependList;
+    // Какие ошибки кидает walker
     private List<ErrorType> errors;
     private boolean checker = false;
     {
