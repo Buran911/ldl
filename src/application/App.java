@@ -1,6 +1,6 @@
 package application;
 
-import generation.db.DbConectionData;
+import generation.db.DatabaseConnectionData;
 import generation.db.Policy;
 import generation.db.QueryMaker;
 import generation.idtable.IdTable;
@@ -52,7 +52,7 @@ public class App {
     private SyntaxTree tree;
     private ErrorHandler errh;
     private Engine engine;
-    private DbConectionData connection;
+    private DatabaseConnectionData connection;
     private Policy policy;
     private QueryMaker queryMaker;
     private IdTable table;
@@ -86,7 +86,7 @@ public class App {
 	logger.trace("password: " + parser.getPassword());
 	logger.trace("policy: " + parser.getPolicy());
 
-	connection = new DbConectionData();
+	connection = new DatabaseConnectionData();
 	connection.setConnectionString(parser.getConnectionString());
 	connection.setUser(parser.getUser());
 	connection.setPassword(parser.getPassword());
@@ -110,7 +110,7 @@ public class App {
 	logger.info("Парсинг исходных файлов.");
 	parser.setDebugModeOn();
 	parser.parse();
-	 parser.getTree().printTree();
+	parser.getTree().printTree();
 	// Синтаксические ошибки
 	logger.info("Проверка синтаксических ошибок");
 	if (errh.hasErrors()) {

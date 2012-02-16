@@ -16,14 +16,14 @@ import java.util.List;
 public class QueryMaker {
     private List<String> querys;
     private List<QueryResult> queryResults;
-    private DbConectionData connection;
+    private DatabaseConnectionData connection;
     private DBMS dbms;
 
     {
 	queryResults = new LinkedList<QueryResult>();
     }
 
-    public QueryMaker(DbConectionData connection, List<String> querys) {
+    public QueryMaker(DatabaseConnectionData connection, List<String> querys) {
 	this.querys = querys;
 	this.connection = connection;
     }

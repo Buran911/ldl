@@ -4,7 +4,7 @@ package generation.db;
  * Класс содержит информацию необходимую для соединения с БД
  * @author hindu
  *  */
-public class DbConectionData {
+public class DatabaseConnectionData {
     private String connectionString;
     private String user;
     private String password;

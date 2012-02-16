@@ -8,7 +8,6 @@ import java.util.List;
 public class ConditionAST extends ConstraintAST {
     private BinaryAST condition;
     private List<ConstraintAST> constraints;
-    // XXX eqClasseses -> eqClasses , разобраться с названиями
     private List<ConstraintAST> eqClassesList;
 
     {
