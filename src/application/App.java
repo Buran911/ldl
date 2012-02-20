@@ -32,6 +32,7 @@ import parse.parser.Parser;
 import parse.syntaxtree.SyntaxTree;
 import parse.util.Source;
 import application.util.CmdLineParser;
+import application.util.DateGeneratorFilter;
 import application.util.FilterRunner;
 import application.util.Halt;
 import application.util.PyFunctionRunner;
@@ -184,7 +185,6 @@ public class App {
 	    logger.trace(StackTrace.getStackTrace(e));
 	    throw new Halt();
 	}
-
     }
 
     // Фильтрация результатов, применение функций
@@ -194,6 +194,7 @@ public class App {
 
 	filterRunner.addFilter(new VisibleFilter(table));
 	filterRunner.addFilter(new ValueFilter(policy));
+	filterRunner.addFilter(new DateGeneratorFilter(table));
 
 	filterRunner.run();
 

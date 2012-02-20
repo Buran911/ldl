@@ -27,7 +27,7 @@ public class Debugging {
 				"testdata/test.ldl");
 		ErrorHandler errh = new ErrorHandler(src);
 		Parser parser = new Parser(src, errh);
-//		parser.setDebugModeOn();
+		parser.setDebugModeOn();
 		
 		parser.parse();
 		
@@ -38,7 +38,7 @@ public class Debugging {
 		
 		
 		ParseTree tree = parser.getTree();
-//		tree.printTree();
+		tree.printTree();
 		
 		SyntaxTree syntaxTree = new SyntaxTree(tree);
 		

@@ -6,24 +6,23 @@ import generation.languageconstants.Messure;
 import java.util.Calendar;
 
 public class DataGenerator extends SourceData {
-    private Calendar startData = null;
-    private Calendar endData = null;
+    private Calendar startDate = null;
+    private Calendar endDate = null;
     private Behaviour behaviour = null;
     private Double step = null;
     private Messure messure = null;
 
     @Override
     public Object clone() {
-	// TODO Auto-generated method stub
 	return null;
     }
 
-    public Calendar getStartData() {
-        return startData;
+    public Calendar getStartDate() {
+        return startDate;
     }
 
-    public Calendar getEndData() {
-        return endData;
+    public Calendar getEndDate() {
+        return endDate;
     }
 
     public Behaviour getBehaviour() {
@@ -38,12 +37,12 @@ public class DataGenerator extends SourceData {
         return messure;
     }
 
-    public void setStartData(Calendar startData) {
-        this.startData = startData;
+    public void setStartDate(Calendar startData) {
+        this.startDate = startData;
     }
 
-    public void setEndData(Calendar endData) {
-        this.endData = endData;
+    public void setEndDate(Calendar endData) {
+        this.endDate = endData;
     }
 
     public void setBehaviour(Behaviour behaviour) {

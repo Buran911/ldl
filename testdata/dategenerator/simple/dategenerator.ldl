@@ -1,12 +1,14 @@
 context BankRu{
 	bic1 instanceof String;
 	bic2 instanceof String;
+	bic3 instanceof Integer;
+
 	source{
 		bic1:{
 			_type = dategenerator;
 			_generationType = sequence;
 			_startDate = '10/10/2010';
-			_step = 2;
+			_step = 1.34;
 			_messure = 'day';
 		}
 		bic2:{
@@ -15,5 +17,21 @@ context BankRu{
 			_startDate = '10/10/2010';
 			_endDate = '10/11/2010';
 		}
+		bic3:{
+			_type = db;
+			_table = 'bankru';
+			_column = 'bic';
+		}
+	}
+
+	eq_classes {
+		bic3 > 0;
+		bic3 > 0;
+		bic3 > 0;
+		bic3 > 0;
+		bic3 > 0;
+		bic3 > 0;
+		bic3 > 0;
+		bic3 > 0;
 	}
 }

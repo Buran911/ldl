@@ -36,5 +36,4 @@ public class ValueFilter implements Filterable {
 	    }
 	}
     }
-
 }

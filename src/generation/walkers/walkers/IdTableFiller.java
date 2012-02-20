@@ -67,32 +67,22 @@ public class IdTableFiller extends TreeWalker {
 
     @Override
     public void visit(AttributeCallAST attrCall) {
-	// Empty
-
     }
 
     @Override
     public void visit(BinaryExpressionAST binaryExp) {
-	// Empty
-
     }
 
     @Override
     public void visit(BinaryOpAST binaryOp) {
-	// Empty
-
     }
 
     @Override
     public void visit(BooleanAST bool) {
-	// Empty
-
     }
 
     @Override
     public void visit(ConditionAST condition) {
-	// Empty
-
     }
 
     @Override
@@ -102,104 +92,70 @@ public class IdTableFiller extends TreeWalker {
 
     @Override
     public void visit(DescriptionAST description) {
-	// Empty
-
     }
 
     @Override
     public void visit(EqClassAST eqClass) {
-	// Empty
-
     }
 
     @Override
     public void visit(FormalParamsAST formalParams) {
-	// Empty
-
     }
 
     @Override
     public void visit(FunctionalPartAST funcPart) {
-	// Empty
-
     }
 
     @Override
     public void visit(IdentifierAST id) {
-	// Empty
-
     }
 
     @Override
     public void visit(ldlAST ldl) {
-	// Empty
-
     }
 
     @Override
     public void visit(NumberAST number) {
-	// Empty
-
     }
 
     @Override
     public void visit(OperationCallAST operationCall) {
-	// Empty
-
     }
 
     @Override
     public void visit(ParametresAST params) {
-	// Empty
-
     }
 
     @Override
     public void visit(PathNameAST pathName) {
-	// Empty
-
     }
 
     @Override
     public void visit(PredicateAST predicate) {
-	// Empty
-
     }
 
     @Override
     public void visit(PredicateImplAST impl) {
-	// Empty
-
     }
 
     @Override
     public void visit(RelationAST relation) {
-	// Empty
-
     }
 
     @Override
     public void visit(SetAST set) {
-	// Empty
-
     }
 
     @Override
     public void visit(SetOpAST setOp) {
-	// Empty
-
     }
 
     @Override
     public void visit(SimpleNameAST simpleName) {
-	// Empty
-
     }
 
     @Override
     public void visit(SourceAST src) {
-	// Empty
-
     }
 
     @Override
@@ -228,13 +184,11 @@ public class IdTableFiller extends TreeWalker {
 			db.setColumn(((StringAST) exp.getLiteral()).getString());
 		    }
 		}
-
 		id.setSrcData(db);
 		break;
 
 	    case function:
 		PyFunction function = new PyFunction();
-
 		for (srcExprAST exp : block.getSrcExprs()) {
 		    if (exp.getFirstId().getId().contentEquals(ReservedWord.main.word())) {
 			function.setMain(((StringAST) exp.getLiteral()).getString());
@@ -259,7 +213,6 @@ public class IdTableFiller extends TreeWalker {
 			}
 		    }
 		}
-
 		id.setSrcData(function);
 		break;
 
@@ -267,15 +220,13 @@ public class IdTableFiller extends TreeWalker {
 		Set set = new Set();
 		set.setName(id.getName());
 		set.setAlias(id.getAlias());
-		for (srcExprAST exp : block.getSrcExprs()) {
-		    if (exp.getFirstId().getId().contentEquals(ReservedWord.value.word())) {
-			for (LiteralAST li : exp.getSet().getElements()) {
+		for (srcExprAST exp : block.getSrcExprs())
+		    if (exp.getFirstId().getId().contentEquals(ReservedWord.value.word()))
+			for (LiteralAST li : exp.getSet().getElements())
 			    set.addElements(li);
-			}
-		    }
-		}
-
 		id.setSrcData(set);
+		break;
+
 	    case dategenerator:
 		DataGenerator dataGenerator = new DataGenerator();
 
@@ -284,19 +235,16 @@ public class IdTableFiller extends TreeWalker {
 			String[] array = ((StringAST) exp.getLiteral()).getString().split("/");
 			Calendar date = Calendar.getInstance();
 			date.clear();
-			date.set(Calendar.YEAR, Integer.parseInt(array[2]));
-			date.set(Calendar.MONTH, Integer.parseInt(array[1]) - 1);
-			date.set(Calendar.DATE, Integer.parseInt(array[0]));
-			dataGenerator.setStartData(date);
+			date.set(Integer.parseInt(array[2]), Integer.parseInt(array[1]) - 1, Integer.parseInt(array[0]));
+			dataGenerator.setStartDate(date);
 		    }
 		    else if (exp.getFirstId().getId().contentEquals(ReservedWord.enddate.word())) {
 			String[] array = ((StringAST) exp.getLiteral()).getString().split("/");
 			Calendar date = Calendar.getInstance();
 			date.clear();
-			date.set(Calendar.YEAR, Integer.parseInt(array[2]));
-			date.set(Calendar.MONTH, Integer.parseInt(array[1]) - 1);
-			date.set(Calendar.DATE, Integer.parseInt(array[0]));
-			dataGenerator.setEndData(date);
+
+			date.set(Integer.parseInt(array[2]), Integer.parseInt(array[1]) - 1, Integer.parseInt(array[0]));
+			dataGenerator.setEndDate(date);
 		    }
 		    else if (exp.getFirstId().getId().contentEquals(ReservedWord.generationtype.word())) {
 			String generationtype = exp.getSecondId().getId();
@@ -310,7 +258,8 @@ public class IdTableFiller extends TreeWalker {
 		    else if (exp.getFirstId().getId().contentEquals(ReservedWord.step.word())) {
 			Double step = ((NumberAST) exp.getLiteral()).getNumber();
 			dataGenerator.setStep(step);
-		    }else if (exp.getFirstId().getId().contentEquals(ReservedWord.messure.word())) {
+		    }
+		    else if (exp.getFirstId().getId().contentEquals(ReservedWord.messure.word())) {
 			String messure = ((StringAST) exp.getLiteral()).getData();
 			if (messure.equals("day")) {
 			    dataGenerator.setMessure(Messure.day);
@@ -324,6 +273,7 @@ public class IdTableFiller extends TreeWalker {
 		    }
 		}
 		id.setSrcData(dataGenerator);
+		break;
 	    }
 	// устанавливаем параметр _visible
 	expr = findReservedWord(ReservedWord.visible, block.getSrcExprs().iterator());
@@ -335,26 +285,18 @@ public class IdTableFiller extends TreeWalker {
 
     @Override
     public void visit(srcExprAST expr) {
-	// Empty
-
     }
 
     @Override
     public void visit(StringAST string) {
-	// Empty
-
     }
 
     @Override
     public void visit(TypeAST type) {
-	// Empty
-
     }
 
     @Override
     public void visit(VariableAST var) {
-	// Empty
-
     }
 
     private srcExprAST findReservedWord(ReservedWord word, Iterator<srcExprAST> itExpr) {
