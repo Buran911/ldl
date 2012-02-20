@@ -55,11 +55,12 @@ public class WalkerRunner {
 	errhCl = errh.clone();
 	for (Cell cell : twt.getEndElements())
 	    func(cell);
+	System.out.println("end");
     }
 
     public void func(Cell cell) {
 	if (cell.getPrecellList() != null)
-	    for (Cell precell : cell.getPrecellList()) 
+	    for (Cell precell : cell.getPrecellList())
 		if (precell.isAvailable()) {
 		    func(precell);
 		    // код для обработки
@@ -67,6 +68,7 @@ public class WalkerRunner {
 		    precell.setAvailable(false);
 		    List<ErrorType> listError = errh.difference(errhCl);
 		}
+	System.out.println("end");
     }
 
     public void add(TreeWalker walker) {

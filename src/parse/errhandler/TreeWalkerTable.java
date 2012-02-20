@@ -74,26 +74,7 @@ public class TreeWalkerTable {
 		    cell.disappear();
 	    }
 	}
-	// удалить транзитивные связи
-	for (Class<? extends TreeWalker> classe : cellList.keySet()) {
-	    Cell cell = cellList.get(classe);
-	    if ((cell.getPrecellList() != null) && (cell.getPrecellList().size() != 0)) {
-		System.out.println(" - " + cell.getWalkerClass().getSimpleName());
-		deleteTR(cell);
-	    }
-	}
     }
-
-    // удалить транзитивные связи (delete transitive relations)
-    public void deleteTR(Cell cell) {
-	List<Cell> cellListM = cell.getPrecellList();
-
-	for (Cell cll : cellListM) {
-	    System.out.println(" --- " + cll.getWalkerClass().getSimpleName());
-	}
-    }
-    
-    
 
     private void fill() {
 	// Заполняем клетки walker'ами
