@@ -9,5 +9,6 @@ public enum Type {
     set,
     own,
     function,
-    dategenerator
+    dategenerator,
+    NumberGenerator
 }

@@ -19,7 +19,12 @@ public enum ReservedWord {
     startdate("_startDate"),
     enddate("_endDate"),
     step("_step"),
-    messure("_messure");
+    messure("_messure"),
+    generationType("_generationType"),
+    beginVal("_beginVal"),
+    period("_period"),
+    endVal("_endVal")
+    ;
 
     private final String reservedWord;
 

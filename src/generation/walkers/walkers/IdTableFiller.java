@@ -48,6 +48,7 @@ import parse.syntaxtree.nodes.srcBlockAST;
 import parse.syntaxtree.nodes.srcExprAST;
 import parse.util.FileReader;
 import application.util.Halt;
+import application.util.NumberGenerator;
 
 /**
  * Волкер заполняет информацию об источниках идентификаторов.
@@ -65,24 +66,35 @@ public class IdTableFiller extends TreeWalker {
 	this.pythonDir = pythonDir;
     }
 
+  
     @Override
     public void visit(AttributeCallAST attrCall) {
+	// Empty
+
     }
 
     @Override
     public void visit(BinaryExpressionAST binaryExp) {
+	// Empty
+
     }
 
     @Override
     public void visit(BinaryOpAST binaryOp) {
+	// Empty
+
     }
 
     @Override
     public void visit(BooleanAST bool) {
+	// Empty
+
     }
 
     @Override
     public void visit(ConditionAST condition) {
+	// Empty
+
     }
 
     @Override
@@ -92,70 +104,104 @@ public class IdTableFiller extends TreeWalker {
 
     @Override
     public void visit(DescriptionAST description) {
+	// Empty
+
     }
 
     @Override
     public void visit(EqClassAST eqClass) {
+	// Empty
+
     }
 
     @Override
     public void visit(FormalParamsAST formalParams) {
+	// Empty
+
     }
 
     @Override
     public void visit(FunctionalPartAST funcPart) {
+	// Empty
+
     }
 
     @Override
     public void visit(IdentifierAST id) {
+	// Empty
+
     }
 
     @Override
     public void visit(ldlAST ldl) {
+	// Empty
+
     }
 
     @Override
     public void visit(NumberAST number) {
+	// Empty
+
     }
 
     @Override
     public void visit(OperationCallAST operationCall) {
+	// Empty
+
     }
 
     @Override
     public void visit(ParametresAST params) {
+	// Empty
+
     }
 
     @Override
     public void visit(PathNameAST pathName) {
+	// Empty
+
     }
 
     @Override
     public void visit(PredicateAST predicate) {
+	// Empty
+
     }
 
     @Override
     public void visit(PredicateImplAST impl) {
+	// Empty
+
     }
 
     @Override
     public void visit(RelationAST relation) {
+	// Empty
+
     }
 
     @Override
     public void visit(SetAST set) {
+	// Empty
+
     }
 
     @Override
     public void visit(SetOpAST setOp) {
+	// Empty
+
     }
 
     @Override
     public void visit(SimpleNameAST simpleName) {
+	// Empty
+
     }
 
     @Override
     public void visit(SourceAST src) {
+	// Empty
+
     }
 
     @Override
@@ -184,11 +230,13 @@ public class IdTableFiller extends TreeWalker {
 			db.setColumn(((StringAST) exp.getLiteral()).getString());
 		    }
 		}
+
 		id.setSrcData(db);
 		break;
 
 	    case function:
 		PyFunction function = new PyFunction();
+
 		for (srcExprAST exp : block.getSrcExprs()) {
 		    if (exp.getFirstId().getId().contentEquals(ReservedWord.main.word())) {
 			function.setMain(((StringAST) exp.getLiteral()).getString());
@@ -225,8 +273,8 @@ public class IdTableFiller extends TreeWalker {
 			for (LiteralAST li : exp.getSet().getElements())
 			    set.addElements(li);
 		id.setSrcData(set);
-		break;
-
+	    break;
+	    
 	    case dategenerator:
 		DataGenerator dataGenerator = new DataGenerator();
 
@@ -274,6 +322,33 @@ public class IdTableFiller extends TreeWalker {
 		}
 		id.setSrcData(dataGenerator);
 		break;
+		
+	    case NumberGenerator:
+		    NumberGenerator numbGen = new NumberGenerator();	//SdcData - test
+		    for (srcExprAST exp : block.getSrcExprs()){
+			if (exp.getFirstId().getId().contentEquals(ReservedWord.generationType.word())){
+			    System.out.println("   " + (exp.getFirstId()).getData() + " : " + (exp.getSecondId()).getData() );
+			    String bufstr = exp.getSecondId().getData();		//TEST!!!
+			    numbGen.setGenType(bufstr);	//SdcData - test
+			}
+			if (exp.getFirstId().getId().contentEquals(ReservedWord.beginVal.word())){
+			    System.out.println("   " + (exp.getFirstId()).getData() + " : " + (((NumberAST)exp.getLiteral()).getNumber().toString()));    //getSecondId()).getData() );
+			    double val = ((NumberAST)exp.getLiteral()).getNumber();
+			    numbGen.setBeginVal((int)val);	//SdcData - test
+			}
+			if (exp.getFirstId().getId().contentEquals(ReservedWord.period.word())){
+			    System.out.println("   " + (exp.getFirstId()).getData() + " : " + (((NumberAST)exp.getLiteral()).getNumber().toString()));    //getSecondId()).getData() );
+			    double val = ((NumberAST)exp.getLiteral()).getNumber();
+			    numbGen.setPeriod((int)val);	//SdcData - test
+			}
+			if (exp.getFirstId().getId().contentEquals(ReservedWord.endVal.word())){
+			    System.out.println("   " + (exp.getFirstId()).getData() + " : " + (((NumberAST)exp.getLiteral()).getNumber().toString()));    //getSecondId()).getData() );
+			    double val = ((NumberAST)exp.getLiteral()).getNumber();
+			    numbGen.setEndVal((int)val);	//SdcData - test
+			}
+		    }
+		    id.setSrcData(numbGen);	//SdcData - test
+		    break;		
 	    }
 	// устанавливаем параметр _visible
 	expr = findReservedWord(ReservedWord.visible, block.getSrcExprs().iterator());
@@ -289,14 +364,20 @@ public class IdTableFiller extends TreeWalker {
 
     @Override
     public void visit(StringAST string) {
+	// Empty
+
     }
 
     @Override
     public void visit(TypeAST type) {
+	// Empty
+
     }
 
     @Override
     public void visit(VariableAST var) {
+	// Empty
+
     }
 
     private srcExprAST findReservedWord(ReservedWord word, Iterator<srcExprAST> itExpr) {

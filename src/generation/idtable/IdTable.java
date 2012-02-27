@@ -53,6 +53,7 @@ public class IdTable {
 		return id;
 	    }
 	}
+
 	return null;
     }
 
@@ -63,6 +64,7 @@ public class IdTable {
 		identifiers.add(identifier);
 	    }
 	}
+
 	return identifiers;
     }
 
@@ -74,6 +76,7 @@ public class IdTable {
 		return predicate;
 	    }
 	}
+
 	return null;
     }
 
@@ -84,6 +87,8 @@ public class IdTable {
 		predicates.add(predicate);
 	    }
 	}
+
 	return predicates;
     }
+
 }

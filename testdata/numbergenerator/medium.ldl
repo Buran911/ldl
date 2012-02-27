@@ -1,0 +1,31 @@
+context BankRu{
+	bic instanceof String;
+	bic1 instanceof String;
+	number instanceof Integer;
+	
+	source{
+		number:{
+			_type = NumberGenerator;
+			_generationType = sequence;
+			_beginVal = 1000;
+			_period = 300;
+		}
+		bic:{
+			_type = db;
+			_table = 'bankru';
+			_column = 'bic'; 
+		}
+		bic1:{
+			_type = dategenerator;
+			_generationType = sequence;
+			_startDate = '10/10/2010';
+			_step = 1.34;
+			_messure = 'day';
+		}
+	}
+	eq_classes{
+		bic = '046354980';
+		bic < '049466331';
+		bic > '046354980';	
+	} 
+}

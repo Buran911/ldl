@@ -1,0 +1,23 @@
+context BankRu{
+	bic instanceof String;
+	number instanceof Integer;
+	
+	source{
+		number:{
+			_type = NumberGenerator;
+			_generationType = random;
+			_beginVal = 10;
+			_endVal = 20;
+		}
+		bic:{
+			_type = db;
+			_table = 'bankru';
+			_column = 'bic'; 
+		}
+	}
+	eq_classes{
+		bic = '046354980';
+		bic < '049466331';
+		bic > '046354980';	
+	} 
+}

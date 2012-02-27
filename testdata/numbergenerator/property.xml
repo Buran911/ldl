@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ldl-project>
+	<database connectionString = "jdbc:sqlite:testdata\set\new.db"
+	user="1"
+	password="2"
+		returnPolicy = "random"/>
+</ldl-project>

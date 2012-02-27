@@ -35,6 +35,7 @@ import application.util.CmdLineParser;
 import application.util.DateGeneratorFilter;
 import application.util.FilterRunner;
 import application.util.Halt;
+import application.util.NumGenFilter;
 import application.util.PyFunctionRunner;
 import application.util.StackTrace;
 import application.util.ValueFilter;
@@ -108,6 +109,7 @@ public class App {
     // парсинг исходных файлов и проверка синтаксических и семантических ошибок
     public void parseAndCheckErrors() {
 	Parser parser = new Parser(src, errh);
+//	parser.setDebugModeOn();
 	logger.info("Парсинг исходных файлов.");
 	parser.setDebugModeOn();
 	parser.parse();
@@ -138,7 +140,7 @@ public class App {
 	// TODO Сделать копию дерева
 	SyntaxTree treeSemantic = (SyntaxTree) tree.clone();
 	IdTable idTable = new IdTable();
-
+	logger.info("Создали генератор.");	
 	treeSemantic.accept(new FunctionalImplementedChecker(new BottomUpWalkingStrategy(), errh));
 	treeSemantic.accept(new PositionEstimater(new IdParsigStrategy()));
 	treeSemantic.accept(new IdRedefinedChecker(new IdParsigStrategy(), errh));
@@ -148,6 +150,7 @@ public class App {
 	treeSemantic.accept(new GroupFilter(new IdParsigStrategy(), funcGroups));
 	treeSemantic.accept(new IdNotDefinedChecker(new IdParsigStrategy(), idTable, errh));
 	treeSemantic.accept(new TypeMismatchChecker(new IdParsigStrategy(), errh));
+
     }
 
     // Предобработка AST и генерация по нему запросов.
@@ -195,6 +198,7 @@ public class App {
 	filterRunner.addFilter(new VisibleFilter(table));
 	filterRunner.addFilter(new ValueFilter(policy));
 	filterRunner.addFilter(new DateGeneratorFilter(table));
+	filterRunner.addFilter(new NumGenFilter(table));
 
 	filterRunner.run();
 

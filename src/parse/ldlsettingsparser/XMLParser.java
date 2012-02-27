@@ -108,6 +108,7 @@ public class XMLParser {
 
     @SuppressWarnings("unused")
     private String getTextValue(Element elem, String tag) {
+
 	return getValue(elem, tag, 0);
     }
 

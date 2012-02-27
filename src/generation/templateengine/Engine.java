@@ -42,7 +42,7 @@ public class Engine {
 	if (!queryConstraints.hasNext()) {
 	    if (queryConstraints.hasConstConstraints()) {
 		String where = generateWhere();
-
+    	    
 		String q = selFrom + where;
 		while (q.contains("\r\n\r\n")) {
 		    q = q.replaceAll("\r\n\r\n", "\r\n");

@@ -15,6 +15,12 @@ public class StringAST extends LiteralAST implements Datable, Positionable {
 	this.string = string;
     }
 
+    public StringAST(StringAST str){
+	this.string = str.string;
+	this.lineNo = str.lineNo;
+	this.columnNo = this.columnNo;
+    }
+    
     public String getString() {
 	return string;
     }
