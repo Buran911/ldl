@@ -1,0 +1,24 @@
+context Payment{
+	test instanceof int;
+	number instanceof int;
+	
+	source{
+		number:{
+			_type = NumberGenerator;
+			_generationType = sequence;
+			_beginVal = 10;
+			_period = 3;
+		}
+		test:{
+			_type = Set;
+			_value = {1,2,3,4};
+		}
+	}
+	
+	eq_classes{
+		test = 1;
+		test = 2;
+		test = 3;
+		test = 4;
+	}
+}

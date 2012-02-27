@@ -1,68 +1,91 @@
 package generation.templateengine;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import parse.syntaxtree.nodes.ConstraintAST;
 
-
-/** 
- * Класс работающий как генератор, выдает шаблонизатору набор
- * ограничений для построения where части запроса.
+/**
+ * Класс работающий как генератор, выдает шаблонизатору набор ограничений для
+ * построения where части запроса. 
+ * @author hindu
  * */
 public class QueryConstraints {
-	private EqualityClass constPart;
-	private boolean hasNnext;
-	private List<EqualityClass> eqClasses;
-	private Iterator<EqualityClass> itEqClass;
+    private EqualityClass constPart;
+    private List<EqualityClass> eqClasses;
+    private Iterator<EqualityClass> itEqClass;
 
-	{
-		eqClasses = new LinkedList<EqualityClass>();
-		hasNnext = false;
-		itEqClass = eqClasses.iterator();
-	}
-	
-	public EqualityClass getConstPart() {
-		return constPart;
+    {
+	eqClasses = new LinkedList<EqualityClass>();
+	itEqClass = eqClasses.iterator();
+    }
+
+    public EqualityClass getConstPart() {
+	return constPart;
+    }
+
+    public void setConstPart(EqualityClass constPart) {
+	this.constPart = constPart;
+    }
+
+    public void addEqualityClass(EqualityClass eqClass) {
+	eqClasses.add(eqClass);
+    }
+
+    public EqualityClass getEqClass(int index) {
+	return eqClasses.get(index);
+    }
+
+    public void duplicate(int cloneCount) {
+	List<EqualityClass> newEqClasses = eqClasses;
+	int eqClassesCount = eqClasses.size();
+
+	for (int i = 0; i < cloneCount - 1; i++) {
+	    newEqClasses.addAll(getEqClassesClone(eqClassesCount));
 	}
 
+	eqClasses = newEqClasses;
+    }
 
-	public void setConstPart(EqualityClass constPart) {
-		this.constPart = constPart;
-		
-		if(hasNnext == false){
-			hasNnext = true;
-		}
+    public int getEqClassesCount() {
+	return eqClasses.size();
+    }
+
+    public void makeUnmodifiable() {
+	eqClasses = Collections.unmodifiableList(eqClasses);
+	itEqClass = eqClasses.iterator();
+    }
+
+    public List<ConstraintAST> next() {
+	List<ConstraintAST> constraints = new LinkedList<ConstraintAST>();
+
+	constraints.addAll(constPart.getConstraints());
+	if (itEqClass.hasNext()) {
+	    EqualityClass varPart = itEqClass.next();
+	    constraints.addAll(varPart.getConstraints());
 	}
 
+	return constraints;
+    }
 
-	public void addEqualityClass(EqualityClass eqClass){
-		eqClasses.add(eqClass);
-		
-		if(hasNnext == false){
-			hasNnext = true;
-		}
+    private List<EqualityClass> getEqClassesClone(int elementCount) {
+	List<EqualityClass> ec = new LinkedList<EqualityClass>();
+
+	for (int i = 0; i < elementCount; i++) {
+	    ec.add((EqualityClass) eqClasses.get(i).clone());
 	}
-	
-	
-	public List<EqualityClass> getEqClasses() {
-		return eqClasses;
-	}
-	
-	public boolean hasNnext(){
-		return hasNnext;
-	}
-	
-	public List<ConstraintAST> getGnext(){
-		List<ConstraintAST> constraints = new LinkedList<ConstraintAST>();
-		
-		constraints.addAll(constPart.getConstraints());
-		if(itEqClass.hasNext()){
-			constraints.addAll( itEqClass.next().getConstraints() );
-		}
-		hasNnext = itEqClass.hasNext();
-		
-		return constraints;
-	}
+
+	return ec;
+    }
+
+    public boolean hasNext() {
+	return itEqClass.hasNext();
+    }
+    
+    public boolean hasConstConstraints() {
+	return constPart.getConstraints().size() > 0;
+    }
+
 }

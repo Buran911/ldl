@@ -1,13 +1,20 @@
 %{
-	import java.io.*;
-	import parse.lexer.Lexer;
-	import parse.errhandler.ErrorHandler;
-	import parse.util.Source;
+	import generation.languageconstants.Logical;
+	import generation.languageconstants.Ratio;
+	
+	import java.io.IOException;
 	import java.io.StringReader;
-	import parse.errhandler.*;
-	import parse.parsetree.*;
+	
+	import parse.errhandler.ErrorClass;
+	import parse.errhandler.ErrorHandler;
+	import parse.errhandler.ErrorType;
+	import parse.errhandler.ParseError;
+	import parse.lexer.Lexer;
+	import parse.parsetree.Node;
+	import parse.parsetree.ParseTree;
 	import parse.parsetree.nodes.*;
 	import parse.parsetree.nodes.Number;
+	import parse.util.Source;
 %}
 
 %token context 
@@ -112,6 +119,7 @@
 %type <obj> Number
 %type <obj> LString
 %type <obj> Identifier
+%type <obj> Identifiers
 %type <obj> Type
 %type <obj> PathName
 %type <obj> SimpleName
@@ -287,11 +295,11 @@ srcExprs : srcExpr srcExprs{
 	(( srcExprs ) $2).setParent( (srcExprs)$$ ); 
 }  
 
-srcExpr : Identifier "=" Identifier ";"{ 
+srcExpr : Identifier "=" Identifiers ";"{ 
 	tree.saveNode( new srcExpr() ); 
 	$$ = tree.getLast(); 
 	(( Identifier ) $1).setParent( (srcExpr)$$ ); 
-	(( Identifier ) $3).setParent( (srcExpr)$$ ); 
+	(( Identifiers ) $3).setParent( (srcExpr)$$ ); 
 }  
 srcExpr : Identifier "=" Set ";"{ 
 	tree.saveNode( new srcExpr() ); 
@@ -313,6 +321,26 @@ srcExpr : Identifier "=" LString ";"{
 	(( Identifier ) $1).setParent( (srcExpr)$$ ); 
 	(( LString ) $3).setParent( (srcExpr)$$ ); 
 }  
+
+srcExpr : Identifier "=" Bool ";"{ 
+	tree.saveNode( new srcExpr() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (srcExpr)$$ ); 
+	(( Bool ) $3).setParent( (srcExpr)$$ ); 
+}
+
+Identifiers : Identifier{
+	tree.saveNode( new Identifiers() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (Identifiers)$$ ); 
+}
+
+Identifiers : Identifier "," Identifiers{
+	tree.saveNode( new Identifiers() ); 
+	$$ = tree.getLast(); 
+	(( Identifier ) $1).setParent( (Identifiers)$$ ); 
+	(( Identifiers ) $3).setParent( (Identifiers)$$ ); 
+} 
 
 Set : "{" Elements "}"{ 
 	tree.saveNode( new Set() ); 
@@ -407,6 +435,15 @@ BinaryExp : Expression Relation Expression{
 	(( Relation ) $2).setParent( (BinaryExp)$$ );
 	(( Expression ) $3).setParent( (BinaryExp)$$ );
 }  
+
+BinaryExp : Bool{ 
+	tree.saveNode( new BinaryExp() ); 
+	$$ = tree.getLast(); 
+	(( Bool ) $1).setParent( (BinaryExp)$$ ); 
+}  
+
+
+
 
 Condition : If Binary "{"
 	IfBlocks
@@ -569,82 +606,82 @@ FormalParams : {
 }  
 
 Identifier : identifier{ 
-	tree.saveNode( new Identifier($1) ); 
+	tree.saveNode( new Identifier($1, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Type : identifier{ 
-	tree.saveNode( new Type($1) ); 
+	tree.saveNode( new Type($1, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 SimpleName : identifier { 
-	tree.saveNode( new SimpleName($1) ); 
+	tree.saveNode( new SimpleName($1, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 LString : string{ 
-	tree.saveNode( new LString($1) ); 
+	tree.saveNode( new LString($1, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Number : number { 
-	tree.saveNode( new Number($1) ); 
+	tree.saveNode( new Number($1, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Bool : ldltrue { 
-	tree.saveNode( new Bool(true) ); 
+	tree.saveNode( new Bool(true, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Bool : ldlfalse{ 
-	tree.saveNode( new Bool(false) ); 
+	tree.saveNode( new Bool(false, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 SetOp : and { 
-	tree.saveNode( new SetOp(Logical.and) ); 
+	tree.saveNode( new SetOp(Logical.and, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 SetOp : or { 
-	tree.saveNode( new SetOp(Logical.or) ); 
+	tree.saveNode( new SetOp(Logical.or, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 SetOp : xor { 
-	tree.saveNode( new SetOp(Logical.xor) ); 
+	tree.saveNode( new SetOp(Logical.xor, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : "<" { 
-	tree.saveNode( new Relation(Ratio.less) ); 
+	tree.saveNode( new Relation(Ratio.less, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : ">" { 
-	tree.saveNode( new Relation(Ratio.more) ); 
+	tree.saveNode( new Relation(Ratio.more, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : "=" { 
-	tree.saveNode( new Relation(Ratio.equal) ); 
+	tree.saveNode( new Relation(Ratio.equal, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : notEqual { 
-	tree.saveNode( new Relation(Ratio.notEqual) ); 
+	tree.saveNode( new Relation(Ratio.notEqual, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : lessEqual { 
-	tree.saveNode( new Relation(Ratio.lessEqual) ); 
+	tree.saveNode( new Relation(Ratio.lessEqual, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) ); 
 	$$ = tree.getLast(); 
 }  
 
 Relation : moreEqual{ 
-	tree.saveNode( new Relation(Ratio.moreEqual) );  
+	tree.saveNode( new Relation(Ratio.moreEqual, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()) );  
 	$$ = tree.getLast(); 
 }  
 
@@ -675,8 +712,7 @@ private int yylex (){
 
   /* error reporting */
 public void yyerror  (String error) {
-	System.err.println ("Error: " + error);
-	errHandler.addError( new ParseError(ErrorClass.syntax, ErrorType.Syntax, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()));
+	errHandler.addError( new ParseError(ErrorClass.syntax, ErrorType.AbstractCompiler, lexer.getCurrentLineNo(), lexer.getCurrentColumnNo()));
 	/* КАК ЭТО РАБОТАЕТ????? P.S. Восстановление парсера после фейла.*/
 	yyerrflag = 3;
 }

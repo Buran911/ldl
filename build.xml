@@ -5,7 +5,7 @@
 	<property name="build" value="bin"/>
 	<property name="build.classes" value="${build}/classes"/>
 	<property name="project dir" location="."/>
-	<property name="releaseDir" value= "generation/project"/>
+	<property name="releaseDir" value= "build"/>
 	<property name="jarFile" value="ldl.jar"/>
 	
 	<property name="lexerFile" value="generation/lexparse/JFlex.jar"/>
@@ -64,34 +64,59 @@
 	
 	<!-- задание путей  либам --> 
 	<path id="compile.classpath">
-		<fileset dir="${lib}" includes="**/*.jar" excludes="junit.jar"/>
+		<fileset dir="${lib}" includes="*.jar" excludes="junit.jar"/>
 	</path>
 	
+	<path id="compile.mapedclasspath"/>
+	
+	<pathconvert targetos="windows" property="compile.mapedclasspath" refid="compile.classpath" pathsep=" ">
+		<map from="${project dir}\" to=""/>
+	</pathconvert>
+	
+	
 	<!-- создание бинарников -->
-    <target name="jar" depends="init, generate lexparse" description="Creating jar from ldl project">
-    	<manifestclasspath property="jar.classpath" jarfile="${releaseDir}/${jarFile}">
-    		<classpath refid="compile.classpath"/>
-    	</manifestclasspath>
-    	
+    <target name="make build" depends="init, generate lexparse" description="Creating jar from ldl project">    	
 		<!-- компиляция исходников -->
     	<mkdir dir="${build.classes}"/>
     	<echo> All sources will be recompiled.</echo>
-    	<javac proceed="true" encoding="cp1251" debug="off" optimize="on" srcdir="${src}" destdir="${build.classes}" classpathref="compile.classpath"/>
+    	<javac proceed="true" encoding="cp1251" debug="off" optimize="on" includeantruntime="true"
+    		srcdir="${src}" destdir="${build.classes}" classpathref="compile.classpath"
+    		excludes="testcases/**, testcode/**" target="1.6" source="1.6"/>
     	
     	<!-- создание jar -->
+    	<copy todir="${build.classes}" verbose="Yes" overwrite="yes" >
+    		<fileset file="${src}/log4j.xml"/>
+    	</copy>
         <jar destfile="${releaseDir}/${jarFile}" basedir="${build.classes}">
         	<manifest>
         		<attribute name="Built-Time" value="${release date}"/>
         		<attribute name="Built-By" value="${user.name}"/>
-        		<attribute name="Class-Path" value="${jar.classpath}"/>
+        		<attribute name="Main-Class" value="application.Application"/>
+        		<attribute name="Class-Path" value="${compile.mapedclasspath}"/>
         	</manifest>
         </jar>
     	<echo> ${jarFile} created </echo>
     	
     	<!-- копирование либ -->
     	<mkdir dir="${releaseDir}/lib"/>
-    	<copy todir="${releaseDir}/lib" verbose="Yes" >
-    		<fileset dir="${lib}" includes="**/*.jar" excludes="junit.jar"/>
+    	<copy todir="${releaseDir}/lib" verbose="Yes" overwrite="yes" >
+    		<fileset dir="${lib}" includes="**/*.jar" excludes="junit.jar, cashe*"/>
+    	</copy>
+    	
+    	<!-- копирование шаблонов -->
+    	<mkdir dir="${releaseDir}/generation"/>
+    	<mkdir dir="${releaseDir}/generation/templates"/>
+    	<copy todir="${releaseDir}/generation/templates" verbose="Yes" overwrite="yes">
+    		<fileset dir="generation/templates" includes="**/*.stg"/>
+    	</copy>
+    	
+    	<!-- создание выходной папки -->
+    	<mkdir dir="${releaseDir}/out"/>
+    	
+    	<!-- копирование примеров -->
+    	<mkdir dir="${releaseDir}/samples"/>
+    	<copy todir="${releaseDir}/samples" verbose="Yes" overwrite="yes">
+    	    <fileset dir="testdata/samples" includes="**/**"/>
     	</copy>
     	
     	<delete dir="${build.classes}"/>

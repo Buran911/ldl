@@ -1,0 +1,3 @@
+BankRu::isGRKC(){
+	true;
+}

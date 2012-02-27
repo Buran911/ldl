@@ -1,7 +1,5 @@
 package testcases.functional.syntax;
 
-import java.io.StringReader;
-
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -18,7 +16,7 @@ public class Predicates {
 		Parser parser = new Parser( src, errHandler );
 //		parser.setDebugModeOn();
 		parser.parse(); 
-		
+		errHandler.printErrors();
 		Assert.assertFalse(errHandler.hasErrors());
 	}
 }

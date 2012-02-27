@@ -1,7 +1,5 @@
 package parse.parsetree.nodes;
 
-import org.omg.PortableInterceptor.SUCCESSFUL;
-
 import parse.parsetree.Node;
 import parse.syntaxtree.NodeAST;
 import parse.syntaxtree.nodes.BinaryAST;

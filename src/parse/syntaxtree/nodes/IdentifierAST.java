@@ -1,29 +1,49 @@
 package parse.syntaxtree.nodes;
 
 import generation.walkers.TreeWalker;
-import parse.syntaxtree.Data;
+import parse.syntaxtree.Datable;
 import parse.syntaxtree.NodeAST;
+import parse.util.Positionable;
 
-public class IdentifierAST extends NodeAST implements Data{
-	private String id;
-	
-	public IdentifierAST(String id) {
-		this.id = id;
-	}
+public class IdentifierAST extends NodeAST implements Datable, Positionable {
+    private String id;
+    private Integer lineNo;
+    private Integer columnNo;
 
-	public String getId() {
-		return id;
-	}
+    public IdentifierAST(String id, Integer lineNo, Integer columnNo) {
+	this.lineNo = lineNo;
+	this.columnNo = columnNo;
+	this.id = id;
+    }
 
-	@Override
-	public void accept(TreeWalker walker) {
-		walker.accept(this);
-		
-	}
+    public String getId() {
+	return id;
+    }
 
-	@Override
-	public String getData() {
-		return id;
-	}
+    @Override
+    public void accept(TreeWalker walker) {
+	walker.accept(this);
 
+    }
+
+    @Override
+    public String getData() {
+	return id;
+    }
+
+    @Override
+    public Integer getLineNo() {
+	return lineNo;
+    }
+
+    @Override
+    public Integer getColumnNo() {
+	return columnNo;
+    }
+
+    @Override
+    public Object clone() {
+	IdentifierAST copy = new IdentifierAST(new String(id), new Integer(lineNo), new Integer(columnNo));
+	return copy;
+    }
 }

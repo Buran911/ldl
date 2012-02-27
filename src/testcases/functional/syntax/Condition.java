@@ -1,10 +1,23 @@
 package testcases.functional.syntax;
 
+import generation.idtable.IdTable;
+import generation.templateengine.QueryConstraints;
+import generation.walkers.strategys.BottomUpWalkingStrategy;
+import generation.walkers.strategys.IdParsigStrategy;
+import generation.walkers.walkers.FunctionalImplementedChecker;
+import generation.walkers.walkers.IdConvertor;
+import generation.walkers.walkers.IdTableFiller;
+import generation.walkers.walkers.IdTableMaker;
+import generation.walkers.walkers.PositionEstimater;
+import generation.walkers.walkers.TemplateEqClassesFiller;
+import generation.walkers.walkers.TemplateTypeFiller;
+
 import org.junit.Assert;
 import org.junit.Test;
 
 import parse.errhandler.ErrorHandler;
 import parse.parser.Parser;
+import parse.syntaxtree.SyntaxTree;
 import parse.util.Source;
 
 

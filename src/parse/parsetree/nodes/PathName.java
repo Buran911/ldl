@@ -2,7 +2,6 @@ package parse.parsetree.nodes;
 
 import parse.parsetree.Node;
 import parse.syntaxtree.NodeAST;
-import parse.syntaxtree.nodes.ParametresAST;
 import parse.syntaxtree.nodes.PathNameAST;
 import parse.syntaxtree.nodes.SimpleNameAST;
 

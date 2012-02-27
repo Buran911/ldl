@@ -1,5 +1,11 @@
 bin
-src/parse/parser
-src/parse/lexer
+src/parse/parser/*
+src/parse/lexer/*
 src/testcode
 generation/project
+.*
+testdata/test.ldl
+build
+log
+out
+lib/cachedir

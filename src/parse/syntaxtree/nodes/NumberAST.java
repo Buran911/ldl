@@ -1,28 +1,48 @@
 package parse.syntaxtree.nodes;
 
 import generation.walkers.TreeWalker;
-import parse.syntaxtree.Data;
+import parse.syntaxtree.Datable;
+import parse.util.Positionable;
 
-public class NumberAST extends LiteralAST implements Data {
-	private Double number;
-	
-	public NumberAST(Double number) {
-		this.number = number;
-	}
-	
-	public Double getNumber() {
-		return number;
-	}
+public class NumberAST extends LiteralAST implements Datable, Positionable {
+    private Double number;
+    private Integer lineNo;
+    private Integer columnNo;
 
-	@Override
-	public void accept(TreeWalker walker) {
-		walker.accept(this);
+    public NumberAST(Double number, Integer lineNo, Integer columnNo) {
+	this.lineNo = lineNo;
+	this.columnNo = columnNo;
+	this.number = number;
+    }
 
-	}
+    public Double getNumber() {
+	return number;
+    }
 
-	@Override
-	public String getData() {
-		return number.toString();
-	}
+    @Override
+    public void accept(TreeWalker walker) {
+	walker.accept(this);
 
+    }
+
+    @Override
+    public String getData() {
+	return number.toString();
+    }
+
+    @Override
+    public Integer getLineNo() {
+	return lineNo;
+    }
+
+    @Override
+    public Integer getColumnNo() {
+	return columnNo;
+    }
+
+    @Override
+    public Object clone() {
+	NumberAST copy = new NumberAST(new Double(number), new Integer(lineNo), new Integer(columnNo));
+	return copy;
+    }
 }

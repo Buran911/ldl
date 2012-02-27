@@ -1,0 +1,17 @@
+context BankRu{
+	bic instanceof String;
+	number instanceof int;
+	
+	source{
+		bic:{
+			_type = db;
+			_table = 'bankru';
+			_column = 'bic'; 
+		}
+	}
+	eq_classes{
+		bic = '046354980';
+		bic < '049466331';
+		bic > '046354980';	
+	} 
+}

@@ -1,0 +1,48 @@
+context Payer{
+	inn instanceof String;
+	kpp instanceof String;
+	bankRuId instanceof Integer;
+	personalAcc instanceof String;
+	bankRu instanceof BankRu;
+	
+	source{
+		inn:{
+			_type = db;
+			_table = 'payer';
+			_column = 'inn'; 
+		}
+		kpp:{
+			_type = db;
+			_table = 'payer';
+			_column = 'kpp'; 
+		}
+		bankRuId:{
+			_type = db;
+			_table = 'payer';
+			_column = 'bankru'; 
+		}
+		personalAcc:{
+			_type = db;
+			_table = 'payer';
+			_column = 'personalAcc'; 
+		}
+	}
+}
+
+context BankRu{
+	id instanceof Integer;
+	bic instanceof String;
+	
+	source{
+		id:{
+			_type = db;
+			_table = 'bankru';
+			_column = 'id'; 
+		}
+		bic:{
+			_type = db;
+			_table = 'bankru';
+			_column = 'bic'; 
+		}
+	}
+}

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ldl-project>
+	<db connectionString = "jdbc:sqlite:testdata\\pozinu\\new.db"
+		returnPolicy = "last"/>
+</ldl-project>
