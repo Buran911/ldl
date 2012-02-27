@@ -1,3 +1,9 @@
+query(elem)::=<< <select_wrapper(elem)> >>
+
+select_wrapper(elem)::=<<
+SELECT * FROM (<select(elem)>)
+>>
+
 select(elem) ::=<<
 SELECT	<select_list(elem.data)>
 FROM <from_list(elem.data)>
